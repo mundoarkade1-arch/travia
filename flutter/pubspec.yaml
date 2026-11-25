@@ -1,0 +1,23 @@
+name: travia
+description: Cliente multiplataforma do Travia, compatível com o estado web v4.
+publish_to: 'none'
+version: 0.4.0+1
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.2
+  shared_preferences: ^2.3.2
+  file_picker: ^13.4.1
+  google_mlkit_text_recognition: ^1.0.3
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  drift_dev: ^2.20.0
+  build_runner: ^2.4.12
+flutter:
+  uses-material-design: true

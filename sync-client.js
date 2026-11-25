@@ -1,0 +1,7 @@
+(function(){
+  const tokenKey='travia-sync-token',deviceKey='travia-device-id',configKey='travia-sync-config';
+  const id=()=>{let value=localStorage.getItem(deviceKey);if(!value){value=crypto.randomUUID();localStorage.setItem(deviceKey,value)}return value};
+  const config=()=>JSON.parse(sessionStorage.getItem(configKey)||'{}');
+  const request=async(path,options={})=>{const response=await fetch(path,{...options,headers:{'Content-Type':'application/json',...(sessionStorage.getItem(tokenKey)?{Authorization:`Bearer ${sessionStorage.getItem(tokenKey)}`}:{})}});const body=await response.json().catch(()=>({}));if(!response.ok)throw Object.assign(new Error(body.error||'sync_failed'),{body,status:response.status});return body};
+  window.traviaSync={saveConfig:value=>sessionStorage.setItem(configKey,JSON.stringify(value)),config,authenticated:()=>!!sessionStorage.getItem(tokenKey),register:async(email,password)=>{const result=await request('/api/auth/register',{method:'POST',body:JSON.stringify({email,password})});sessionStorage.setItem(tokenKey,result.token);return result},login:async(email,password)=>{const result=await request('/api/auth/login',{method:'POST',body:JSON.stringify({email,password})});sessionStorage.setItem(tokenKey,result.token);return result},logout:()=>sessionStorage.removeItem(tokenKey),pull:()=>request('/api/sync'),push:(envelope,baseRevision)=>request('/api/sync',{method:'PUT',body:JSON.stringify({envelope,baseRevision})}),deviceId:id};
+})();

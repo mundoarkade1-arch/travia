@@ -1,0 +1,10 @@
+{
+  "name": "Travia · Engenharia Civil",
+  "short_name": "Travia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#101010",
+  "theme_color": "#101010",
+  "lang": "pt-BR",
+  "icons": []
+}

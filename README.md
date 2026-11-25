@@ -1,0 +1,72 @@
+# Travia
+
+## Auditoria final — 25/11/2026
+
+As correções finais mantêm o estado no esquema v4 durante a inicialização e a restauração de backups, atualizam o `package-lock.json` para a versão 0.4.0 e fazem o cliente web mesclar o estado remoto e tentar um único reenvio após conflito de revisão.
+
+Validações executadas: `npm.cmd test` (4/4), `node --check app.js`, `node --check server.mjs`, `npm.cmd audit --omit=dev --audit-level=high` (0 vulnerabilidades), Flutter analyze sem erros com 10 avisos informativos, Flutter test (1/1), interface web local com matriz de 70 disciplinas e API local com registro, persistência, leitura, 401, 409 e bloqueio de endpoint inseguro.
+
+O Flutter 3.50.1 e o SDK Android 36 estão instalados via Puro/Android Studio. APK e AAB Release existentes foram gerados em etapa anterior; não foram regenerados nesta auditoria porque as alterações não afetaram o cliente Flutter. A validação interativa Android, a assinatura de produção, o tutor real, HTTPS e o OCR de PDF escaneado continuam pendentes de ambiente, credenciais ou arquivos reais.
+
+## Validação Android atual
+
+O APK Release foi instalado e aberto somente no AVD autorizado `Medium_Phone_API_37.0` (Android 17/API 37). A navegação inferior e a matriz com 70 disciplinas foram confirmadas; a validação funcional completa continua pendente por latência elevada do emulador. Não houve uso de dispositivo físico.
+
+## Resultado da auditoria Android
+
+Em 24/11/2026, o ambiente Flutter foi recuperado via Puro. `flutter doctor -v`, `flutter pub get`, `flutter test` e os builds APK/AAB Release passaram; `flutter analyze` não encontrou erros, mas registrou 9 informações de estilo/depreciação. O AVD está configurado, mas não foi iniciado e nenhum dispositivo físico está conectado; o aplicativo ainda não deve ser considerado pronto para lançamento Android.
+
+O cliente Flutter recebeu correções para registrar notas na matriz e reenviar dados após mesclar um conflito de sincronização. Tutor real, HTTPS, OCR de PDF escaneado e assinatura de produção continuam dependendo de configuração externa. Nenhuma credencial ou keystore foi criada.
+
+## Estado de distribuicao Android
+
+Os artefatos Release foram regenerados nesta auditoria: APK de 87.452.554 bytes (83,4 MiB) e AAB de 69.007.188 bytes (65,8 MiB). A configuração segura e o processo de assinatura estão em [`flutter/README.md`](./flutter/README.md).
+
+Os artefatos locais não comprovam a execução em Android nesta auditoria; consulte [`TESTING.md`](./TESTING.md) para as limitações atuais.
+
+Aplicativo offline-first para acompanhar a graduação em Engenharia Civil, com foco em planejamento sustentável, dependências e estudo em pequenas etapas.
+
+## Executar
+
+Requer Node.js 18 ou superior. Nesta pasta, execute:
+
+```powershell
+npm install
+npm start
+```
+
+## Sincronização opcional
+
+Para ativar contas e sincronização local/remota, defina uma chave fora do repositório antes de iniciar o servidor:
+
+```powershell
+$env:TRAVIA_SYNC_KEY = 'uma-chave-com-mais-de-16-caracteres'
+$env:TRAVIA_SYNC_DIR = 'C:\\dados\\travia-sync'
+npm start
+```
+
+O servidor usa senha derivada com scrypt, tokens mantidos somente em memória e dados cifrados com AES-256-GCM. Em produção, coloque-o atrás de HTTPS e use um armazenamento/gerenciador de segredos apropriado. Sem essa configuração, a aplicação permanece offline-first.
+
+## Cliente Flutter
+
+A aplicação funcional está em [`flutter/`](./flutter/), com persistência local, navegação, documentos/OCR, tutor, simuladores, backup e sincronização. Os modelos Dart e o envelope JSON correspondem ao estado web v4.
+
+Abra `http://localhost:4173`. Não há login nem banco remoto; os dados são salvos no navegador.
+
+## Funcionalidades atuais
+
+- Painel de progresso, dependências e matriz de 10 períodos.
+- Filtros e edição de situação, nota e observação.
+- Caderno digital por disciplina.
+- Calendário acadêmico com provas, trabalhos, aulas e lembretes.
+- Importação local de PDFs e imagens via IndexedDB.
+- Tutor configurável para endpoints compatíveis com OpenAI; sem endpoint, registra perguntas offline.
+- Simulador interativo de tensão axial com cálculo real.
+- Planejamento com cenários salvos e resumo de carga horária.
+- Tarefas, sessões de foco, backup e restauração JSON.
+- Cache offline instalável com Service Worker e manifest web.
+- OCR real para imagens com Tesseract.js e PDFs escaneados com rasterização de páginas no navegador.
+- Pesquisa textual nos materiais com contexto reaproveitável pelo tutor.
+- Simuladores de tensão axial, viga biapoiada, resultante de forças, vazão e pressão hidrostática.
+
+Sincronização, SQLite/Drift, calendário recorrente e simuladores adicionais ainda estão no roadmap.

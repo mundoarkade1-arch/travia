@@ -1,0 +1,6 @@
+# Copie este arquivo para key.properties apenas na máquina de build.
+# Nunca versione key.properties nem o arquivo .jks/.keystore correspondente.
+storePassword=COLOQUE_A_SENHA_LOCALMENTE
+keyPassword=COLOQUE_A_SENHA_LOCALMENTE
+keyAlias=travia
+storeFile=C:/caminho/fora-do-repositorio/travia-upload-key.jks
