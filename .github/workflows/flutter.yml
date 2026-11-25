@@ -2,9 +2,13 @@ name: Flutter Android
 
 on:
   push:
-    branches: [main, 'fix/**']
+    branches: [main]
   pull_request:
     branches: [main]
+
+concurrency:
+  group: flutter-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -12,6 +16,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: flutter

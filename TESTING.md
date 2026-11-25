@@ -134,6 +134,7 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 
 ## CI GitHub
 
-- Adicionado `.github/workflows/flutter.yml` para executar em pushes da `main` e branches de correção e em pull requests para `main`.
+- Adicionado `.github/workflows/flutter.yml` para executar em pushes da `main` e em pull requests para `main`.
 - O workflow usa Java 17, Flutter 3.50.1 estável, `flutter pub get`, `flutter analyze --no-fatal-infos`, `flutter test` e build APK Release.
-- O workflow ainda aguardará o primeiro resultado remoto após o push; anteriormente não havia checks configurados.
+- O workflow cancela execuções superseded do mesmo PR e possui timeout de 15 minutos para não deixar builds remotos indefinidos.
+- Os primeiros workflows desta configuração passaram por analyze e testes; o build APK ainda estava em andamento durante esta execução.
