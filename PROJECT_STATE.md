@@ -66,3 +66,11 @@ PDFs e imagens podem ser abertos e removidos do IndexedDB. A chamada de IA passa
 - APK Release novo gerado com sucesso em 173,2 s; AAB Release novo gerado com sucesso em 29,1 s.
 - Package ID `com.example.travia`, versão `0.4.0`, versionCode `1`, compile/target SDK `36` confirmados com `aapt`.
 - A instalação no AVD ficou pendente nesta etapa porque `emulator-5554` permaneceu `offline` após recuperação controlada do ADB.
+
+## Validação Android após recuperação — 2026-11-25
+
+- O AVD foi inicializado a frio com `-no-snapshot`, sem apagar userdata, e passou de `offline` para `device`.
+- O APK Release novo foi instalado com `Success` e iniciou `com.example.travia/.MainActivity`.
+- Foram acessados Início, Caderno, Calendário, Materiais e menu lateral. A anotação existente foi confirmada após reinício do processo.
+- Não foram observados `FATAL EXCEPTION`, ANR do Travia ou erro Flutter no logcat filtrado.
+- O alerta de inicialização observado foi `System UI isn't responding`, componente do sistema durante o boot; após aguardar, o Travia ficou visível e funcional.

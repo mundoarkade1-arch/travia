@@ -77,4 +77,6 @@ O APK Release existente foi instalado e aberto no AVD `Medium_Phone_API_37.0`. F
 
 ## Build Android recuperado
 
-O bloqueio foi identificado no classpath do `integration_test` usado pelo registrante Android gerado pelo Flutter 3.50.1. A dependência foi declarada explicitamente em `flutter/android/app/build.gradle.kts`. O novo APK Release foi gerado em 173,2 s e o novo AAB Release em 29,1 s. Ambos usam package ID `com.example.travia`, versão `0.4.0` e versionCode `1`. A instalação do novo APK permanece pendente porque o AVD ficou offline no ADB nesta execução.
+O bloqueio foi identificado no classpath do `integration_test` usado pelo registrante Android gerado pelo Flutter 3.50.1. A dependência foi declarada explicitamente em `flutter/android/app/build.gradle.kts`. O novo APK Release foi gerado em 173,2 s e o novo AAB Release em 29,1 s. Ambos usam package ID `com.example.travia`, versão `0.4.0` e versionCode `1`.
+
+O AVD foi posteriormente recuperado por inicialização a frio, sem apagar dados. O APK novo foi instalado e aberto com sucesso; Início, Caderno, Calendário, Materiais, menu lateral e persistência após reinício foram verificados. O workflow de CI está em `.github/workflows/flutter.yml`.

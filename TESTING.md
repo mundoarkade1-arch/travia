@@ -131,3 +131,9 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - `aapt dump badging`: package `com.example.travia`, versão `0.4.0`, versionCode `1`, compile/target SDK `36`.
 - Instalação e abertura do novo APK no AVD: pendentes nesta etapa; `emulator-5554` permaneceu `offline` mesmo após reinicialização controlada do servidor ADB. Não foi declarado como aprovado.
 - Diagnóstico do erro anterior: compilação de `GeneratedPluginRegistrant.java` falhava porque o `integration_test` gerado não estava no classpath release.
+
+## CI GitHub
+
+- Adicionado `.github/workflows/flutter.yml` para executar em pushes da `main` e branches de correção e em pull requests para `main`.
+- O workflow usa Java 17, Flutter 3.50.1 estável, `flutter pub get`, `flutter analyze --no-fatal-infos`, `flutter test` e build APK Release.
+- O workflow ainda aguardará o primeiro resultado remoto após o push; anteriormente não havia checks configurados.

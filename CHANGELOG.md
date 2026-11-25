@@ -90,3 +90,9 @@
 - Corrigido o classpath do módulo `integration_test` no build Android, resolvendo a falha do `GeneratedPluginRegistrant.java`.
 - Gerados novos artefatos APK Release e AAB Release com sucesso.
 - Registradas a versão, o package ID e a pendência de instalação no AVD, que permaneceu offline no ADB.
+
+## Validação e CI — 2026-11-25
+
+- Recuperado o AVD por inicialização a frio sem apagar dados do usuário.
+- Validado o APK novo instalado, com abertura, navegação principal e persistência após reinício.
+- Adicionado workflow GitHub Actions para Flutter Analyze, Flutter Test e APK Release.
