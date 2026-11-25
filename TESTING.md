@@ -102,10 +102,21 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - `npm test` — testes automatizados de migração v4, merge de estados, cifragem, autenticação e conflitos de revisão.
 - API de sincronização exercitada diretamente pelo serviço com senha derivada por scrypt e arquivo cifrado sem texto acadêmico legível.
 
+## Validação Android — 2026-11-25
+
+- AVD `Medium_Phone_API_37.0`: online como `emulator-5554` após reinicialização controlada.
+- APK Release existente: instalação com `adb install -r` concluída com `Success`.
+- Inicialização: `MainActivity` visível; nenhuma exceção fatal ou ANR do Travia observada no logcat filtrado.
+- Fluxos acessados: Início, Graduação, Caderno, Calendário, Materiais e menu lateral com Estudar, Laboratório, Tutor e Configurações.
+- Persistência: anotação de teste salva no Caderno e confirmada após encerrar e reabrir o processo.
+- Offline: painel exibiu `Modo offline ativo`.
+- A regeneração APK/AAB não foi concluída: Gradle ficou sem progresso por aproximadamente quatro minutos e foi interrompido. Os artefatos anteriores permaneceram inalterados.
+- O alerta `System UI isn't responding` foi identificado como componente System UI, não como exceção do Travia, e desapareceu após aguardar.
+
 ## Ainda não executados
 
 - Testes automatizados de navegador, IndexedDB em múltiplos navegadores e acessibilidade formal.
 - Integração real com provedor de IA, pois depende de endpoint e chave fornecidos pelo usuário.
 - OCR de PDF escaneado em navegador completo; requer validação manual com arquivo real selecionado pelo usuário.
-- Build Android/Flutter: há artefatos anteriores; a regeneração e a assinatura de produção ainda dependem do ambiente Android e de keystore local.
+- Regeneração Android/Flutter nesta execução: bloqueada por falta de progresso do Gradle; a assinatura de produção ainda depende de keystore local.
 - Teste de integração HTTPS com provedor remoto, pois não há infraestrutura/credenciais externas configuradas.

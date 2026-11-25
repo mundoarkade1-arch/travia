@@ -76,4 +76,6 @@ O cliente Flutter inicial foi conectado à matriz curricular real e à persistê
 - [x] Estrutura inicial de cliente Flutter e modelos Dart compatíveis.
 - [x] Migrar a UI funcional para Flutter Android.
 - [x] Gerar APK e AAB Release localmente em etapa anterior.
+- [x] Instalar o APK existente e validar abertura, modo offline e persistência básica em AVD.
+- [ ] Regerar APK/AAB Release após investigar o bloqueio de progresso do Gradle.
 - [ ] Assinar e validar artefatos com keystore de produção fornecido.

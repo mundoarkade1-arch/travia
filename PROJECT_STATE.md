@@ -49,3 +49,12 @@ O ambiente atual não possui Flutter, Dart, Android SDK ou ADB. HTML, CSS e Java
 ## Limitações conhecidas
 
 PDFs e imagens podem ser abertos e removidos do IndexedDB. A chamada de IA passa pelo proxy local sem persistir credenciais e o histórico é separado por disciplina. OCR de imagens usa Tesseract.js no servidor local e ML Kit no Flutter; PDFs digitais usam extração com pdfjs-dist. A sincronização está implementada, mas requer configurar uma chave de cifragem e infraestrutura HTTPS; sem isso o modo offline continua sendo o padrão. O build Android sem key.properties usa deliberadamente a assinatura debug para validação local.
+
+## Auditoria Android — 2026-11-25
+
+- O AVD `Medium_Phone_API_37.0` ficou online como `emulator-5554` após reinicialização controlada.
+- O APK Release existente foi instalado e abriu em `com.example.travia/.MainActivity`; não houve exceção fatal nem ANR do aplicativo no logcat filtrado.
+- O painel exibiu modo offline, progresso `24/70`, disciplinas em andamento, agenda e materiais locais. Graduação, Caderno, Calendário, Materiais e menu lateral foram acessados.
+- Uma anotação de validação foi salva no Caderno e permaneceu após encerrar e reabrir o processo.
+- A tentativa de regenerar `assembleRelease` ficou sem progresso por aproximadamente quatro minutos e foi interrompida com segurança. APK/AAB existentes não tiveram seus horários de modificação alterados.
+- OCR Android, assinatura de produção, sincronização remota HTTPS e tutor com provedor real continuam pendentes por dependerem de arquivos, credenciais ou infraestrutura externos.

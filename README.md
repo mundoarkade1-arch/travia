@@ -70,3 +70,7 @@ Abra `http://localhost:4173`. Não há login nem banco remoto; os dados são sal
 - Simuladores de tensão axial, viga biapoiada, resultante de forças, vazão e pressão hidrostática.
 
 Sincronização, SQLite/Drift, calendário recorrente e simuladores adicionais ainda estão no roadmap.
+
+## Validação Android mais recente
+
+O APK Release existente foi instalado e aberto no AVD `Medium_Phone_API_37.0`. Foram verificados o painel offline, a matriz de graduação, Caderno, Calendário, Materiais, menu lateral e persistência de anotação após reinício do processo. A regeneração do build Release ficou pendente porque o Gradle não apresentou progresso dentro do limite operacional; a assinatura de produção requer um keystore fornecido pelo proprietário.

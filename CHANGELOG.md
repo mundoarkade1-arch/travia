@@ -79,3 +79,8 @@
 - Cliente Flutter inicial passou a carregar a matriz curricular real, sem disciplinas genéricas.
 - Persistência local Flutter, backup/restauração JSON e conclusão de tarefas foram reforçados.
 - Validação de caminho do servidor passou a rejeitar travessia de diretório de forma independente do sistema operacional.
+
+## 0.4.1 — 2026-11-25
+
+- Validado no AVD o APK Release existente, com abertura, modo offline, navegação principal e persistência do Caderno após reinício.
+- Registrado que a tentativa de regenerar o build Release ficou sem progresso no Gradle e foi interrompida; nenhum artefato anterior foi substituído.
