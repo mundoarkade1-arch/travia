@@ -118,5 +118,23 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - Testes automatizados de navegador, IndexedDB em múltiplos navegadores e acessibilidade formal.
 - Integração real com provedor de IA, pois depende de endpoint e chave fornecidos pelo usuário.
 - OCR de PDF escaneado em navegador completo; requer validação manual com arquivo real selecionado pelo usuário.
-- Regeneração Android/Flutter nesta execução: bloqueada por falta de progresso do Gradle; a assinatura de produção ainda depende de keystore local.
+- Regeneração Android/Flutter: concluída após a correção do classpath; a assinatura de produção ainda depende de keystore local.
 - Teste de integração HTTPS com provedor remoto, pois não há infraestrutura/credenciais externas configuradas.
+
+## Recuperação do build Android — 2026-11-25
+
+- `flutter analyze --no-fatal-infos`: passou; 10 avisos informativos existentes.
+- `flutter test`: passou; 1 teste aprovado.
+- `flutter build apk --release --no-pub`: passou em 173,2 s; novo APK gerado.
+- `flutter build appbundle --release --no-pub`: passou em 29,1 s; novo AAB gerado.
+- Integridade básica: APK e AAB existem, possuem tamanho não nulo e foram gerados após a correção.
+- `aapt dump badging`: package `com.example.travia`, versão `0.4.0`, versionCode `1`, compile/target SDK `36`.
+- Instalação e abertura do novo APK no AVD: aprovadas após inicialização a frio; `emulator-5554` ficou `device`, a instalação retornou `Success` e `MainActivity` foi retomada.
+- Diagnóstico do erro anterior: compilação de `GeneratedPluginRegistrant.java` falhava porque o `integration_test` gerado não estava no classpath release.
+
+## CI GitHub
+
+- Adicionado `.github/workflows/flutter.yml` para executar em pushes da `main` e em pull requests para `main`.
+- O workflow usa Java 17, Flutter 3.50.1 estável, `flutter pub get`, `flutter analyze --no-fatal-infos`, `flutter test` e build APK Release.
+- O workflow cancela execuções superseded do mesmo PR e possui timeout de 15 minutos para não deixar builds remotos indefinidos.
+- Os primeiros workflows desta configuração passaram por analyze e testes; o build APK ainda estava em andamento durante esta execução.

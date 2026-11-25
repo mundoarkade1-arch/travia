@@ -77,5 +77,9 @@ O cliente Flutter inicial foi conectado à matriz curricular real e à persistê
 - [x] Migrar a UI funcional para Flutter Android.
 - [x] Gerar APK e AAB Release localmente em etapa anterior.
 - [x] Instalar o APK existente e validar abertura, modo offline e persistência básica em AVD.
-- [ ] Regerar APK/AAB Release após investigar o bloqueio de progresso do Gradle.
+- [x] Regerar APK/AAB Release após investigar o bloqueio de progresso do Gradle.
+- [x] Corrigir o classpath do `integration_test` e gerar novo APK/AAB Release.
+- [x] Instalar e validar o novo APK após o AVD voltar a ficar online no ADB.
+- [x] Recuperar o AVD com inicialização a frio e validar instalação, abertura, navegação e persistência do novo APK.
+- [x] Configurar CI GitHub para análise, testes e APK Release.
 - [ ] Assinar e validar artefatos com keystore de produção fornecido.
