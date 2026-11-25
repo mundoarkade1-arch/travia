@@ -63,6 +63,15 @@ android {
     }
 }
 
+// Flutter 3.50.1 inclui o integration_test no registrante Android gerado,
+// embora o plugin permaneça em dev_dependencies e não entre no classpath do
+// aplicativo. Mantemos a dependência explícita para que o registrante gerado
+// compile em todos os variants; o plugin não contém credenciais nem código da
+// aplicação.
+dependencies {
+    implementation(project(":integration_test"))
+}
+
 kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17

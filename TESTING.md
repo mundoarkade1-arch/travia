@@ -120,3 +120,14 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - OCR de PDF escaneado em navegador completo; requer validação manual com arquivo real selecionado pelo usuário.
 - Regeneração Android/Flutter nesta execução: bloqueada por falta de progresso do Gradle; a assinatura de produção ainda depende de keystore local.
 - Teste de integração HTTPS com provedor remoto, pois não há infraestrutura/credenciais externas configuradas.
+
+## Recuperação do build Android — 2026-11-25
+
+- `flutter analyze --no-fatal-infos`: passou; 10 avisos informativos existentes.
+- `flutter test`: passou; 1 teste aprovado.
+- `flutter build apk --release --no-pub`: passou em 173,2 s; novo APK gerado.
+- `flutter build appbundle --release --no-pub`: passou em 29,1 s; novo AAB gerado.
+- Integridade básica: APK e AAB existem, possuem tamanho não nulo e foram gerados após a correção.
+- `aapt dump badging`: package `com.example.travia`, versão `0.4.0`, versionCode `1`, compile/target SDK `36`.
+- Instalação e abertura do novo APK no AVD: pendentes nesta etapa; `emulator-5554` permaneceu `offline` mesmo após reinicialização controlada do servidor ADB. Não foi declarado como aprovado.
+- Diagnóstico do erro anterior: compilação de `GeneratedPluginRegistrant.java` falhava porque o `integration_test` gerado não estava no classpath release.

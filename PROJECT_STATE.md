@@ -58,3 +58,11 @@ PDFs e imagens podem ser abertos e removidos do IndexedDB. A chamada de IA passa
 - Uma anotação de validação foi salva no Caderno e permaneceu após encerrar e reabrir o processo.
 - A tentativa de regenerar `assembleRelease` ficou sem progresso por aproximadamente quatro minutos e foi interrompida com segurança. APK/AAB existentes não tiveram seus horários de modificação alterados.
 - OCR Android, assinatura de produção, sincronização remota HTTPS e tutor com provedor real continuam pendentes por dependerem de arquivos, credenciais ou infraestrutura externos.
+
+## Recuperação do build Android — 2026-11-25
+
+- Causa identificada: o registrante Android gerado pelo Flutter 3.50.1 referenciava `dev.flutter.plugins.integration_test.IntegrationTestPlugin`, mas o módulo `integration_test` não estava no classpath de compilação do aplicativo. O log do Gradle terminou com erro de compilação em `GeneratedPluginRegistrant.java`; não era um loop de daemon.
+- Correção mínima: [flutter/android/app/build.gradle.kts](flutter/android/app/build.gradle.kts) passou a declarar `implementation(project(":integration_test"))`, sem remover dependências ou alterar o código do aplicativo.
+- APK Release novo gerado com sucesso em 173,2 s; AAB Release novo gerado com sucesso em 29,1 s.
+- Package ID `com.example.travia`, versão `0.4.0`, versionCode `1`, compile/target SDK `36` confirmados com `aapt`.
+- A instalação no AVD ficou pendente nesta etapa porque `emulator-5554` permaneceu `offline` após recuperação controlada do ADB.
