@@ -9,6 +9,7 @@
 - `flutter build appbundle --release --no-pub`: passou em 66,2 s; AAB gerado com 70,5 MB.
 - `aapt dump badging`: package `com.example.travia`, versão `0.4.0`, versionCode `1`, compile/target SDK `36`.
 - Instalação do APK novo no AVD: `Success`; `MainActivity` iniciou. O fluxo OCR não foi aprovado porque o `System UI` do AVD exibiu indisponibilidade e deixou de aceitar toques após duas inicializações controladas. Não houve crash fatal do Travia observado no logcat filtrado.
+- CI do PR: a primeira execução falhou somente no lint interno de `image_picker_android` (`ExifDataCopier.java`/`JavaDocParser`); a exceção foi limitada à tarefa vital dessa dependência e o workflow foi reenviado.
 
 ### Limitações do OCR
 

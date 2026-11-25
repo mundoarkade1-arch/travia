@@ -8,6 +8,7 @@
 - Adicionados seleção de páginas, indicador de progresso, limite de 50 MB e limpeza de imagens temporárias.
 - Materiais importados passaram a ser copiados para o armazenamento privado do aplicativo.
 - Build APK/AAB passou; a validação interativa OCR no AVD ficou pendente por indisponibilidade do System UI.
+- Corrigida a falha de CI causada pelo erro interno do Lint em `image_picker_android`, limitando a exceção à tarefa `lintVitalAnalyzeRelease` dessa dependência.
 
 ## Auditoria autônoma final — 2026-11-25
 

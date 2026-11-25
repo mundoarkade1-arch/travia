@@ -10,6 +10,8 @@ Dependências adicionadas: `image_picker`, `path_provider`, `pdfx` e `syncfusion
 
 Ainda não aprovado: OCR real de imagem/PDF no AVD. O APK iniciou, mas o `System UI` apresentou alerta de indisponibilidade e não aceitou interação confiável após duas inicializações controladas. Não há evidência suficiente para marcar o fluxo Android como concluído.
 
+O CI encontrou e foi corrigido um erro interno do Android Lint no módulo `image_picker_android`, durante `lintVitalAnalyzeRelease` de `ExifDataCopier.java`. A configuração desabilita somente essa tarefa específica da dependência; a análise do aplicativo, os testes e o build release continuam obrigatórios.
+
 ## Auditoria autônoma final — 2026-11-25
 
 Foram corrigidos dois pontos de consistência: o estado web agora é normalizado pelo migrador v4 na inicialização e na restauração, e o cliente web tenta mesclar o estado remoto e reenviar uma vez após conflito HTTP 409. O `package-lock.json` foi alinhado à versão 0.4.0 do `package.json`.

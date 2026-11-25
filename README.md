@@ -8,6 +8,8 @@ PDFs com camada de texto usam `syncfusion_flutter_pdf`. PDFs escaneados usam `pd
 
 A disponibilidade offline do OCR depende do modelo Latin fornecido pelo ML Kit no APK; nenhuma API paga ou credencial é usada. A execução completa do fluxo OCR no AVD permanece pendente nesta etapa porque o `System UI` do emulador voltou a travar e não aceitou toques. A assinatura de produção continua dependendo do keystore do proprietário.
 
+O workflow mantém o lint do aplicativo ativo. Há uma exceção somente para `lintVitalAnalyzeRelease` do `image_picker_android`, cuja análise de `ExifDataCopier.java` falha com um erro interno do Lint no runner atual; a exceção não desativa `flutter analyze`, testes nem o lint do código do aplicativo.
+
 ## Auditoria final — 25/11/2026
 
 As correções finais mantêm o estado no esquema v4 durante a inicialização e a restauração de backups, atualizam o `package-lock.json` para a versão 0.4.0 e fazem o cliente web mesclar o estado remoto e tentar um único reenvio após conflito de revisão.
