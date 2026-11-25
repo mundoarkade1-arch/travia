@@ -1,5 +1,14 @@
 # Changelog
 
+## OCR Android — 2026-11-25
+
+- Adicionada captura por câmera, galeria e importação de arquivos no módulo Materiais.
+- Adicionado OCR local de imagens com ML Kit Latin, incluindo edição, cópia e persistência do resultado.
+- Adicionada extração de PDF textual e OCR de PDF escaneado por renderização controlada página a página.
+- Adicionados seleção de páginas, indicador de progresso, limite de 50 MB e limpeza de imagens temporárias.
+- Materiais importados passaram a ser copiados para o armazenamento privado do aplicativo.
+- Build APK/AAB passou; a validação interativa OCR no AVD ficou pendente por indisponibilidade do System UI.
+
 ## Auditoria autônoma final — 2026-11-25
 
 - Corrigida a normalização do estado web para persistir e restaurar o esquema v4.

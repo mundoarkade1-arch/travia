@@ -1,5 +1,14 @@
 # Roadmap
 
+## OCR Android — 2026-11-25
+
+- [x] Implementar importação por câmera, galeria e arquivos.
+- [x] Implementar OCR local de imagens em script Latin, compatível com português.
+- [x] Implementar edição, cópia e persistência do texto OCR por material.
+- [x] Implementar extração de PDF textual e fallback de PDF escaneado por página.
+- [x] Implementar seleção de páginas, progresso, limite de tamanho e limpeza de temporários.
+- [ ] Validar o fluxo completo de OCR com imagem e PDFs reais em AVD ou dispositivo estável.
+
 ## Auditoria autônoma final — 2026-11-25
 
 - [x] Normalizar restauração e inicialização do estado web para o esquema v4.

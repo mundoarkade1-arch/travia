@@ -1,5 +1,15 @@
 # Estado do projeto
 
+## OCR Android — implementação 2026-11-25
+
+Implementado no módulo Materiais: captura por câmera, seleção pela galeria/arquivos, pré-visualização de imagens, OCR de imagens em português pelo ML Kit Latin, edição, cópia e persistência do texto reconhecido. O texto é salvo em `materials[].ocrText`, com páginas, origem e data, mantendo compatibilidade com estados v4 anteriores.
+
+PDFs selecionáveis são extraídos página a página com `syncfusion_flutter_pdf`. PDFs escaneados são renderizados página a página com `pdfx`, processados pelo ML Kit e removidos do diretório temporário após cada página. Há seleção de páginas, progresso, tratamento de arquivo vazio/inválido e limite de 50 MB. A câmera/galeria copia o arquivo para o diretório privado do aplicativo para sobreviver ao reinício.
+
+Dependências adicionadas: `image_picker`, `path_provider`, `pdfx` e `syncfusion_flutter_pdf`. O AndroidManifest declara somente a permissão de câmera necessária. O build release passou; o aviso atual do `pdfx` é sobre migração futura do Kotlin Gradle Plugin, sem falha no ambiente atual.
+
+Ainda não aprovado: OCR real de imagem/PDF no AVD. O APK iniciou, mas o `System UI` apresentou alerta de indisponibilidade e não aceitou interação confiável após duas inicializações controladas. Não há evidência suficiente para marcar o fluxo Android como concluído.
+
 ## Auditoria autônoma final — 2026-11-25
 
 Foram corrigidos dois pontos de consistência: o estado web agora é normalizado pelo migrador v4 na inicialização e na restauração, e o cliente web tenta mesclar o estado remoto e reenviar uma vez após conflito HTTP 409. O `package-lock.json` foi alinhado à versão 0.4.0 do `package.json`.

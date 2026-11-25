@@ -1,5 +1,19 @@
 # Testes
 
+## OCR Android — 2026-11-25
+
+- `flutter pub get`: passou após adicionar `image_picker`, `path_provider`, `pdfx` e `syncfusion_flutter_pdf`.
+- `flutter analyze --no-fatal-infos`: passou sem erros; permaneceram 9 informações de estilo/depreciação.
+- `flutter test`: passou 5/5, incluindo seleção de páginas, serialização e arquivo de imagem vazio/inexistente.
+- `flutter build apk --release --no-pub`: passou em 360,6 s; APK gerado com 88,9 MB.
+- `flutter build appbundle --release --no-pub`: passou em 66,2 s; AAB gerado com 70,5 MB.
+- `aapt dump badging`: package `com.example.travia`, versão `0.4.0`, versionCode `1`, compile/target SDK `36`.
+- Instalação do APK novo no AVD: `Success`; `MainActivity` iniciou. O fluxo OCR não foi aprovado porque o `System UI` do AVD exibiu indisponibilidade e deixou de aceitar toques após duas inicializações controladas. Não houve crash fatal do Travia observado no logcat filtrado.
+
+### Limitações do OCR
+
+O ML Kit Latin é local no APK e não usa credenciais. A disponibilidade efetiva do modelo deve ser confirmada no dispositivo-alvo. PDFs grandes acima de 50 MB são recusados; PDFs escaneados são processados por páginas selecionadas, com renderização temporária de uma página por vez. A validação com imagem e PDFs reais permanece pendente até haver um AVD/dispositivo que aceite interação.
+
 ## Auditoria autônoma final — 2026-11-25
 
 - `npm.cmd test`: passou 4/4.

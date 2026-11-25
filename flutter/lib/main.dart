@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/curriculum.dart';
+import 'core/ocr_service.dart';
 import 'core/sync_contract.dart';
 import 'core/travia_model.dart';
 
@@ -33,6 +34,12 @@ class _TraviaAppState extends State<TraviaApp> {
   int syncRevision = 0;
   Timer? focusTimer;
   int focusSeconds = 0;
+  bool ocrProcessing = false;
+  int ocrCurrent = 0;
+  int ocrTotal = 1;
+  String ocrMessage = '';
+  final imagePicker = ImagePicker();
+  final ocrService = OcrService();
   final note = TextEditingController();
   final question = TextEditingController();
   final endpoint = TextEditingController();
@@ -426,57 +433,252 @@ class _TraviaAppState extends State<TraviaApp> {
 
   Future<void> _importMaterial() async {
     final files = await FilePicker.pickFiles(
-        type: FileType.custom, allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg']);
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg']);
     final file = files.isEmpty ? null : files.single;
     if (file == null || file.path == null) return;
     data.materials.add({
       'id': DateTime.now().millisecondsSinceEpoch,
       'name': file.name,
       'size': await file.length(),
-      'path': file.path,
+      'path': await _copyMaterialFile(file.path!, file.name),
       'updatedAt': DateTime.now().toIso8601String()
     });
     await _save();
   }
 
-  Future<void> _ocr(String path) async {
-    final recognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    try {
-      final result =
-          await recognizer.processImage(InputImage.fromFilePath(path));
-      if (mounted)
-        showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-                title: const Text('Texto reconhecido'),
-                content: SingleChildScrollView(child: Text(result.text))));
-    } catch (_) {
-      _message(
-          'Não foi possível reconhecer este arquivo. OCR de PDF ainda depende da versão web.');
-    } finally {
-      await recognizer.close();
-    }
+  Future<String> _copyMaterialFile(String sourcePath, String name) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final safeName = name.replaceAll(RegExp(r'[^a-zA-Z0-9._-]'), '_');
+    final target = File(
+        '${directory.path}${Platform.pathSeparator}${DateTime.now().microsecondsSinceEpoch}_$safeName');
+    await File(sourcePath).copy(target.path);
+    return target.path;
   }
 
   Widget _materials() => ListView(padding: const EdgeInsets.all(16), children: [
         FilledButton.icon(
-            onPressed: _importMaterial,
+            onPressed: _showMaterialImportMenu,
             icon: const Icon(Icons.upload_file),
             label: const Text('Importar PDF ou imagem')),
+        if (ocrProcessing) ...[
+          const SizedBox(height: 16),
+          LinearProgressIndicator(value: ocrCurrent / ocrTotal),
+          const SizedBox(height: 6),
+          Text(ocrMessage, textAlign: TextAlign.center),
+        ],
         const SizedBox(height: 12),
         for (final material in data.materials)
           Card(
               child: ListTile(
                   title: Text(material['name'].toString()),
-                  subtitle:
-                      Text('${material['size'] ?? 0} bytes · arquivo local'),
+                  subtitle: Text(
+                      '${material['size'] ?? 0} bytes · arquivo local${material['ocrText'] != null ? ' · OCR salvo' : ''}'),
+                  onTap: () => _previewMaterial(material),
                   trailing: material['path'].toString().isEmpty
                       ? null
                       : IconButton(
                           icon: const Icon(Icons.text_snippet),
-                          tooltip: 'OCR da imagem',
-                          onPressed: () => _ocr(material['path'].toString()))))
+                          tooltip: 'Executar OCR',
+                          onPressed:
+                              ocrProcessing ? null : () => _runOcr(material))))
       ]);
+
+  Future<void> _showMaterialImportMenu() async {
+    final choice = await showModalBottomSheet<String>(
+        context: context,
+        builder: (sheetContext) => SafeArea(
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                ListTile(
+                    leading: const Icon(Icons.camera_alt),
+                    title: const Text('Capturar com câmera'),
+                    onTap: () => Navigator.pop(sheetContext, 'camera')),
+                ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: const Text('Escolher imagem da galeria'),
+                    onTap: () => Navigator.pop(sheetContext, 'gallery')),
+                ListTile(
+                    leading: const Icon(Icons.picture_as_pdf),
+                    title: const Text('Escolher PDF ou imagem'),
+                    onTap: () => Navigator.pop(sheetContext, 'file')),
+              ]),
+            ));
+    if (choice == 'camera') {
+      await _importImage(ImageSource.camera);
+    } else if (choice == 'gallery') {
+      await _importImage(ImageSource.gallery);
+    } else if (choice == 'file') {
+      await _importMaterial();
+    }
+  }
+
+  Future<void> _importImage(ImageSource source) async {
+    try {
+      final image = await imagePicker.pickImage(
+          source: source, maxWidth: 2000, maxHeight: 2000, imageQuality: 88);
+      if (image == null) return;
+      data.materials.add({
+        'id': DateTime.now().millisecondsSinceEpoch,
+        'name': image.name,
+        'size': await File(image.path).length(),
+        'path': await _copyMaterialFile(image.path, image.name),
+        'updatedAt': DateTime.now().toIso8601String()
+      });
+      await _save();
+      _message('Imagem salva somente neste dispositivo.');
+    } catch (_) {
+      _message('Não foi possível abrir a câmera ou galeria.');
+    }
+  }
+
+  void _setOcrProgress(int current, int total, String message) {
+    if (!mounted) return;
+    setState(() {
+      ocrCurrent = current;
+      ocrTotal = total == 0 ? 1 : total;
+      ocrMessage = message;
+    });
+  }
+
+  Future<OcrPageSelection?> _choosePdfPages(int count) async {
+    final controller = TextEditingController(text: '1-$count');
+    final selection = await showDialog<OcrPageSelection>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+              title: Text('Selecionar páginas ($count)'),
+              content: TextField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                      labelText: 'Páginas', hintText: 'Ex.: 1-3, 5'),
+                  keyboardType: TextInputType.text),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: const Text('Cancelar')),
+                FilledButton(
+                    onPressed: () {
+                      final result =
+                          OcrPageSelection.parse(controller.text, count);
+                      if (result.pages.isNotEmpty) {
+                        Navigator.pop(dialogContext, result);
+                      }
+                    },
+                    child: const Text('Continuar'))
+              ],
+            ));
+    controller.dispose();
+    return selection;
+  }
+
+  Future<void> _runOcr(Map<String, dynamic> material) async {
+    if (ocrProcessing) return;
+    final path = material['path']?.toString() ?? '';
+    final name = material['name']?.toString().toLowerCase() ?? '';
+    if (path.isEmpty) return;
+    setState(() {
+      ocrProcessing = true;
+      ocrCurrent = 0;
+      ocrTotal = 1;
+      ocrMessage = 'Preparando OCR...';
+    });
+    try {
+      final OcrDocumentResult result;
+      if (name.endsWith('.pdf')) {
+        final pageCount = await ocrService.pdfPageCount(path);
+        final selection = await _choosePdfPages(pageCount);
+        if (selection == null) return;
+        result = await ocrService.recognizePdf(path,
+            selection: selection, onProgress: _setOcrProgress);
+      } else {
+        result =
+            await ocrService.recognizeImage(path, onProgress: _setOcrProgress);
+      }
+      material['ocrText'] = result.text;
+      material['ocrPages'] = result.pages.map((page) => page.toJson()).toList();
+      material['ocrSource'] = result.source;
+      material['ocrUpdatedAt'] = DateTime.now().toIso8601String();
+      material['updatedAt'] = DateTime.now().toIso8601String();
+      await _save();
+      if (mounted) await _showOcrResult(material);
+    } on FormatException catch (error) {
+      _message(error.message);
+    } catch (_) {
+      _message(
+          'Não foi possível processar este arquivo. Ele pode estar protegido, inválido ou grande demais.');
+    } finally {
+      if (mounted) setState(() => ocrProcessing = false);
+    }
+  }
+
+  Future<void> _showOcrResult(Map<String, dynamic> material) async {
+    final controller = TextEditingController(
+        text: material['ocrText']?.toString() ?? 'Nenhum texto reconhecido.');
+    await showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+              title: Text('OCR · ${material['name']}'),
+              content: SizedBox(
+                  width: 560,
+                  child: TextField(
+                      controller: controller,
+                      minLines: 8,
+                      maxLines: 16,
+                      decoration: const InputDecoration(
+                          labelText: 'Texto extraído',
+                          border: OutlineInputBorder()))),
+              actions: [
+                TextButton.icon(
+                    onPressed: () async {
+                      await Clipboard.setData(
+                          ClipboardData(text: controller.text));
+                      if (dialogContext.mounted) {
+                        ScaffoldMessenger.of(dialogContext).showSnackBar(
+                            const SnackBar(content: Text('Texto copiado.')));
+                      }
+                    },
+                    icon: const Icon(Icons.copy),
+                    label: const Text('Copiar')),
+                FilledButton(
+                    onPressed: () async {
+                      material['ocrText'] = controller.text;
+                      material['ocrUpdatedAt'] =
+                          DateTime.now().toIso8601String();
+                      material['updatedAt'] = DateTime.now().toIso8601String();
+                      await _save();
+                      if (dialogContext.mounted) Navigator.pop(dialogContext);
+                      _message('Resultado do OCR salvo no material.');
+                    },
+                    child: const Text('Salvar'))
+              ],
+            ));
+    controller.dispose();
+  }
+
+  Future<void> _previewMaterial(Map<String, dynamic> material) async {
+    final path = material['path']?.toString() ?? '';
+    final name = material['name']?.toString().toLowerCase() ?? '';
+    if (material['ocrText'] != null) {
+      await _showOcrResult(material);
+      return;
+    }
+    if (name.endsWith('.pdf')) {
+      _message(
+          'PDF selecionado: escolha Executar OCR para selecionar as páginas.');
+      return;
+    }
+    if (!mounted || path.isEmpty) return;
+    await showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text(material['name'].toString()),
+              content: Image.file(File(path), fit: BoxFit.contain),
+              actions: [
+                FilledButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Fechar'))
+              ],
+            ));
+  }
 
   void _toggleFocus() {
     if (focusTimer != null) {

@@ -1,5 +1,13 @@
 # Travia
 
+## OCR Android — implementação 25/11/2026
+
+O cliente Flutter agora oferece câmera, galeria e seletor de arquivos para imagens e PDFs. Imagens usam ML Kit Text Recognition no script Latin, que cobre português brasileiro; o processamento ocorre no dispositivo e não envia documentos para servidores. O resultado pode ser revisado, editado, copiado e salvo junto aos metadados do material.
+
+PDFs com camada de texto usam `syncfusion_flutter_pdf`. PDFs escaneados usam `pdfx` para renderizar uma página por vez e o mesmo OCR local, com seleção de páginas, progresso e limite de 50 MB para evitar consumo excessivo de memória. Materiais importados são copiados para o diretório privado do aplicativo; o backup exporta metadados e texto OCR, não os binários.
+
+A disponibilidade offline do OCR depende do modelo Latin fornecido pelo ML Kit no APK; nenhuma API paga ou credencial é usada. A execução completa do fluxo OCR no AVD permanece pendente nesta etapa porque o `System UI` do emulador voltou a travar e não aceitou toques. A assinatura de produção continua dependendo do keystore do proprietário.
+
 ## Auditoria final — 25/11/2026
 
 As correções finais mantêm o estado no esquema v4 durante a inicialização e a restauração de backups, atualizam o `package-lock.json` para a versão 0.4.0 e fazem o cliente web mesclar o estado remoto e tentar um único reenvio após conflito de revisão.
