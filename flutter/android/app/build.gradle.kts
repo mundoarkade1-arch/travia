@@ -16,6 +16,17 @@ if (keystorePropertiesFile.isFile) {
 val releaseSigningKeys = listOf("storePassword", "keyPassword", "keyAlias", "storeFile")
 val hasReleaseSigning = keystorePropertiesFile.isFile &&
     releaseSigningKeys.all { key -> !keystoreProperties.getProperty(key).isNullOrBlank() }
+val allowDebugSigning = providers.gradleProperty("allowDebugSigning")
+    .map(String::toBoolean)
+    .orElse(false)
+    .get()
+
+if (!hasReleaseSigning && !allowDebugSigning) {
+    throw GradleException(
+        "Release signing is not configured. Provide android/key.properties " +
+            "or explicitly use -PallowDebugSigning=true for non-production validation."
+    )
+}
 
 android {
     namespace = "com.example.travia"
@@ -54,7 +65,7 @@ android {
                     storeFile = file(keystoreProperties.getProperty("storeFile"))
                     storePassword = keystoreProperties.getProperty("storePassword")
                 }
-            } else {
+            } else if (allowDebugSigning) {
                 signingConfig = signingConfigs.getByName("debug")
             }
             isMinifyEnabled = false

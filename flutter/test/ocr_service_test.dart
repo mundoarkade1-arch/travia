@@ -30,4 +30,12 @@ void main() {
     addTearDown(() => file.delete().catchError((_) => file));
     expect(service.recognizeImage(file.path), throwsA(isA<FormatException>()));
   });
+
+  test('recusa arquivo que não é PDF antes de abrir o parser', () async {
+    final service = OcrService();
+    final file = File('${Directory.systemTemp.path}/travia-invalid-ocr.pdf');
+    await file.writeAsString('isto não é um pdf');
+    addTearDown(() => file.delete().catchError((_) => file));
+    expect(service.pdfPageCount(file.path), throwsA(isA<FormatException>()));
+  });
 }

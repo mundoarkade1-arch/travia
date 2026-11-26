@@ -1,10 +1,14 @@
 # Estado do projeto
 
+## Auditoria de preparação para produção — 26/11/2026
+
+A configuração Android agora falha sem `key.properties`, impedindo fallback silencioso para debug. O CI autoriza debug somente por variável explícita para manter builds de validação enquanto não há keystore de produção. O OCR rejeita PDFs que não possuem cabeçalho válido, excedem 50 MiB ou não produzem texto reconhecido. Detalhes e pendências estão em [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md).
+
 ## Auditoria de pré-release — 26/11/2026
 
-O estado integrado está na `main` em `9c16596`, com working tree limpo e `origin/main` sincronizada. `npm.cmd test` (4/4), verificações de sintaxe JavaScript, `flutter test` (5/5), `flutter analyze --no-fatal-infos` e `npm.cmd audit --omit=dev --audit-level=high` passaram; a análise Flutter mantém apenas 9 informações de estilo/depreciação. O workflow de Android foi reforçado para compilar e publicar APK e AAB Release como artefatos do CI.
+O estado integrado estava na `main` em `31494c4` antes desta branch de preparação. `npm.cmd test` (4/4), verificações de sintaxe JavaScript, `flutter test` (agora 6 testes), `flutter analyze --no-fatal-infos` e `npm.cmd audit --omit=dev --audit-level=high` passaram; a análise Flutter mantém 9 informações de estilo/depreciação. O workflow de Android compila e publica APK e AAB de validação com autorização explícita de debug.
 
-Nenhum segredo ou keystore foi criado. O build sem `key.properties` continua usando assinatura debug. Permanecem pendentes somente validações que dependem de amostras, hardware ou infraestrutura externos, especialmente PDF escaneado/protegido, tutor remoto, HTTPS e assinatura de produção. A captura efetiva da câmera foi validada no dispositivo físico autorizado.
+Nenhum segredo ou keystore foi criado. O build sem `key.properties` falha deliberadamente; a assinatura debug só é usada com autorização explícita de validação. Permanecem pendentes somente validações que dependem de amostras, hardware ou infraestrutura externos, especialmente PDF escaneado/protegido, tutor remoto, HTTPS e assinatura de produção. A captura efetiva da câmera foi validada no dispositivo físico autorizado.
 
 ## Status atual - 26/11/2026
 
@@ -75,7 +79,7 @@ Versão web 0.4 funcional, com OCR/PDF e histórico de tutor por disciplina. O n
 
 ## Decisões
 
-O ambiente atual não possui Flutter, Dart, Android SDK ou ADB. HTML, CSS e JavaScript nativos permitem execução imediata em web. O estado migra até a versão 4; arquivos binários usam IndexedDB e metadados ficam no estado exportável. O servidor de sincronização opcional usa scrypt, tokens de sessão, revisão otimista e AES-256-GCM em arquivos fora do repositório.
+HTML, CSS e JavaScript nativos permitem execução imediata em web; Flutter, Android SDK e ADB estão disponíveis no ambiente desta auditoria. O estado migra até a versão 4; arquivos binários usam IndexedDB e metadados ficam no estado exportável. O servidor de sincronização opcional usa scrypt, tokens de sessão, revisão otimista e AES-256-GCM em arquivos fora do repositório.
 
 ## Correção de estabilidade do OCR — 2026-11-26
 

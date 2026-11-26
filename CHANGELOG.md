@@ -1,5 +1,12 @@
 # Changelog
 
+## Preparação para produção — 26/11/2026
+
+- Impedido o fallback silencioso de assinatura debug em builds Release.
+- Mantida autorização explícita de debug apenas no pipeline de validação sem Secrets de produção.
+- Adicionada validação de cabeçalho, tamanho e resultado do OCR de PDFs.
+- Adicionada a documentação [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md).
+
 O registro mais recente da PR #2 corresponde ao commit publicado em `feat/android-ocr`; entradas abaixo sao historicas e nao substituem a validacao final do dispositivo fisico.
 
 ## Auditoria de pré-release — 2026-11-26

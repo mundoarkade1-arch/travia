@@ -1,11 +1,18 @@
 # Testes
 
+## Preparação para produção — 26/11/2026
+
+- A ausência de `flutter/android/key.properties` deve fazer um build Release falhar claramente.
+- Builds locais de validação podem usar `ORG_GRADLE_PROJECT_allowDebugSigning=true`; isso não valida assinatura de produção.
+- PDFs vazios, que não começam com `%PDF-`, acima de 50 MiB e sem texto reconhecido devem ser rejeitados.
+- A validação com PDF escaneado, protegido ou corrompido real continua pendente até haver amostras apropriadas.
+
 ## Auditoria de pré-release — 26/11/2026
 
 - `npm.cmd test`: 4/4 aprovados.
 - `node --check app.js` e `node --check server.mjs`: aprovados.
 - `npm.cmd audit --omit=dev --audit-level=high`: 0 vulnerabilidades.
-- `flutter test`: 5/5 aprovados.
+- `flutter test`: 6/6 aprovados.
 - `flutter analyze --no-fatal-infos`: aprovado sem erros; 9 informações de estilo/depreciação.
 - CI da PR de pré-release: análise, testes, APK Release, AAB Release e upload dos artefatos aprovados.
 - As evidências físicas estão separadas das validações automatizadas; esta etapa instalou o APK apenas com `adb install -r`, sem limpeza de dados.

@@ -41,10 +41,44 @@ jobs:
         run: flutter analyze --no-fatal-infos
       - name: Run Flutter tests
         run: flutter test
+      - name: Configure Android signing
+        shell: bash
+        env:
+          TRAVIA_KEYSTORE_BASE64: ${{ secrets.TRAVIA_KEYSTORE_BASE64 }}
+          TRAVIA_STORE_PASSWORD: ${{ secrets.TRAVIA_STORE_PASSWORD }}
+          TRAVIA_KEY_PASSWORD: ${{ secrets.TRAVIA_KEY_PASSWORD }}
+          TRAVIA_KEY_ALIAS: ${{ secrets.TRAVIA_KEY_ALIAS }}
+        run: |
+          if [ -n "${TRAVIA_KEYSTORE_BASE64:-}" ]; then
+            printf '%s' "$TRAVIA_KEYSTORE_BASE64" | base64 --decode > android/travia-upload-key.jks
+            cat > android/key.properties <<EOF
+          storePassword=$TRAVIA_STORE_PASSWORD
+          keyPassword=$TRAVIA_KEY_PASSWORD
+          keyAlias=$TRAVIA_KEY_ALIAS
+          storeFile=travia-upload-key.jks
+          EOF
+            echo "Production signing configured from GitHub Secrets."
+          else
+            echo "Production signing Secrets are absent; enabling explicit debug signing for validation artifacts."
+            echo "allowDebugSigning=true" >> android/gradle.properties
+          fi
       - name: Build APK Release
         run: flutter build apk --release --no-pub
       - name: Build AAB Release
         run: flutter build appbundle --release --no-pub
+      - name: Verify Android signatures
+        shell: bash
+        env:
+          TRAVIA_KEYSTORE_BASE64: ${{ secrets.TRAVIA_KEYSTORE_BASE64 }}
+        run: |
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -n 1)
+          "$APKSIGNER" verify --verbose build/app/outputs/flutter-apk/app-release.apk
+          if [ -n "${TRAVIA_KEYSTORE_BASE64:-}" ]; then
+            jarsigner -verify -strict build/app/outputs/bundle/release/app-release.aab
+          else
+            jarsigner -verify build/app/outputs/bundle/release/app-release.aab
+            echo "AAB verification completed with the expected debug/self-signed certificate warning."
+          fi
       - name: Upload Android artifacts
         uses: actions/upload-artifact@v7
         with:

@@ -11,7 +11,7 @@ async function readBody(req, limit=1024*1024){let chunks=[],size=0;for await(con
 function json(res,status,payload){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(payload))}
 function bearer(req){const value=req.headers.authorization||'';return value.startsWith('Bearer ')?value.slice(7):''}
 function decodeDataUrl(value){const match=/^data:([^;,]+)?(;base64)?,(.*)$/s.exec(value||'');if(!match)throw new Error('invalid_data_url');return {mime:match[1]||'application/octet-stream',buffer:Buffer.from(decodeURIComponent(match[3]),match[2]?'base64':'utf8')}}
-async function extractPdfText(buffer){const pdfjs=await import('pdfjs-dist/legacy/build/pdf.mjs');const doc=await pdfjs.getDocument({data:new Uint8Array(buffer)}).promise;let pages=[];for(let i=1;i<=doc.numPages;i++){const page=await doc.getPage(i);const content=await page.getTextContent();pages.push(content.items.map(item=>item.str).join(' '))}return pages.join('\n\n')}
+async function extractPdfText(buffer){const pdfjs=await import('pdfjs-dist/legacy/build/pdf.mjs');const doc=await pdfjs.getDocument({data:new Uint8Array(buffer)}).promise;try{let pages=[];for(let i=1;i<=doc.numPages;i++){const page=await doc.getPage(i);const content=await page.getTextContent();pages.push(content.items.map(item=>item.str).join(' '))}return pages.join('\n\n')}finally{await doc.destroy()}}
 async function ocrImages(images,language='por'){const {createWorker}=await import('tesseract.js');const worker=await createWorker(language);try{let text=[],confidence=[];for(const image of images){const result=await worker.recognize(image);text.push(result.data.text);confidence.push(result.data.confidence)}return {text:text.join('\n\n'),confidence:confidence.length?confidence.reduce((a,b)=>a+b,0)/confidence.length:0}}finally{await worker.terminate()}}
 createServer(async (req, res) => {
   if((req.method==='POST'&&['/api/auth/register','/api/auth/login'].includes(req.url))||((req.method==='GET'||req.method==='PUT')&&req.url==='/api/sync')){
@@ -38,12 +38,16 @@ createServer(async (req, res) => {
   }
   if(req.method==='POST'&&req.url==='/api/tutor'){
     try{
-      const input=JSON.parse(await readBody(req));
+      const input=JSON.parse(await readBody(req,1024*1024));
+      if(typeof input.endpoint!=='string'||input.endpoint.length>2048)throw new Error('invalid_endpoint');
       const target=new URL(input.endpoint);
       if(!['https:','http:'].includes(target.protocol)||(target.protocol==='http:'&&!['localhost','127.0.0.1'].includes(target.hostname)))throw new Error('endpoint_insecure');
-      const response=await fetch(target,{method:'POST',headers:{'Content-Type':'application/json',...(input.apiKey?{Authorization:`Bearer ${input.apiKey}`}:{})},body:JSON.stringify({model:input.model,messages:input.messages})});
-      const payload=await response.text();res.writeHead(response.status,{'Content-Type':response.headers.get('content-type')||'application/json','Cache-Control':'no-store'});return res.end(payload);
-    }catch(error){res.writeHead(error.message==='endpoint_insecure'?400:502,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({error:error.message==='payload_too_large'?'payload_too_large':'tutor_request_failed'}))}
+      const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),30000);
+      try {
+        const response=await fetch(target,{method:'POST',headers:{'Content-Type':'application/json',...(input.apiKey?{Authorization:`Bearer ${input.apiKey}`}:{})},body:JSON.stringify({model:input.model,messages:input.messages}),signal:controller.signal});
+        const payload=await response.text();res.writeHead(response.status,{'Content-Type':response.headers.get('content-type')||'application/json','Cache-Control':'no-store'});return res.end(payload);
+      } finally { clearTimeout(timeout); }
+    }catch(error){const clientError=['endpoint_insecure','invalid_endpoint'].includes(error.message);res.writeHead(clientError?400:error.message==='payload_too_large'?413:502,{'Content-Type':'application/json','Cache-Control':'no-store'});return res.end(JSON.stringify({error:error.message==='payload_too_large'?'payload_too_large':clientError?error.message:'tutor_request_failed'}))}
   }
   const requested = req.url === '/' ? 'index.html' : req.url.slice(1).split('?')[0];
   const path = normalize(join(root, requested));

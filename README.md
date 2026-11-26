@@ -1,10 +1,14 @@
 # Travia
 
+## Preparação para produção
+
+O projeto está em preparação, não em publicação. O build Release exige assinatura configurada; a exceção explícita de assinatura debug é usada apenas para validação local/CI. Consulte [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md) para keystore, Secrets, PDFs, segurança e critérios de publicação.
+
 ## Auditoria de pré-release — 26/11/2026
 
-A `main` está integrada no commit `9c16596`. A auditoria reproduziu os testes Node e Flutter, a análise estática sem erros e `npm audit --omit=dev --audit-level=high` sem vulnerabilidades. O workflow [`flutter.yml`](./.github/workflows/flutter.yml) agora gera e publica como artefatos do CI tanto o APK quanto o AAB Release, sem exigir segredos para a validação comum. As actions de checkout e Java foram atualizadas para versões compatíveis com o runtime atual do GitHub Actions.
+A `main` está integrada no commit `31494c4`. A auditoria reproduziu os testes Node e Flutter, a análise estática sem erros e `npm audit --omit=dev --audit-level=high` sem vulnerabilidades. O workflow [`flutter.yml`](./.github/workflows/flutter.yml) gera e publica como artefatos do CI tanto o APK quanto o AAB de validação, com autorização explícita de assinatura debug enquanto não existem Secrets de produção.
 
-Os builds comuns usam assinatura debug deliberadamente. A assinatura de produção continua pendente de keystore e segredos reais. OCR de PDF escaneado/protegido, tutor remoto e sincronização HTTPS permanecem validações externas pendentes; a captura efetiva da câmera foi comprovada no dispositivo físico e os resultados estão diferenciados em [`TESTING.md`](./TESTING.md).
+O build Release falha sem assinatura configurada; somente o CI de validação autoriza debug explicitamente. A assinatura de produção continua pendente de keystore e Secrets reais. OCR de PDF escaneado/protegido, tutor remoto e sincronização HTTPS permanecem validações externas pendentes; a captura efetiva da câmera foi comprovada no dispositivo físico e os resultados estão diferenciados em [`TESTING.md`](./TESTING.md).
 
 ## OCR Android — implementação 25/11/2026
 

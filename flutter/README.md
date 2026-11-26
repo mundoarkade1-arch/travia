@@ -6,7 +6,7 @@ O código inclui painel, disciplinas/notas, caderno, calendário, tarefas, docum
 
 ## Assinatura de producao
 
-Sem `android/key.properties`, o build usa a assinatura debug somente para validacao local. Para producao, gere um keystore fora do repositorio com `keytool -genkeypair -v -keystore travia-upload-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias travia`, copie `android/key.properties.example` para `android/key.properties`, preencha as propriedades e use caminho absoluto para o keystore. `key.properties`, `.jks` e `.keystore` estao no `.gitignore`; nunca versione esses arquivos ou senhas.
+Sem `android/key.properties`, o build Release falha deliberadamente. Para uma validação local não produtiva, execute os tasks Gradle com `-PallowDebugSigning=true`; para produção, gere um keystore fora do repositório com `keytool -genkeypair -v -keystore travia-upload-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias travia`, copie `android/key.properties.example` para `android/key.properties`, preencha as propriedades e use caminho absoluto para o keystore. `key.properties`, `.jks` e `.keystore` estão no `.gitignore`; nunca versione esses arquivos ou senhas.
 
 Flutter, Dart, Android SDK e Build Tools foram recuperados via Puro. O AVD `Medium_Phone_API_37.0` está configurado, mas não foi iniciado e os artefatos não foram instalados automaticamente.
 
