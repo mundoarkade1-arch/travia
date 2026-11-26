@@ -1,5 +1,9 @@
 # Estado do projeto
 
+## Status atual - 26/11/2026
+
+O Flutter, o Android SDK e o ADB estao disponiveis neste ambiente. A PR #2 foi validada no dispositivo fisico autorizado `5a3338e6`; os registros datados abaixo preservam o historico das tentativas anteriores.
+
 ## OCR Android — implementação 2026-11-25
 
 Implementado no módulo Materiais: captura por câmera, seleção pela galeria/arquivos, pré-visualização de imagens, OCR de imagens em português pelo ML Kit Latin, edição, cópia e persistência do texto reconhecido. O texto é salvo em `materials[].ocrText`, com páginas, origem e data, mantendo compatibilidade com estados v4 anteriores.

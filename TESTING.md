@@ -1,5 +1,9 @@
 # Testes
 
+## Resumo atual - 26/11/2026
+
+Os resultados do dispositivo fisico registrados neste arquivo supersedem as tentativas anteriores no AVD instavel. O CI da PR #2 esta verde; as limitacoes remanescentes estao explicitadas no registro mais recente.
+
 ## OCR Android — 2026-11-25
 
 - `flutter pub get`: passou após adicionar `image_picker`, `path_provider`, `pdfx` e `syncfusion_flutter_pdf`.

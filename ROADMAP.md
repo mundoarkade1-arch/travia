@@ -1,5 +1,11 @@
 # Roadmap
 
+## Status atual da PR #2 - 26/11/2026
+
+- A branch `feat/android-ocr` foi validada no dispositivo fisico `5a3338e6`.
+- OCR de imagem, PDF textual multipagina, selecao de paginas, persistencia, edicao/copia e camera foram validados conforme registrado abaixo.
+- As secoes anteriores mantem historico de etapas; pendencias de PDF escaneado/protegido, captura efetiva da camera, keystore de producao e infraestrutura externa continuam reais.
+
 ## OCR Android — 2026-11-25
 
 - [x] Implementar importação por câmera, galeria e arquivos.

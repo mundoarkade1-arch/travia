@@ -1,5 +1,7 @@
 # Changelog
 
+O registro mais recente da PR #2 corresponde ao commit publicado em `feat/android-ocr`; entradas abaixo sao historicas e nao substituem a validacao final do dispositivo fisico.
+
 ## Correcao OCR no dispositivo fisico - 2026-11-26
 
 - Corrigido o estado inicial de materiais para permitir importacao de arquivos em instalacoes sem dados anteriores.
