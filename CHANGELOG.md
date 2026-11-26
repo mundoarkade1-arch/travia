@@ -2,6 +2,13 @@
 
 O registro mais recente da PR #2 corresponde ao commit publicado em `feat/android-ocr`; entradas abaixo sao historicas e nao substituem a validacao final do dispositivo fisico.
 
+## Auditoria de pré-release — 2026-11-26
+
+- Atualizado o workflow Android para usar actions atuais e gerar APK e AAB Release.
+- Adicionado upload dos dois artefatos no GitHub Actions, com falha explícita se algum arquivo não for produzido.
+- Reexecutadas as validações Node, Flutter e auditoria de dependências sem erros.
+- Mantidas explícitas as pendências de assinatura de produção e validações que dependem de hardware, amostras ou infraestrutura externa.
+
 ## Correcao OCR no dispositivo fisico - 2026-11-26
 
 - Corrigido o estado inicial de materiais para permitir importacao de arquivos em instalacoes sem dados anteriores.

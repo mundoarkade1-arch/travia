@@ -1,5 +1,11 @@
 # Estado do projeto
 
+## Auditoria de pré-release — 26/11/2026
+
+O estado integrado está na `main` em `9c16596`, com working tree limpo e `origin/main` sincronizada. `npm.cmd test` (4/4), verificações de sintaxe JavaScript, `flutter test` (5/5), `flutter analyze --no-fatal-infos` e `npm.cmd audit --omit=dev --audit-level=high` passaram; a análise Flutter mantém apenas 9 informações de estilo/depreciação. O workflow de Android foi reforçado para compilar e publicar APK e AAB Release como artefatos do CI.
+
+Nenhum segredo ou keystore foi criado. O build sem `key.properties` continua usando assinatura debug. Permanecem pendentes somente validações que dependem de amostras, hardware ou infraestrutura externos, especialmente PDF escaneado/protegido, captura efetiva da câmera, tutor remoto, HTTPS e assinatura de produção.
+
 ## Status atual - 26/11/2026
 
 O Flutter, o Android SDK e o ADB estao disponiveis neste ambiente. A PR #2 foi validada no dispositivo fisico autorizado `5a3338e6`; os registros datados abaixo preservam o historico das tentativas anteriores.

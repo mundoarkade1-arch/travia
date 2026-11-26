@@ -1,5 +1,15 @@
 # Testes
 
+## Auditoria de pré-release — 26/11/2026
+
+- `npm.cmd test`: 4/4 aprovados.
+- `node --check app.js` e `node --check server.mjs`: aprovados.
+- `npm.cmd audit --omit=dev --audit-level=high`: 0 vulnerabilidades.
+- `flutter test`: 5/5 aprovados.
+- `flutter analyze --no-fatal-infos`: aprovado sem erros; 9 informações de estilo/depreciação.
+- CI pós-integração: análise, testes, APK Release, AAB Release e upload dos artefatos aprovados.
+- A validação Android desta etapa não instalou APK. As evidências físicas anteriores permanecem separadas das validações automatizadas.
+
 ## Resumo atual - 26/11/2026
 
 Os resultados do dispositivo fisico registrados neste arquivo supersedem as tentativas anteriores no AVD instavel. O CI da PR #2 esta verde; as limitacoes remanescentes estao explicitadas no registro mais recente.
