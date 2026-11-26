@@ -161,6 +161,18 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 
 ## CI GitHub
 
+## Dispositivo fisico - validacao final do OCR - 2026-11-26
+
+- `adb devices`: `5a3338e6 device`; APK Release corrigido instalado com `Success`.
+- Reproduzido e corrigido `Unsupported operation: Cannot add to an unmodifiable list` em `_importMaterial`.
+- Imagem real importada; ML Kit Latin exibiu OCR com acentuacao e o resultado foi editado, copiado e salvo.
+- Apos reinicio do processo, o material permaneceu listado com `OCR salvo`.
+- PDF real de 13 paginas importado; `Selecionar paginas (13)` exibido, intervalo `1-13` processado e resultado multipagina mostrado.
+- Camera aberta com permissao durante o uso e disparador visivel; saida feita sem capturar imagem.
+- `node --check app.js`, `node --check server.mjs`, `flutter analyze --no-fatal-infos` e `flutter test` aprovados; 5 testes Flutter passaram.
+- APK e AAB Release atualizados gerados com sucesso.
+- Sem merge, limpeza de dados, desinstalacao ou comandos destrutivos no dispositivo. PDF escaneado/protegido e captura efetiva permanecem pendentes por falta de amostras apropriadas.
+
 ## Validação funcional do OCR — 2026-11-26
 
 - APK Release recompilado após correção de código e instalado no `emulator-5554` com `adb install -r`: `Success`.

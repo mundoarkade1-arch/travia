@@ -42,6 +42,15 @@
 
 ## Estado de distribuicao
 
+## Validacao no dispositivo fisico - 26/11/2026
+
+- [x] Corrigir estado inicial imutavel que bloqueava importacao de arquivos.
+- [x] Validar importacao, OCR com acentuacao, edicao, copia, salvamento e persistencia de imagem.
+- [x] Validar PDF real multipagina, selecao `1-13` e extracao das paginas.
+- [x] Abrir e validar a tela de camera sem capturar imagem.
+- [x] Gerar APK e AAB Release atualizados.
+- [ ] Validar PDF escaneado, arquivo protegido/invalido e captura efetiva da camera com amostras especificas.
+
 Há artefatos APK/AAB Release gerados anteriormente. A assinatura de produção continua pendente até que um keystore e credenciais sejam fornecidos; a configuração local segura está preparada.
 
 A validação em emulador e em dispositivo físico continua pendente nesta auditoria; a assinatura de produção também continua pendente.

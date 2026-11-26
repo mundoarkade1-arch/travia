@@ -1,5 +1,11 @@
 # Changelog
 
+## Correcao OCR no dispositivo fisico - 2026-11-26
+
+- Corrigido o estado inicial de materiais para permitir importacao de arquivos em instalacoes sem dados anteriores.
+- Validado OCR local de imagem com acentuacao, persistencia apos reinicio, edicao/copia e PDF de 13 paginas.
+- Gerados APK e AAB Release atualizados para a branch `feat/android-ocr`.
+
 ## Correção funcional do OCR Android — 2026-11-26
 
 - Corrigida a hierarquia de `MaterialApp`/`BuildContext` que impedia `showModalBottomSheet` de abrir no botão de importação.

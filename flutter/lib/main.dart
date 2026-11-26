@@ -100,10 +100,14 @@ class _TraviaAppState extends State<TraviaApp> {
       try {
         data = TraviaState.fromJson(jsonDecode(raw) as Map<String, dynamic>);
       } catch (_) {
-        data = TraviaState(courses: cloneCurriculum());
+        data = TraviaState(
+            courses: cloneCurriculum(), materials: <Map<String, dynamic>>[]);
       }
     }
-    if (data.courses.isEmpty) data = TraviaState(courses: cloneCurriculum());
+    if (data.courses.isEmpty) {
+      data = TraviaState(
+          courses: cloneCurriculum(), materials: <Map<String, dynamic>>[]);
+    }
     endpoint.text = data.tutor['endpoint']?.toString() ?? '';
     model.text = data.tutor['model']?.toString() ?? '';
     _selectCourse(data.courses.first['id'] as int);

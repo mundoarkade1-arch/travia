@@ -52,6 +52,15 @@ O cliente Flutter funcional usa a matriz curricular real, persistência local, b
 
 ## Atual
 
+## Validacao no dispositivo fisico - 26/11/2026
+
+- Dispositivo autorizado `5a3338e6` usado como alvo principal; APK Release instalado com `Success`.
+- Corrigido em `flutter/lib/main.dart` o uso de lista imutavel no estado inicial, que causava `Unsupported operation: Cannot add to an unmodifiable list` na importacao.
+- Imagem importada, OCR ML Kit Latin com acentuacao, edicao/copia/salvamento e persistencia apos reinicio confirmados.
+- PDF real de 13 paginas importado; selecao `1-13` processada e resultado multipagina exibido.
+- Permissao e tela da camera abertas; nenhuma foto capturada.
+- APK e AAB Release recompilados com sucesso.
+
 Versão web 0.4 funcional, com OCR/PDF e histórico de tutor por disciplina. O núcleo de estado foi separado em módulos portáveis v4, com cliente Flutter inicial e sincronização autenticada opcional.
 
 ## Decisões
