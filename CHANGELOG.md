@@ -1,5 +1,36 @@
 # Changelog
 
+O registro mais recente da PR #2 corresponde ao commit publicado em `feat/android-ocr`; entradas abaixo sao historicas e nao substituem a validacao final do dispositivo fisico.
+
+## Correcao OCR no dispositivo fisico - 2026-11-26
+
+- Corrigido o estado inicial de materiais para permitir importacao de arquivos em instalacoes sem dados anteriores.
+- Validado OCR local de imagem com acentuacao, persistencia apos reinicio, edicao/copia e PDF de 13 paginas.
+- Gerados APK e AAB Release atualizados para a branch `feat/android-ocr`.
+
+## Correção funcional do OCR Android — 2026-11-26
+
+- Corrigida a hierarquia de `MaterialApp`/`BuildContext` que impedia `showModalBottomSheet` de abrir no botão de importação.
+- Confirmada a instalação do APK recompilado e a abertura do menu de importação no AVD.
+- Registrada a limitação do Photo Picker do AVD, que ficou sem resposta após a seleção da imagem de teste; OCR positivo e persistência Android continuam pendentes.
+
+## Validação funcional parcial do OCR — 2026-11-26
+
+- Confirmada a importação de `travia-ocr-pt.png` pelo seletor de arquivos, com 12.466 bytes recebidos.
+- Confirmado o processamento local do ML Kit Latin e o texto exibido na interface: `Engenharia Civil - acao, calculo e pressao 12,5 kN`.
+- Confirmada a permanência do material listado após reinício do aplicativo.
+- Edição e cópia ficaram inconclusivas devido a ANR do processo `system` no AVD durante a automação; PDFs e câmera continuam sem teste funcional Android.
+
+## OCR Android — 2026-11-25
+
+- Adicionada captura por câmera, galeria e importação de arquivos no módulo Materiais.
+- Adicionado OCR local de imagens com ML Kit Latin, incluindo edição, cópia e persistência do resultado.
+- Adicionada extração de PDF textual e OCR de PDF escaneado por renderização controlada página a página.
+- Adicionados seleção de páginas, indicador de progresso, limite de 50 MB e limpeza de imagens temporárias.
+- Materiais importados passaram a ser copiados para o armazenamento privado do aplicativo.
+- Build APK/AAB passou; a validação interativa OCR no AVD ficou pendente por indisponibilidade do System UI.
+- Corrigida a falha de CI causada pelo erro interno do Lint em `image_picker_android`, limitando a exceção à tarefa `lintVitalAnalyzeRelease` dessa dependência.
+
 ## Auditoria autônoma final — 2026-11-25
 
 - Corrigida a normalização do estado web para persistir e restaurar o esquema v4.
@@ -20,6 +51,14 @@
 - Reexecutados `flutter pub get`, análise, testes, APK Release e AAB Release a partir do código atual.
 - Confirmados APK de 83,4 MiB e AAB de 65,8 MiB; nenhum artefato foi instalado.
 - Registrada a ausência de dispositivo conectado e de emulador iniciado.
+
+## OCR Android — 2026-11-26
+
+- Corrigido o tratamento de PDFs mistos para processar páginas sem texto selecionável com renderização e OCR, preservando páginas textuais.
+- Adicionada recuperação de imagem perdida pelo `image_picker` após recriação da Activity.
+- `flutter analyze --no-fatal-infos`: aprovado sem erros; `flutter test`: 5/5.
+- APK Release e AAB Release recompilados. Instalação do APK no AVD retornou `Success`.
+- Edição/cópia e validação Android de PDFs/câmera permanecem pendentes devido a ANR recorrente do `com.android.systemui` no AVD.
 
 ## Auditoria Android final — 2026-11-24
 

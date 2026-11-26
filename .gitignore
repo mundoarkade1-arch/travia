@@ -16,6 +16,7 @@ npm-debug.log*
 **/*secret*.json
 flutter/.dart_tool/
 flutter/android/.gradle/
+flutter/android/.kotlin/
 flutter/build/
 flutter/.flutter-plugins
 flutter/.flutter-plugins-dependencies

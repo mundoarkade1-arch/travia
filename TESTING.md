@@ -1,5 +1,24 @@
 # Testes
 
+## Resumo atual - 26/11/2026
+
+Os resultados do dispositivo fisico registrados neste arquivo supersedem as tentativas anteriores no AVD instavel. O CI da PR #2 esta verde; as limitacoes remanescentes estao explicitadas no registro mais recente.
+
+## OCR Android — 2026-11-25
+
+- `flutter pub get`: passou após adicionar `image_picker`, `path_provider`, `pdfx` e `syncfusion_flutter_pdf`.
+- `flutter analyze --no-fatal-infos`: passou sem erros; permaneceram 9 informações de estilo/depreciação.
+- `flutter test`: passou 5/5, incluindo seleção de páginas, serialização e arquivo de imagem vazio/inexistente.
+- `flutter build apk --release --no-pub`: passou em 360,6 s; APK gerado com 88,9 MB.
+- `flutter build appbundle --release --no-pub`: passou em 66,2 s; AAB gerado com 70,5 MB.
+- `aapt dump badging`: package `com.example.travia`, versão `0.4.0`, versionCode `1`, compile/target SDK `36`.
+- Instalação do APK novo no AVD: `Success`; `MainActivity` iniciou. O fluxo OCR não foi aprovado porque o `System UI` do AVD exibiu indisponibilidade e deixou de aceitar toques após duas inicializações controladas. Não houve crash fatal do Travia observado no logcat filtrado.
+- CI do PR: a primeira execução falhou somente no lint interno de `image_picker_android` (`ExifDataCopier.java`/`JavaDocParser`); a exceção foi limitada à tarefa vital dessa dependência e o workflow foi reenviado.
+
+### Limitações do OCR
+
+O ML Kit Latin é local no APK e não usa credenciais. A disponibilidade efetiva do modelo deve ser confirmada no dispositivo-alvo. PDFs grandes acima de 50 MB são recusados; PDFs escaneados são processados por páginas selecionadas, com renderização temporária de uma página por vez. A validação com imagem e PDFs reais permanece pendente até haver um AVD/dispositivo que aceite interação.
+
 ## Auditoria autônoma final — 2026-11-25
 
 - `npm.cmd test`: passou 4/4.
@@ -113,6 +132,18 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - A regeneração APK/AAB não foi concluída: Gradle ficou sem progresso por aproximadamente quatro minutos e foi interrompido. Os artefatos anteriores permaneceram inalterados.
 - O alerta `System UI isn't responding` foi identificado como componente System UI, não como exceção do Travia, e desapareceu após aguardar.
 
+## Correções de OCR — 2026-11-26
+
+- `dart format flutter/lib/core/ocr_service.dart flutter/lib/main.dart`: concluído.
+- `flutter analyze --no-fatal-infos --no-pub`: aprovado sem erros; 9 informações de estilo/depreciação existentes.
+- `flutter test --no-pub`: aprovado, 5/5 testes.
+- `flutter build apk --release --no-pub`: concluído; APK em `flutter/build/app/outputs/flutter-apk/app-release.apk`.
+- `flutter build appbundle --release --no-pub`: concluído em 53,6 s; AAB em `flutter/build/app/outputs/bundle/release/app-release.aab`.
+- `aapt2 dump badging`: `com.example.travia`, versão `0.4.0`, versionCode `1`, minSdk `24`, target/compile SDK `36`.
+- `adb install -r`: `Success`; processo `com.example.travia` ativo após inicialização.
+- O AVD apresentou novamente ANR do `com.android.systemui` após reinicialização. Não foram aprovados os testes novos de edição/cópia, câmera ou PDFs no Android.
+- A evidência funcional anterior permanece válida: seletor de arquivos, OCR real de imagem e persistência do material após reinício. A amostra usada não continha acentos; preservação de acentuação ainda não foi comprovada em Android.
+
 ## Ainda não executados
 
 - Testes automatizados de navegador, IndexedDB em múltiplos navegadores e acessibilidade formal.
@@ -133,6 +164,37 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - Diagnóstico do erro anterior: compilação de `GeneratedPluginRegistrant.java` falhava porque o `integration_test` gerado não estava no classpath release.
 
 ## CI GitHub
+
+## Dispositivo fisico - validacao final do OCR - 2026-11-26
+
+- `adb devices`: `5a3338e6 device`; APK Release corrigido instalado com `Success`.
+- Reproduzido e corrigido `Unsupported operation: Cannot add to an unmodifiable list` em `_importMaterial`.
+- Imagem real importada; ML Kit Latin exibiu OCR com acentuacao e o resultado foi editado, copiado e salvo.
+- Apos reinicio do processo, o material permaneceu listado com `OCR salvo`.
+- PDF real de 13 paginas importado; `Selecionar paginas (13)` exibido, intervalo `1-13` processado e resultado multipagina mostrado.
+- Camera aberta com permissao durante o uso e disparador visivel; saida feita sem capturar imagem.
+- `node --check app.js`, `node --check server.mjs`, `flutter analyze --no-fatal-infos` e `flutter test` aprovados; 5 testes Flutter passaram.
+- APK e AAB Release atualizados gerados com sucesso.
+- Sem merge, limpeza de dados, desinstalacao ou comandos destrutivos no dispositivo. PDF escaneado/protegido e captura efetiva permanecem pendentes por falta de amostras apropriadas.
+
+## Validação funcional do OCR — 2026-11-26
+
+- APK Release recompilado após correção de código e instalado no `emulator-5554` com `adb install -r`: `Success`.
+- O aplicativo iniciou e o botão `Importar PDF ou imagem` abriu o menu com `Capturar com câmera`, `Escolher imagem da galeria` e `Escolher PDF ou imagem`.
+- O logcat do APK anterior forneceu a evidência da causa: `Null check operator used on a null value` em `Navigator.of` dentro de `_showMaterialImportMenu`.
+- Uma imagem PNG de teste em português foi transferida para `/sdcard/Download` apenas para esta validação. O Photo Picker abriu, mas ficou sem resposta ao selecionar o item; o fluxo foi encerrado com Back. Não foi declarado OCR positivo, edição, cópia, persistência, PDF ou câmera como aprovado.
+- `flutter analyze --no-fatal-infos`: sem erros, 9 infos já conhecidas. `flutter test`: 5/5 aprovados.
+- A execução do comando `flutter build apk --debug --no-pub` e a nova execução Release ficaram sem progresso textual na etapa final e foram encerradas no limite operacional; o APK Release existente foi instalado com sucesso, mas não há uma linha final de build para declarar a compilação nova como aprovada. O AAB anterior foi preservado e não repetido.
+
+## OCR Android — evidência funcional — 2026-11-26
+
+- APK Release instalado no `emulator-5554` com retorno `Success`.
+- O seletor de arquivos exibiu e devolveu `travia-ocr-pt.png`, 12.466 bytes. O Travia exibiu o material como arquivo local e o processo permaneceu ativo.
+- ML Kit Latin foi inicializado localmente; o logcat registrou `OCR process succeeded via visionkit pipeline` e o diálogo exibiu `Página 1` com `Engenharia Civil - acao, calculo e pressao 12,5 kN`.
+- Após reinício, o painel inicial exibiu `Materiais — 1 arquivos locais`, confirmando a persistência do material e do resultado salvo antes do diálogo.
+- A edição, cópia e confirmação visual do texto persistido não foram aprovadas: o AVD apresentou repetidamente `Process system isn't responding`, bloqueando UIAutomator e a interação subsequente.
+- Não foram executados testes funcionais Android de câmera, PDF textual, PDF escaneado, PDF multipágina, seleção de páginas ou arquivo protegido/inválido.
+- Builds desta rodada: APK Release aprovado em 71,0 s; AAB Release aprovado em 32,6 s. `flutter analyze --no-fatal-infos` sem erros, com 9 infos conhecidas; `flutter test` 5/5.
 
 - Adicionado `.github/workflows/flutter.yml` para executar em pushes da `main` e em pull requests para `main`.
 - O workflow usa Java 17, Flutter 3.50.1 estável, `flutter pub get`, `flutter analyze --no-fatal-infos`, `flutter test` e build APK Release.

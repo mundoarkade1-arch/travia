@@ -1,5 +1,20 @@
 # Roadmap
 
+## Status atual da PR #2 - 26/11/2026
+
+- A branch `feat/android-ocr` foi validada no dispositivo fisico `5a3338e6`.
+- OCR de imagem, PDF textual multipagina, selecao de paginas, persistencia, edicao/copia e camera foram validados conforme registrado abaixo.
+- As secoes anteriores mantem historico de etapas; pendencias de PDF escaneado/protegido, captura efetiva da camera, keystore de producao e infraestrutura externa continuam reais.
+
+## OCR Android — 2026-11-25
+
+- [x] Implementar importação por câmera, galeria e arquivos.
+- [x] Implementar OCR local de imagens em script Latin, compatível com português.
+- [x] Implementar edição, cópia e persistência do texto OCR por material.
+- [x] Implementar extração de PDF textual e fallback de PDF escaneado por página.
+- [x] Implementar seleção de páginas, progresso, limite de tamanho e limpeza de temporários.
+- [ ] Validar o fluxo completo de OCR com imagem e PDFs reais em AVD ou dispositivo estável.
+
 ## Auditoria autônoma final — 2026-11-25
 
 - [x] Normalizar restauração e inicialização do estado web para o esquema v4.
@@ -32,6 +47,15 @@
 - [ ] Validar assinatura de produção com keystore fornecido, sem gerar credenciais.
 
 ## Estado de distribuicao
+
+## Validacao no dispositivo fisico - 26/11/2026
+
+- [x] Corrigir estado inicial imutavel que bloqueava importacao de arquivos.
+- [x] Validar importacao, OCR com acentuacao, edicao, copia, salvamento e persistencia de imagem.
+- [x] Validar PDF real multipagina, selecao `1-13` e extracao das paginas.
+- [x] Abrir e validar a tela de camera sem capturar imagem.
+- [x] Gerar APK e AAB Release atualizados.
+- [ ] Validar PDF escaneado, arquivo protegido/invalido e captura efetiva da camera com amostras especificas.
 
 Há artefatos APK/AAB Release gerados anteriormente. A assinatura de produção continua pendente até que um keystore e credenciais sejam fornecidos; a configuração local segura está preparada.
 
@@ -82,4 +106,27 @@ O cliente Flutter inicial foi conectado à matriz curricular real e à persistê
 - [x] Instalar e validar o novo APK após o AVD voltar a ficar online no ADB.
 - [x] Recuperar o AVD com inicialização a frio e validar instalação, abertura, navegação e persistência do novo APK.
 - [x] Configurar CI GitHub para análise, testes e APK Release.
+
+## Próxima validação OCR Android
+
+- [x] Corrigir processamento híbrido página a página para PDFs mistos.
+- [x] Recuperar imagens perdidas após recriação da Activity.
+- [x] Recompilar APK e AAB Release após as correções.
+- [ ] Validar edição, cópia e reabertura do OCR em AVD estável.
+- [ ] Validar PDF textual, escaneado, multipágina, seleção, inválido e protegido no Android.
+- [ ] Validar câmera em dispositivo ou AVD estável.
+
+## Correção encontrada na validação OCR — 2026-11-26
+
+- [x] Corrigir o `BuildContext` usado pelo menu de importação no Android.
+- [x] Confirmar abertura do menu de câmera, galeria e arquivos no APK recompilado.
+- [ ] Concluir OCR positivo, PDFs e persistência no Android após estabilizar o Photo Picker/AVD.
+
+### Resultado da validação — 2026-11-26
+
+- [x] Importar imagem por seletor de arquivos e confirmar o arquivo recebido.
+- [x] Executar ML Kit Latin e confirmar texto reconhecido na interface.
+- [x] Confirmar que o material permanece listado após reinício.
+- [ ] Aprovar edição/cópia do resultado e reabertura visual do texto após ANR do sistema no AVD.
+- [ ] Validar PDFs e câmera em dispositivo/AVD estável.
 - [ ] Assinar e validar artefatos com keystore de produção fornecido.

@@ -1,5 +1,21 @@
 # Estado do projeto
 
+## Status atual - 26/11/2026
+
+O Flutter, o Android SDK e o ADB estao disponiveis neste ambiente. A PR #2 foi validada no dispositivo fisico autorizado `5a3338e6`; os registros datados abaixo preservam o historico das tentativas anteriores.
+
+## OCR Android — implementação 2026-11-25
+
+Implementado no módulo Materiais: captura por câmera, seleção pela galeria/arquivos, pré-visualização de imagens, OCR de imagens em português pelo ML Kit Latin, edição, cópia e persistência do texto reconhecido. O texto é salvo em `materials[].ocrText`, com páginas, origem e data, mantendo compatibilidade com estados v4 anteriores.
+
+PDFs selecionáveis são extraídos página a página com `syncfusion_flutter_pdf`. PDFs escaneados são renderizados página a página com `pdfx`, processados pelo ML Kit e removidos do diretório temporário após cada página. Há seleção de páginas, progresso, tratamento de arquivo vazio/inválido e limite de 50 MB. A câmera/galeria copia o arquivo para o diretório privado do aplicativo para sobreviver ao reinício.
+
+Dependências adicionadas: `image_picker`, `path_provider`, `pdfx` e `syncfusion_flutter_pdf`. O AndroidManifest declara somente a permissão de câmera necessária. O build release passou; o aviso atual do `pdfx` é sobre migração futura do Kotlin Gradle Plugin, sem falha no ambiente atual.
+
+Ainda não aprovado: OCR real de imagem/PDF no AVD. O APK iniciou, mas o `System UI` apresentou alerta de indisponibilidade e não aceitou interação confiável após duas inicializações controladas. Não há evidência suficiente para marcar o fluxo Android como concluído.
+
+O CI encontrou e foi corrigido um erro interno do Android Lint no módulo `image_picker_android`, durante `lintVitalAnalyzeRelease` de `ExifDataCopier.java`. A configuração desabilita somente essa tarefa específica da dependência; a análise do aplicativo, os testes e o build release continuam obrigatórios.
+
 ## Auditoria autônoma final — 2026-11-25
 
 Foram corrigidos dois pontos de consistência: o estado web agora é normalizado pelo migrador v4 na inicialização e na restauração, e o cliente web tenta mesclar o estado remoto e reenviar uma vez após conflito HTTP 409. O `package-lock.json` foi alinhado à versão 0.4.0 do `package.json`.
@@ -40,11 +56,27 @@ O cliente Flutter funcional usa a matriz curricular real, persistência local, b
 
 ## Atual
 
+## Validacao no dispositivo fisico - 26/11/2026
+
+- Dispositivo autorizado `5a3338e6` usado como alvo principal; APK Release instalado com `Success`.
+- Corrigido em `flutter/lib/main.dart` o uso de lista imutavel no estado inicial, que causava `Unsupported operation: Cannot add to an unmodifiable list` na importacao.
+- Imagem importada, OCR ML Kit Latin com acentuacao, edicao/copia/salvamento e persistencia apos reinicio confirmados.
+- PDF real de 13 paginas importado; selecao `1-13` processada e resultado multipagina exibido.
+- Permissao e tela da camera abertas; nenhuma foto capturada.
+- APK e AAB Release recompilados com sucesso.
+
 Versão web 0.4 funcional, com OCR/PDF e histórico de tutor por disciplina. O núcleo de estado foi separado em módulos portáveis v4, com cliente Flutter inicial e sincronização autenticada opcional.
 
 ## Decisões
 
 O ambiente atual não possui Flutter, Dart, Android SDK ou ADB. HTML, CSS e JavaScript nativos permitem execução imediata em web. O estado migra até a versão 4; arquivos binários usam IndexedDB e metadados ficam no estado exportável. O servidor de sincronização opcional usa scrypt, tokens de sessão, revisão otimista e AES-256-GCM em arquivos fora do repositório.
+
+## Correção de estabilidade do OCR — 2026-11-26
+
+- PDFs mistos agora processam cada página: Syncfusion para páginas textuais e `pdfx` + ML Kit para páginas escaneadas.
+- O ciclo de vida de imagens foi reforçado com `ImagePicker.retrieveLostData()` após recriação da Activity.
+- A análise passou sem erros e os 5 testes automatizados passaram. APK e AAB Release foram recompilados; o APK foi instalado com `Success` no AVD.
+- A validação Android anterior comprovou OCR real de imagem pelo ML Kit e persistência do material. Edição/cópia e PDFs continuam sem aprovação nova porque o AVD voltou a travar o `System UI` com ANR.
 
 ## Limitações conhecidas
 
@@ -70,6 +102,21 @@ PDFs e imagens podem ser abertos e removidos do IndexedDB. A chamada de IA passa
 ## Validação Android após recuperação — 2026-11-25
 
 - O AVD foi inicializado a frio com `-no-snapshot`, sem apagar userdata, e passou de `offline` para `device`.
+
+## Auditoria funcional do OCR — 26/11/2026
+
+- O logcat revelou uma falha real no fluxo de importação: `showModalBottomSheet` era chamado com o `context` do estado acima do `MaterialApp`, resultando em `Null check operator used on a null value`.
+- A correção mínima foi aplicada em `flutter/lib/main.dart`: `MaterialApp` passou a ser criado em `main()` e `TraviaApp` passou a retornar diretamente o `Scaffold`.
+- `flutter analyze --no-fatal-infos` continuou sem erros e `flutter test` passou com 5 testes.
+- O APK recompilado foi instalado com `adb install -r` retornando `Success`; a abertura do menu de importação foi confirmada no AVD. O Photo Picker abriu, mas ficou sem responder depois da seleção da imagem de teste. Não há evidência suficiente para aprovar OCR positivo ou persistência Android.
+- O build Release não recebeu uma linha final de conclusão antes do limite operacional, embora o APK resultante tenha sido instalado; o AAB anterior permanece preservado e não foi repetido.
+
+## OCR Android validado parcialmente — 26/11/2026
+
+- O seletor de arquivos devolveu uma imagem local conhecida (`travia-ocr-pt.png`, 12.466 bytes); o arquivo foi copiado para o armazenamento privado e permaneceu listado após reinício do aplicativo.
+- O ML Kit Latin carregou o modelo local no APK e reconheceu na interface: `Engenharia Civil - acao, calculo e pressao 12,5 kN`.
+- A edição/cópia/salvamento manual do diálogo não recebeu aprovação: durante a automação o AVD apresentou `Process system isn't responding`, bloqueando UIAutomator e novas interações. O OCR já é persistido antes da abertura do diálogo, mas a reabertura do texto não pôde ser confirmada visualmente nessa sessão.
+- PDFs textual, escaneado, múltiplas páginas, seleção de páginas e câmera não foram validados funcionalmente no Android nesta execução.
 - O APK Release novo foi instalado com `Success` e iniciou `com.example.travia/.MainActivity`.
 - Foram acessados Início, Caderno, Calendário, Materiais e menu lateral. A anotação existente foi confirmada após reinício do processo.
 - Não foram observados `FATAL EXCEPTION`, ANR do Travia ou erro Flutter no logcat filtrado.
