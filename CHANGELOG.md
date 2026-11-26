@@ -1,5 +1,11 @@
 # Changelog
 
+## Correção funcional do OCR Android — 2026-11-26
+
+- Corrigida a hierarquia de `MaterialApp`/`BuildContext` que impedia `showModalBottomSheet` de abrir no botão de importação.
+- Confirmada a instalação do APK recompilado e a abertura do menu de importação no AVD.
+- Registrada a limitação do Photo Picker do AVD, que ficou sem resposta após a seleção da imagem de teste; OCR positivo e persistência Android continuam pendentes.
+
 ## OCR Android — 2026-11-25
 
 - Adicionada captura por câmera, galeria e importação de arquivos no módulo Materiais.

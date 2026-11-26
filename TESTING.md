@@ -149,6 +149,15 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 
 ## CI GitHub
 
+## Validação funcional do OCR — 2026-11-26
+
+- APK Release recompilado após correção de código e instalado no `emulator-5554` com `adb install -r`: `Success`.
+- O aplicativo iniciou e o botão `Importar PDF ou imagem` abriu o menu com `Capturar com câmera`, `Escolher imagem da galeria` e `Escolher PDF ou imagem`.
+- O logcat do APK anterior forneceu a evidência da causa: `Null check operator used on a null value` em `Navigator.of` dentro de `_showMaterialImportMenu`.
+- Uma imagem PNG de teste em português foi transferida para `/sdcard/Download` apenas para esta validação. O Photo Picker abriu, mas ficou sem resposta ao selecionar o item; o fluxo foi encerrado com Back. Não foi declarado OCR positivo, edição, cópia, persistência, PDF ou câmera como aprovado.
+- `flutter analyze --no-fatal-infos`: sem erros, 9 infos já conhecidas. `flutter test`: 5/5 aprovados.
+- A execução do comando `flutter build apk --debug --no-pub` e a nova execução Release ficaram sem progresso textual na etapa final e foram encerradas no limite operacional; o APK Release existente foi instalado com sucesso, mas não há uma linha final de build para declarar a compilação nova como aprovada. O AAB anterior foi preservado e não repetido.
+
 - Adicionado `.github/workflows/flutter.yml` para executar em pushes da `main` e em pull requests para `main`.
 - O workflow usa Java 17, Flutter 3.50.1 estável, `flutter pub get`, `flutter analyze --no-fatal-infos`, `flutter test` e build APK Release.
 - O workflow cancela execuções superseded do mesmo PR e possui timeout de 15 minutos para não deixar builds remotos indefinidos.

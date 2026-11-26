@@ -82,6 +82,14 @@ PDFs e imagens podem ser abertos e removidos do IndexedDB. A chamada de IA passa
 ## Validação Android após recuperação — 2026-11-25
 
 - O AVD foi inicializado a frio com `-no-snapshot`, sem apagar userdata, e passou de `offline` para `device`.
+
+## Auditoria funcional do OCR — 26/11/2026
+
+- O logcat revelou uma falha real no fluxo de importação: `showModalBottomSheet` era chamado com o `context` do estado acima do `MaterialApp`, resultando em `Null check operator used on a null value`.
+- A correção mínima foi aplicada em `flutter/lib/main.dart`: `MaterialApp` passou a ser criado em `main()` e `TraviaApp` passou a retornar diretamente o `Scaffold`.
+- `flutter analyze --no-fatal-infos` continuou sem erros e `flutter test` passou com 5 testes.
+- O APK recompilado foi instalado com `adb install -r` retornando `Success`; a abertura do menu de importação foi confirmada no AVD. O Photo Picker abriu, mas ficou sem responder depois da seleção da imagem de teste. Não há evidência suficiente para aprovar OCR positivo ou persistência Android.
+- O build Release não recebeu uma linha final de conclusão antes do limite operacional, embora o APK resultante tenha sido instalado; o AAB anterior permanece preservado e não foi repetido.
 - O APK Release novo foi instalado com `Success` e iniciou `com.example.travia/.MainActivity`.
 - Foram acessados Início, Caderno, Calendário, Materiais e menu lateral. A anotação existente foi confirmada após reinício do processo.
 - Não foram observados `FATAL EXCEPTION`, ANR do Travia ou erro Flutter no logcat filtrado.

@@ -90,3 +90,9 @@ O APK Release existente foi instalado e aberto no AVD `Medium_Phone_API_37.0`. F
 O bloqueio foi identificado no classpath do `integration_test` usado pelo registrante Android gerado pelo Flutter 3.50.1. A dependência foi declarada explicitamente em `flutter/android/app/build.gradle.kts`. O novo APK Release foi gerado em 173,2 s e o novo AAB Release em 29,1 s. Ambos usam package ID `com.example.travia`, versão `0.4.0` e versionCode `1`.
 
 O AVD foi posteriormente recuperado por inicialização a frio, sem apagar dados. O APK novo foi instalado e aberto com sucesso; Início, Caderno, Calendário, Materiais, menu lateral e persistência após reinício foram verificados. O workflow de CI está em `.github/workflows/flutter.yml`.
+
+## Correção de navegação do OCR — 26/11/2026
+
+Durante a validação funcional do APK Release foi identificado no logcat que o botão `Importar PDF ou imagem` lançava `Null check operator used on a null value` em `Navigator.of`. A causa era o estado raiz do aplicativo estar acima do `MaterialApp`; a correção moveu o `MaterialApp` para `main()` e deixou o estado abaixo dele. Após recompilar e instalar o APK, o menu com câmera, galeria e seletor de arquivos abriu no AVD sem a exceção anterior.
+
+A seleção pela galeria abriu o Photo Picker do Android, mas o componente ficou sem responder após a seleção do arquivo de teste; por isso o OCR positivo da imagem e a persistência Android continuam sem aprovação. O APK anterior e o AAB anterior foram preservados.

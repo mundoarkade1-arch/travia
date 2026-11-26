@@ -14,7 +14,16 @@ import 'core/ocr_service.dart';
 import 'core/sync_contract.dart';
 import 'core/travia_model.dart';
 
-void main() => runApp(const TraviaApp());
+void main() => runApp(
+      MaterialApp(
+        title: 'Travia',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff315c52)),
+          useMaterial3: true,
+        ),
+        home: const TraviaApp(),
+      ),
+    );
 
 class TraviaApp extends StatefulWidget {
   const TraviaApp({super.key});
@@ -145,63 +154,54 @@ class _TraviaAppState extends State<TraviaApp> {
   @override
   Widget build(BuildContext context) {
     if (loading)
-      return const MaterialApp(
-          home: Scaffold(body: Center(child: CircularProgressIndicator())));
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     final wide = MediaQuery.sizeOf(context).width >= 820;
-    return MaterialApp(
-        title: 'Travia',
-        theme: ThemeData(
-            colorScheme:
-                ColorScheme.fromSeed(seedColor: const Color(0xff315c52)),
-            useMaterial3: true),
-        home: Scaffold(
-          appBar: AppBar(title: Text(pages[page]), actions: [
-            IconButton(
-                onPressed: _backup,
-                tooltip: 'Backup',
-                icon: const Icon(Icons.download))
-          ]),
-          body: Row(children: [
-            if (wide)
-              NavigationRail(
-                  selectedIndex: page,
-                  labelType: NavigationRailLabelType.all,
-                  onDestinationSelected: (value) =>
-                      setState(() => page = value),
-                  destinations: pages
-                      .map((label) => NavigationRailDestination(
-                          icon: Icon(_icon(label)), label: Text(label)))
-                      .toList()),
-            Expanded(child: _screen())
-          ]),
-          drawer: wide
-              ? null
-              : Drawer(
-                  child: ListView(children: [
-                  const DrawerHeader(
-                      child: Text('Travia', style: TextStyle(fontSize: 28))),
-                  for (var i = 0; i < pages.length; i++)
-                    ListTile(
-                        selected: page == i,
-                        leading: Icon(_icon(pages[i])),
-                        title: Text(pages[i]),
-                        onTap: () {
-                          setState(() => page = i);
-                          Navigator.pop(context);
-                        })
-                ])),
-          bottomNavigationBar: wide
-              ? null
-              : NavigationBar(
-                  selectedIndex: page.clamp(0, 4).toInt(),
-                  onDestinationSelected: (value) =>
-                      setState(() => page = value),
-                  destinations: pages
-                      .take(5)
-                      .map((label) => NavigationDestination(
-                          icon: Icon(_icon(label)), label: label))
-                      .toList()),
-        ));
+    return Scaffold(
+      appBar: AppBar(title: Text(pages[page]), actions: [
+        IconButton(
+            onPressed: _backup,
+            tooltip: 'Backup',
+            icon: const Icon(Icons.download))
+      ]),
+      body: Row(children: [
+        if (wide)
+          NavigationRail(
+              selectedIndex: page,
+              labelType: NavigationRailLabelType.all,
+              onDestinationSelected: (value) => setState(() => page = value),
+              destinations: pages
+                  .map((label) => NavigationRailDestination(
+                      icon: Icon(_icon(label)), label: Text(label)))
+                  .toList()),
+        Expanded(child: _screen())
+      ]),
+      drawer: wide
+          ? null
+          : Drawer(
+              child: ListView(children: [
+              const DrawerHeader(
+                  child: Text('Travia', style: TextStyle(fontSize: 28))),
+              for (var i = 0; i < pages.length; i++)
+                ListTile(
+                    selected: page == i,
+                    leading: Icon(_icon(pages[i])),
+                    title: Text(pages[i]),
+                    onTap: () {
+                      setState(() => page = i);
+                      Navigator.pop(context);
+                    })
+            ])),
+      bottomNavigationBar: wide
+          ? null
+          : NavigationBar(
+              selectedIndex: page.clamp(0, 4).toInt(),
+              onDestinationSelected: (value) => setState(() => page = value),
+              destinations: pages
+                  .take(5)
+                  .map((label) => NavigationDestination(
+                      icon: Icon(_icon(label)), label: label))
+                  .toList()),
+    );
   }
 
   IconData _icon(String label) =>

@@ -91,4 +91,10 @@ O cliente Flutter inicial foi conectado à matriz curricular real e à persistê
 - [x] Instalar e validar o novo APK após o AVD voltar a ficar online no ADB.
 - [x] Recuperar o AVD com inicialização a frio e validar instalação, abertura, navegação e persistência do novo APK.
 - [x] Configurar CI GitHub para análise, testes e APK Release.
+
+## Correção encontrada na validação OCR — 2026-11-26
+
+- [x] Corrigir o `BuildContext` usado pelo menu de importação no Android.
+- [x] Confirmar abertura do menu de câmera, galeria e arquivos no APK recompilado.
+- [ ] Concluir OCR positivo, PDFs e persistência no Android após estabilizar o Photo Picker/AVD.
 - [ ] Assinar e validar artefatos com keystore de produção fornecido.
