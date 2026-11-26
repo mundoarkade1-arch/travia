@@ -4,7 +4,7 @@
 
 O estado integrado está na `main` em `9c16596`, com working tree limpo e `origin/main` sincronizada. `npm.cmd test` (4/4), verificações de sintaxe JavaScript, `flutter test` (5/5), `flutter analyze --no-fatal-infos` e `npm.cmd audit --omit=dev --audit-level=high` passaram; a análise Flutter mantém apenas 9 informações de estilo/depreciação. O workflow de Android foi reforçado para compilar e publicar APK e AAB Release como artefatos do CI.
 
-Nenhum segredo ou keystore foi criado. O build sem `key.properties` continua usando assinatura debug. Permanecem pendentes somente validações que dependem de amostras, hardware ou infraestrutura externos, especialmente PDF escaneado/protegido, captura efetiva da câmera, tutor remoto, HTTPS e assinatura de produção.
+Nenhum segredo ou keystore foi criado. O build sem `key.properties` continua usando assinatura debug. Permanecem pendentes somente validações que dependem de amostras, hardware ou infraestrutura externos, especialmente PDF escaneado/protegido, tutor remoto, HTTPS e assinatura de produção. A captura efetiva da câmera foi validada no dispositivo físico autorizado.
 
 ## Status atual - 26/11/2026
 

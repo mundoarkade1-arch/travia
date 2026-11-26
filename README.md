@@ -4,7 +4,7 @@
 
 A `main` está integrada no commit `9c16596`. A auditoria reproduziu os testes Node e Flutter, a análise estática sem erros e `npm audit --omit=dev --audit-level=high` sem vulnerabilidades. O workflow [`flutter.yml`](./.github/workflows/flutter.yml) agora gera e publica como artefatos do CI tanto o APK quanto o AAB Release, sem exigir segredos para a validação comum. As actions de checkout e Java foram atualizadas para versões compatíveis com o runtime atual do GitHub Actions.
 
-Os builds comuns usam assinatura debug deliberadamente. A assinatura de produção continua pendente de keystore e segredos reais. OCR de PDF escaneado/protegido, captura efetiva da câmera, tutor remoto e sincronização HTTPS permanecem validações externas pendentes; os resultados físicos já obtidos estão diferenciados em [`TESTING.md`](./TESTING.md).
+Os builds comuns usam assinatura debug deliberadamente. A assinatura de produção continua pendente de keystore e segredos reais. OCR de PDF escaneado/protegido, tutor remoto e sincronização HTTPS permanecem validações externas pendentes; a captura efetiva da câmera foi comprovada no dispositivo físico e os resultados estão diferenciados em [`TESTING.md`](./TESTING.md).
 
 ## OCR Android — implementação 25/11/2026
 
