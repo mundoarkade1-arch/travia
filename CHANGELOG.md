@@ -6,6 +6,13 @@
 - Confirmada a instalação do APK recompilado e a abertura do menu de importação no AVD.
 - Registrada a limitação do Photo Picker do AVD, que ficou sem resposta após a seleção da imagem de teste; OCR positivo e persistência Android continuam pendentes.
 
+## Validação funcional parcial do OCR — 2026-11-26
+
+- Confirmada a importação de `travia-ocr-pt.png` pelo seletor de arquivos, com 12.466 bytes recebidos.
+- Confirmado o processamento local do ML Kit Latin e o texto exibido na interface: `Engenharia Civil - acao, calculo e pressao 12,5 kN`.
+- Confirmada a permanência do material listado após reinício do aplicativo.
+- Edição e cópia ficaram inconclusivas devido a ANR do processo `system` no AVD durante a automação; PDFs e câmera continuam sem teste funcional Android.
+
 ## OCR Android — 2026-11-25
 
 - Adicionada captura por câmera, galeria e importação de arquivos no módulo Materiais.

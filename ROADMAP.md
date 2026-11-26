@@ -97,4 +97,12 @@ O cliente Flutter inicial foi conectado à matriz curricular real e à persistê
 - [x] Corrigir o `BuildContext` usado pelo menu de importação no Android.
 - [x] Confirmar abertura do menu de câmera, galeria e arquivos no APK recompilado.
 - [ ] Concluir OCR positivo, PDFs e persistência no Android após estabilizar o Photo Picker/AVD.
+
+### Resultado da validação — 2026-11-26
+
+- [x] Importar imagem por seletor de arquivos e confirmar o arquivo recebido.
+- [x] Executar ML Kit Latin e confirmar texto reconhecido na interface.
+- [x] Confirmar que o material permanece listado após reinício.
+- [ ] Aprovar edição/cópia do resultado e reabertura visual do texto após ANR do sistema no AVD.
+- [ ] Validar PDFs e câmera em dispositivo/AVD estável.
 - [ ] Assinar e validar artefatos com keystore de produção fornecido.

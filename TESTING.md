@@ -158,6 +158,16 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - `flutter analyze --no-fatal-infos`: sem erros, 9 infos já conhecidas. `flutter test`: 5/5 aprovados.
 - A execução do comando `flutter build apk --debug --no-pub` e a nova execução Release ficaram sem progresso textual na etapa final e foram encerradas no limite operacional; o APK Release existente foi instalado com sucesso, mas não há uma linha final de build para declarar a compilação nova como aprovada. O AAB anterior foi preservado e não repetido.
 
+## OCR Android — evidência funcional — 2026-11-26
+
+- APK Release instalado no `emulator-5554` com retorno `Success`.
+- O seletor de arquivos exibiu e devolveu `travia-ocr-pt.png`, 12.466 bytes. O Travia exibiu o material como arquivo local e o processo permaneceu ativo.
+- ML Kit Latin foi inicializado localmente; o logcat registrou `OCR process succeeded via visionkit pipeline` e o diálogo exibiu `Página 1` com `Engenharia Civil - acao, calculo e pressao 12,5 kN`.
+- Após reinício, o painel inicial exibiu `Materiais — 1 arquivos locais`, confirmando a persistência do material e do resultado salvo antes do diálogo.
+- A edição, cópia e confirmação visual do texto persistido não foram aprovadas: o AVD apresentou repetidamente `Process system isn't responding`, bloqueando UIAutomator e a interação subsequente.
+- Não foram executados testes funcionais Android de câmera, PDF textual, PDF escaneado, PDF multipágina, seleção de páginas ou arquivo protegido/inválido.
+- Builds desta rodada: APK Release aprovado em 71,0 s; AAB Release aprovado em 32,6 s. `flutter analyze --no-fatal-infos` sem erros, com 9 infos conhecidas; `flutter test` 5/5.
+
 - Adicionado `.github/workflows/flutter.yml` para executar em pushes da `main` e em pull requests para `main`.
 - O workflow usa Java 17, Flutter 3.50.1 estável, `flutter pub get`, `flutter analyze --no-fatal-infos`, `flutter test` e build APK Release.
 - O workflow cancela execuções superseded do mesmo PR e possui timeout de 15 minutos para não deixar builds remotos indefinidos.

@@ -90,6 +90,13 @@ PDFs e imagens podem ser abertos e removidos do IndexedDB. A chamada de IA passa
 - `flutter analyze --no-fatal-infos` continuou sem erros e `flutter test` passou com 5 testes.
 - O APK recompilado foi instalado com `adb install -r` retornando `Success`; a abertura do menu de importação foi confirmada no AVD. O Photo Picker abriu, mas ficou sem responder depois da seleção da imagem de teste. Não há evidência suficiente para aprovar OCR positivo ou persistência Android.
 - O build Release não recebeu uma linha final de conclusão antes do limite operacional, embora o APK resultante tenha sido instalado; o AAB anterior permanece preservado e não foi repetido.
+
+## OCR Android validado parcialmente — 26/11/2026
+
+- O seletor de arquivos devolveu uma imagem local conhecida (`travia-ocr-pt.png`, 12.466 bytes); o arquivo foi copiado para o armazenamento privado e permaneceu listado após reinício do aplicativo.
+- O ML Kit Latin carregou o modelo local no APK e reconheceu na interface: `Engenharia Civil - acao, calculo e pressao 12,5 kN`.
+- A edição/cópia/salvamento manual do diálogo não recebeu aprovação: durante a automação o AVD apresentou `Process system isn't responding`, bloqueando UIAutomator e novas interações. O OCR já é persistido antes da abertura do diálogo, mas a reabertura do texto não pôde ser confirmada visualmente nessa sessão.
+- PDFs textual, escaneado, múltiplas páginas, seleção de páginas e câmera não foram validados funcionalmente no Android nesta execução.
 - O APK Release novo foi instalado com `Success` e iniciou `com.example.travia/.MainActivity`.
 - Foram acessados Início, Caderno, Calendário, Materiais e menu lateral. A anotação existente foi confirmada após reinício do processo.
 - Não foram observados `FATAL EXCEPTION`, ANR do Travia ou erro Flutter no logcat filtrado.
