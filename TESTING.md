@@ -7,7 +7,7 @@
 - `npm.cmd audit --omit=dev --audit-level=high`: 0 vulnerabilidades.
 - `flutter test`: 5/5 aprovados.
 - `flutter analyze --no-fatal-infos`: aprovado sem erros; 9 informações de estilo/depreciação.
-- CI pós-integração: análise, testes, APK Release, AAB Release e upload dos artefatos aprovados.
+- CI da PR de pré-release: análise, testes, APK Release, AAB Release e upload dos artefatos aprovados.
 - A validação Android desta etapa não instalou APK. As evidências físicas anteriores permanecem separadas das validações automatizadas.
 
 ## Resumo atual - 26/11/2026
