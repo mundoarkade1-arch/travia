@@ -2,6 +2,20 @@
 
 O registro mais recente da PR #2 corresponde ao commit publicado em `feat/android-ocr`; entradas abaixo sao historicas e nao substituem a validacao final do dispositivo fisico.
 
+## Auditoria de pré-release — 2026-11-26
+
+- Atualizado o workflow Android para usar actions atuais e gerar APK e AAB Release.
+- Adicionado upload dos dois artefatos no GitHub Actions, com falha explícita se algum arquivo não for produzido.
+- Reexecutadas as validações Node, Flutter e auditoria de dependências sem erros.
+- Mantidas explícitas as pendências de assinatura de produção e validações que dependem de hardware, amostras ou infraestrutura externa.
+
+## Validação física USB — 2026-11-26
+
+- Confirmado Xiaomi `22101320G` com Android 14/API 34 e ADB autorizado.
+- Validada captura efetiva pela câmera, retorno ao app e processamento OCR local sem exceção.
+- Confirmados OCR com acentuação em imagem existente, edição/cópia e PDF textual multipágina com seleção `1-13`.
+- Mantida como pendência apenas a validação com PDF escaneado/protegido, por ausência de amostra.
+
 ## Correcao OCR no dispositivo fisico - 2026-11-26
 
 - Corrigido o estado inicial de materiais para permitir importacao de arquivos em instalacoes sem dados anteriores.

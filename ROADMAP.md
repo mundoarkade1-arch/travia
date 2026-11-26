@@ -1,5 +1,15 @@
 # Roadmap
 
+## Auditoria de pré-release — 26/11/2026
+
+- [x] Reproduzir testes Node, sintaxe JavaScript, testes Flutter e análise estática.
+- [x] Verificar dependências Node sem vulnerabilidades altas conhecidas.
+- [x] Fazer o CI gerar e publicar APK e AAB Release.
+- [ ] Configurar assinatura de produção com keystore real e GitHub Secrets.
+- [x] Validar captura efetiva da câmera no dispositivo físico autorizado.
+- [ ] Validar com amostras reais o PDF escaneado/protegido.
+- [ ] Configurar e testar tutor remoto e sincronização HTTPS em infraestrutura autorizada.
+
 ## Status atual da PR #2 - 26/11/2026
 
 - A branch `feat/android-ocr` foi validada no dispositivo fisico `5a3338e6`.

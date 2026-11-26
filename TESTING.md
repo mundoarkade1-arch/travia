@@ -1,5 +1,28 @@
 # Testes
 
+## Auditoria de pré-release — 26/11/2026
+
+- `npm.cmd test`: 4/4 aprovados.
+- `node --check app.js` e `node --check server.mjs`: aprovados.
+- `npm.cmd audit --omit=dev --audit-level=high`: 0 vulnerabilidades.
+- `flutter test`: 5/5 aprovados.
+- `flutter analyze --no-fatal-infos`: aprovado sem erros; 9 informações de estilo/depreciação.
+- CI da PR de pré-release: análise, testes, APK Release, AAB Release e upload dos artefatos aprovados.
+- As evidências físicas estão separadas das validações automatizadas; esta etapa instalou o APK apenas com `adb install -r`, sem limpeza de dados.
+
+### Validação física USB — 26/11/2026
+
+- ADB reconheceu `5a3338e6` como `device`; modelo Xiaomi `22101320G`, Android 14/API 34, `arm64-v8a`.
+- `flutter devices` reconheceu o mesmo aparelho.
+- APK `com.example.travia` 0.4.0 foi instalado com `adb install -r`, sem limpar dados.
+- O app abriu e navegou até Materiais; o menu de importação exibiu câmera, galeria e arquivos.
+- A câmera real abriu, o disparador produziu uma foto em `DCIM/Camera` e o fluxo retornou ao Travia.
+- O ML Kit executou OCR no arquivo capturado sem exceção; o resultado da foto sem texto mostrou apenas `Página 1`.
+- Material existente no mesmo APK exibiu OCR com acentuação (`educação`, `considerações`, `à`) e os botões Editar/Copiar/Salvar responderam.
+- PDF textual real de 13 páginas exibiu `Selecionar páginas (13)`, processou `1-13` e mostrou páginas multipágina com acentuação.
+- Não houve `FATAL EXCEPTION` do Travia nos logs filtrados.
+- PDF escaneado/protegido não foi executado por ausência de amostra apropriada.
+
 ## Resumo atual - 26/11/2026
 
 Os resultados do dispositivo fisico registrados neste arquivo supersedem as tentativas anteriores no AVD instavel. O CI da PR #2 esta verde; as limitacoes remanescentes estao explicitadas no registro mais recente.
