@@ -113,49 +113,72 @@ class OcrService {
     }
 
     final selectable = await _extractSelectableText(file, pages.pages);
-    if (selectable.pages.any((page) => page.text.trim().isNotEmpty)) {
+    final hasScannedPages =
+        selectable.pages.any((page) => page.text.trim().isEmpty);
+    if (!hasScannedPages) {
       onProgress?.call(
           pages.pages.length, pages.pages.length, 'Texto do PDF extraído.');
       return selectable;
     }
 
-    final document = await pdfx.PdfDocument.openFile(path);
-    final recognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    pdfx.PdfDocument? document;
+    TextRecognizer? recognizer;
     final results = <OcrPageResult>[];
     Directory? temporaryDirectory;
     try {
+      document = await pdfx.PdfDocument.openFile(path);
       temporaryDirectory = await getTemporaryDirectory();
       for (var index = 0; index < pages.pages.length; index++) {
         final pageNumber = pages.pages[index];
+        final extracted = selectable.pages[index];
+        if (extracted.text.trim().isNotEmpty) {
+          results.add(extracted);
+          onProgress?.call(index + 1, pages.pages.length,
+              'Texto da página $pageNumber extraído.');
+          continue;
+        }
         onProgress?.call(index, pages.pages.length,
             'Processando página $pageNumber de ${pages.pages.length}...');
         final page = await document.getPage(pageNumber);
-        final rendered = await page.render(
-            width: page.width.clamp(900, 1600).toDouble(),
-            height: page.height.clamp(900, 2200).toDouble(),
-            format: pdfx.PdfPageImageFormat.png);
-        await page.close();
+        pdfx.PdfPageImage? rendered;
+        try {
+          rendered = await page.render(
+              width: page.width.clamp(900, 1600).toDouble(),
+              height: page.height.clamp(900, 2200).toDouble(),
+              format: pdfx.PdfPageImageFormat.png);
+        } finally {
+          await page.close();
+        }
         if (rendered == null || rendered.bytes.isEmpty) {
           results.add(OcrPageResult(page: pageNumber, text: ''));
+          onProgress?.call(index + 1, pages.pages.length,
+              'Página $pageNumber sem imagem renderizável.');
           continue;
         }
         final temporaryFile = File(
             '${temporaryDirectory.path}${Platform.pathSeparator}travia_ocr_${DateTime.now().microsecondsSinceEpoch}.png');
         await temporaryFile.writeAsBytes(rendered.bytes, flush: true);
         try {
+          recognizer ??= TextRecognizer(script: TextRecognitionScript.latin);
           final recognized = await recognizer
               .processImage(InputImage.fromFilePath(temporaryFile.path));
           results.add(OcrPageResult(page: pageNumber, text: recognized.text));
         } finally {
           await temporaryFile.delete().catchError((_) => temporaryFile);
         }
+        onProgress?.call(
+            index + 1, pages.pages.length, 'Página $pageNumber processada.');
       }
       onProgress?.call(
           pages.pages.length, pages.pages.length, 'OCR concluído.');
-      return OcrDocumentResult(source: 'pdf-escaneado', pages: results);
+      final hasSelectablePages =
+          selectable.pages.any((page) => page.text.trim().isNotEmpty);
+      return OcrDocumentResult(
+          source: hasSelectablePages ? 'pdf-misto' : 'pdf-escaneado',
+          pages: results);
     } finally {
-      await recognizer.close();
-      await document.close();
+      await recognizer?.close();
+      await document?.close();
     }
   }
 

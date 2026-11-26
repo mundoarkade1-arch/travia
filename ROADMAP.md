@@ -92,6 +92,15 @@ O cliente Flutter inicial foi conectado à matriz curricular real e à persistê
 - [x] Recuperar o AVD com inicialização a frio e validar instalação, abertura, navegação e persistência do novo APK.
 - [x] Configurar CI GitHub para análise, testes e APK Release.
 
+## Próxima validação OCR Android
+
+- [x] Corrigir processamento híbrido página a página para PDFs mistos.
+- [x] Recuperar imagens perdidas após recriação da Activity.
+- [x] Recompilar APK e AAB Release após as correções.
+- [ ] Validar edição, cópia e reabertura do OCR em AVD estável.
+- [ ] Validar PDF textual, escaneado, multipágina, seleção, inválido e protegido no Android.
+- [ ] Validar câmera em dispositivo ou AVD estável.
+
 ## Correção encontrada na validação OCR — 2026-11-26
 
 - [x] Corrigir o `BuildContext` usado pelo menu de importação no Android.

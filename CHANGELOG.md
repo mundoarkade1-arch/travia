@@ -44,6 +44,14 @@
 - Confirmados APK de 83,4 MiB e AAB de 65,8 MiB; nenhum artefato foi instalado.
 - Registrada a ausência de dispositivo conectado e de emulador iniciado.
 
+## OCR Android — 2026-11-26
+
+- Corrigido o tratamento de PDFs mistos para processar páginas sem texto selecionável com renderização e OCR, preservando páginas textuais.
+- Adicionada recuperação de imagem perdida pelo `image_picker` após recriação da Activity.
+- `flutter analyze --no-fatal-infos`: aprovado sem erros; `flutter test`: 5/5.
+- APK Release e AAB Release recompilados. Instalação do APK no AVD retornou `Success`.
+- Edição/cópia e validação Android de PDFs/câmera permanecem pendentes devido a ANR recorrente do `com.android.systemui` no AVD.
+
 ## Auditoria Android final — 2026-11-24
 
 - Corrigido o registro de notas na matriz curricular do cliente Flutter.

@@ -58,6 +58,13 @@ Versão web 0.4 funcional, com OCR/PDF e histórico de tutor por disciplina. O n
 
 O ambiente atual não possui Flutter, Dart, Android SDK ou ADB. HTML, CSS e JavaScript nativos permitem execução imediata em web. O estado migra até a versão 4; arquivos binários usam IndexedDB e metadados ficam no estado exportável. O servidor de sincronização opcional usa scrypt, tokens de sessão, revisão otimista e AES-256-GCM em arquivos fora do repositório.
 
+## Correção de estabilidade do OCR — 2026-11-26
+
+- PDFs mistos agora processam cada página: Syncfusion para páginas textuais e `pdfx` + ML Kit para páginas escaneadas.
+- O ciclo de vida de imagens foi reforçado com `ImagePicker.retrieveLostData()` após recriação da Activity.
+- A análise passou sem erros e os 5 testes automatizados passaram. APK e AAB Release foram recompilados; o APK foi instalado com `Success` no AVD.
+- A validação Android anterior comprovou OCR real de imagem pelo ML Kit e persistência do material. Edição/cópia e PDFs continuam sem aprovação nova porque o AVD voltou a travar o `System UI` com ANR.
+
 ## Limitações conhecidas
 
 PDFs e imagens podem ser abertos e removidos do IndexedDB. A chamada de IA passa pelo proxy local sem persistir credenciais e o histórico é separado por disciplina. OCR de imagens usa Tesseract.js no servidor local e ML Kit no Flutter; PDFs digitais usam extração com pdfjs-dist. A sincronização está implementada, mas requer configurar uma chave de cifragem e infraestrutura HTTPS; sem isso o modo offline continua sendo o padrão. O build Android sem key.properties usa deliberadamente a assinatura debug para validação local.

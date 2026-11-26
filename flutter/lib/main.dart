@@ -108,6 +108,7 @@ class _TraviaAppState extends State<TraviaApp> {
     model.text = data.tutor['model']?.toString() ?? '';
     _selectCourse(data.courses.first['id'] as int);
     if (mounted) setState(() => loading = false);
+    await _recoverLostImage();
   }
 
   Future<void> _save() async {
@@ -436,7 +437,11 @@ class _TraviaAppState extends State<TraviaApp> {
         type: FileType.custom,
         allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg']);
     final file = files.isEmpty ? null : files.single;
-    if (file == null || file.path == null) return;
+    if (file == null) return;
+    if (file.path == null) {
+      _message('Não foi possível acessar o arquivo selecionado.');
+      return;
+    }
     data.materials.add({
       'id': DateTime.now().millisecondsSinceEpoch,
       'name': file.name,
@@ -517,18 +522,37 @@ class _TraviaAppState extends State<TraviaApp> {
       final image = await imagePicker.pickImage(
           source: source, maxWidth: 2000, maxHeight: 2000, imageQuality: 88);
       if (image == null) return;
-      data.materials.add({
-        'id': DateTime.now().millisecondsSinceEpoch,
-        'name': image.name,
-        'size': await File(image.path).length(),
-        'path': await _copyMaterialFile(image.path, image.name),
-        'updatedAt': DateTime.now().toIso8601String()
-      });
-      await _save();
+      await _saveImageMaterial(image);
       _message('Imagem salva somente neste dispositivo.');
     } catch (_) {
       _message('Não foi possível abrir a câmera ou galeria.');
     }
+  }
+
+  Future<void> _recoverLostImage() async {
+    try {
+      final lost = await imagePicker.retrieveLostData();
+      if (lost.isEmpty || lost.files == null || lost.files!.isEmpty) return;
+      await _saveImageMaterial(lost.files!.first);
+      _message('Imagem recuperada após a retomada do aplicativo.');
+    } catch (_) {
+      // A recuperação é opcional e não deve impedir a inicialização.
+    }
+  }
+
+  Future<void> _saveImageMaterial(XFile image) async {
+    final source = File(image.path);
+    if (!await source.exists() || await source.length() == 0) {
+      throw const FormatException('Imagem inexistente ou vazia.');
+    }
+    data.materials.add({
+      'id': DateTime.now().millisecondsSinceEpoch,
+      'name': image.name,
+      'size': await source.length(),
+      'path': await _copyMaterialFile(image.path, image.name),
+      'updatedAt': DateTime.now().toIso8601String()
+    });
+    await _save();
   }
 
   void _setOcrProgress(int current, int total, String message) {

@@ -128,6 +128,18 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - A regeneração APK/AAB não foi concluída: Gradle ficou sem progresso por aproximadamente quatro minutos e foi interrompido. Os artefatos anteriores permaneceram inalterados.
 - O alerta `System UI isn't responding` foi identificado como componente System UI, não como exceção do Travia, e desapareceu após aguardar.
 
+## Correções de OCR — 2026-11-26
+
+- `dart format flutter/lib/core/ocr_service.dart flutter/lib/main.dart`: concluído.
+- `flutter analyze --no-fatal-infos --no-pub`: aprovado sem erros; 9 informações de estilo/depreciação existentes.
+- `flutter test --no-pub`: aprovado, 5/5 testes.
+- `flutter build apk --release --no-pub`: concluído; APK em `flutter/build/app/outputs/flutter-apk/app-release.apk`.
+- `flutter build appbundle --release --no-pub`: concluído em 53,6 s; AAB em `flutter/build/app/outputs/bundle/release/app-release.aab`.
+- `aapt2 dump badging`: `com.example.travia`, versão `0.4.0`, versionCode `1`, minSdk `24`, target/compile SDK `36`.
+- `adb install -r`: `Success`; processo `com.example.travia` ativo após inicialização.
+- O AVD apresentou novamente ANR do `com.android.systemui` após reinicialização. Não foram aprovados os testes novos de edição/cópia, câmera ou PDFs no Android.
+- A evidência funcional anterior permanece válida: seletor de arquivos, OCR real de imagem e persistência do material após reinício. A amostra usada não continha acentos; preservação de acentuação ainda não foi comprovada em Android.
+
 ## Ainda não executados
 
 - Testes automatizados de navegador, IndexedDB em múltiplos navegadores e acessibilidade formal.

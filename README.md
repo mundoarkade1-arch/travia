@@ -81,6 +81,12 @@ Abra `http://localhost:4173`. Não há login nem banco remoto; os dados são sal
 
 Sincronização, SQLite/Drift, calendário recorrente e simuladores adicionais ainda estão no roadmap.
 
+## OCR Android — correção e validação adicional — 26/11/2026
+
+O processamento de PDFs agora avalia cada página individualmente: páginas com texto selecionável são extraídas diretamente e páginas escaneadas são renderizadas e processadas pelo ML Kit. PDFs mistos são identificados como `pdf-misto`, sem ignorar páginas escaneadas. O fluxo de imagens também tenta recuperar uma seleção perdida quando o Android recria a Activity.
+
+`flutter analyze --no-fatal-infos` passou sem erros (9 informações existentes) e `flutter test` passou 5/5. APK Release e AAB Release foram recompilados; o APK foi instalado com sucesso no `emulator-5554`, package `com.example.travia`, versão `0.4.0`, versionCode `1`. O AVD voltou a apresentar ANR do `com.android.systemui`, impedindo nova automação confiável de edição/cópia e dos fluxos PDF.
+
 ## Validação Android mais recente
 
 O APK Release existente foi instalado e aberto no AVD `Medium_Phone_API_37.0`. Foram verificados o painel offline, a matriz de graduação, Caderno, Calendário, Materiais, menu lateral e persistência de anotação após reinício do processo. A regeneração do build Release ficou pendente porque o Gradle não apresentou progresso dentro do limite operacional; a assinatura de produção requer um keystore fornecido pelo proprietário.
