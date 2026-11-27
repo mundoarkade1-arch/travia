@@ -2,6 +2,8 @@
 
 ## Missao 7 - compartilhamento e limites de PDF - 2026-11-27
 
+- APK final de validacao: SHA-256 `2F0C0118FDD2D1654B3533685889DD327B46E9DD2BBD5ACBD2566F65163E1581`.
+- AAB final de validacao: SHA-256 `6A232810D1DE6D1AD23E43982F546644C7067E56A9AE963819A6C5398D4A5571`.
 - O APK com `share_plus` foi instalado no POCO com `adb install -r`, preservando os dados existentes.
 - `Compartilhar backup` abriu o chooser nativo Android com `travia-backup.json`; destinos visiveis incluiram Mi Share, WhatsApp, ChatGPT, Imprimir e Transmitir. O chooser foi cancelado sem envio de dados.
 - O compartilhamento de texto OCR foi implementado no dialogo de resultado. A entrega externa ainda requer selecao humana de um destino; nenhum dado pessoal foi enviado.

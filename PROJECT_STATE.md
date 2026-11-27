@@ -4,6 +4,8 @@
 
 O compartilhamento externo de backup JSON e resultado OCR foi implementado com `share_plus`, URI temporaria e chooser nativo. No POCO, o chooser abriu e foi cancelado sem envio. PDF protegido continua sendo rejeitado com seguranca porque nao existe suporte a senha. Foram preparados arquivos de 20, 51 e 100 MiB, mas a selecao efetiva pelo fluxo do app nao foi concluida; nao sao testes fisicos aprovados.
 
+Artefatos locais gerados a partir do codigo deste estado: APK `flutter/build/app/outputs/flutter-apk/app-release.apk`, SHA-256 `2F0C0118FDD2D1654B3533685889DD327B46E9DD2BBD5ACBD2566F65163E1581`; AAB `flutter/build/app/outputs/bundle/release/app-release.aab`, SHA-256 `6A232810D1DE6D1AD23E43982F546644C7067E56A9AE963819A6C5398D4A5571`. Ambos debug-signed.
+
 ## Artefatos da auditoria final - commit 23a903d
 
 APK de validacao: `flutter/build/app/outputs/flutter-apk/app-release.apk`, SHA-256 `5CCADCEFF0AAFB261B97FFC4839DEC5EBD1DC820CBF71E32FA3CD1EA25FA2308`. AAB de validacao: `flutter/build/app/outputs/bundle/release/app-release.aab`, SHA-256 `7DF5C7D57BD72EFD16EC527B09086169817158731CD5B23DCF628C7ADD81732C`. Ambos sao debug-signed, package `com.example.travia`, versao `0.4.0`/code `1`, e nao sao artefatos de producao.
