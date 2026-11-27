@@ -1,5 +1,9 @@
 # Estado do projeto
 
+## Homologacao complementar - 2026-11-27
+
+No POCO, o APK instalado foi extraido e conferido por SHA-256 contra o artefato local do commit `a9c9fa4`. Foram importados e testados um PDF protegido publico, um PDF publico de 10 MB e um falso PDF. O protegido foi rejeitado sem crash com mensagem segura; como nao ha campo de senha, os cenarios de senha correta/incorreta nao sao suportados. O PDF de 10 MB foi processado em 2 paginas e salvo. O falso PDF foi rejeitado explicitamente. O cliente nao possui compartilhamento externo implementado. A permissao de camera foi revogada e restaurada sem instabilidade, mas a camera externa abriu, portanto o caso de negacao efetiva permanece inconclusivo.
+
 ## Homologacao fisica no POCO X5 Pro - 2026-11-27
 
 O APK reconstruido a partir do commit final `d54268d` foi instalado com `adb install -r` no dispositivo `5a3338e6` (modelo `22101320G`, Android 14/API 34), sem desinstalacao ou limpeza de dados. Inicializacao, navegacao, matriz, edicao/salvamento de nota, camera com captura, persistencia apos reboot e funcionamento offline foram observados sem crash do Travia. O backup foi exportado para `travia-final-test.json`, com `version: 4`, restaurado pelo seletor Android e validado apos reboot. OCR com acentuacao em imagem e PDF escaneado real de 2 paginas foram concluidos com salvamento e persistencia; permanecem pendentes PDF protegido/senhas, PDF grande, compartilhamento externo e tutor HTTPS real.

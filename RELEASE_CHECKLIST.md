@@ -2,6 +2,16 @@
 
 ## Estado desta missão
 
+## Homologacao complementar no POCO - 2026-11-27
+
+- [x] APK instalado corresponde ao artefato local por SHA-256.
+- [x] PDF protegido importado e rejeitado sem crash/ANR.
+- [ ] Senha correta/incorreta: nao suportada porque o cliente nao oferece campo de senha.
+- [x] PDF publico de 10 MB importado, reconhecido como 2 paginas, processado e salvo.
+- [x] Falso PDF rejeitado com mensagem de formato invalido.
+- [ ] Compartilhamento externo: nao implementado no cliente atual.
+- [ ] Negacao efetiva da permissao de camera: inconclusiva, pois a camera externa abriu apos a revogacao; permissao restaurada.
+
 ### Execucao real no POCO X5 Pro - 2026-11-27
 
 - [x] Backup JSON v4 exportado, validado e restaurado sem sobrescrever o arquivo existente.

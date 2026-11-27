@@ -1,5 +1,10 @@
 # Changelog
 
+## Homologacao complementar - 2026-11-27
+
+- Testados no POCO PDF protegido publico, PDF de 10 MB e arquivo falso, com rejeicao segura do protegido/invalido e OCR salvo do PDF de 2 paginas.
+- Confirmado que o cliente atual nao possui fluxo de compartilhamento externo nem entrada de senha para PDF protegido; essas capacidades permanecem pendentes.
+
 ## Homologacao OCR e backup - 2026-11-27
 
 - Validado OCR com acentuacao em imagem e PDF escaneado real de 2 paginas no POCO, incluindo copia, salvamento e persistencia apos reboot.

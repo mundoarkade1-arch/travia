@@ -1,5 +1,14 @@
 # Testes
 
+## Homologacao complementar no POCO - 2026-11-27
+
+- O dispositivo permaneceu `5a3338e6`, modelo `22101320G`, Android 14/API 34. O APK instalado foi extraido do aparelho e seu SHA-256 coincidiu com o artefato local `6C95FFFB6390286F9A7537EF3DF588A19A7D9844FF3FC17D879441B6334DC18F`.
+- A amostra publica protegida `sample-password-protected.pdf` (7.618 bytes, SHA-256 `010A138651A1B04955EC12436A8E9FEA33B1B171A7A10896278223FFFE20F734`) foi importada. O OCR exibiu erro seguro informando que o arquivo pode estar protegido, invalido ou grande demais; nao houve crash/ANR. O app nao oferece campo para senha, portanto senha correta/incorreta nao sao suportadas nem aprovadas.
+- A amostra publica `sample-pdf-10mb.pdf` (10.464.904 bytes, SHA-256 `9CA49F8D3CDACA4BCE1E86FF9FD56F55EC52D697DB4E00D48EA04AC9F7B4F9C1`) foi importada, reconhecida como PDF de 2 paginas, processada por OCR e salva no material sem crash.
+- O arquivo falso `travia-invalid.pdf` de 9 bytes foi importado e rejeitado com `O arquivo selecionado não é um PDF válido.`
+- O caminho de camera foi exercitado com a permissao do Travia temporariamente revogada; a biblioteca abriu a camera externa sem crash. A permissao foi restaurada. Isso nao comprova captura com permissao negada, pois a camera e um aplicativo externo.
+- Nao existe implementacao de compartilhamento externo no cliente atual; o seletor de compartilhamento permanece pendente de funcionalidade.
+
 ## Homologacao fisica real - POCO X5 Pro 5G - 2026-11-27
 
 - Dispositivo `5a3338e6`, modelo `22101320G`, Android 14/API 34; ADB retornou `device`.

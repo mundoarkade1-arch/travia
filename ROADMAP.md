@@ -1,5 +1,11 @@
 # Roadmap
 
+## Homologacao complementar - 2026-11-27
+
+- [x] Validar no POCO PDF protegido/invalido com rejeicao segura e PDF publico de 10 MB com OCR salvo.
+- [ ] Implementar, se aprovado pelo proprietario, entrada de senha para PDF protegido e compartilhamento externo.
+- [ ] Configurar assinatura definitiva e tutor HTTPS real.
+
 ## Preparação para produção — 26/11/2026
 
 - [x] Impedir assinatura debug silenciosa em builds Release.
