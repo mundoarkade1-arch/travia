@@ -9,6 +9,16 @@
 - PDFs vazios, que não começam com `%PDF-`, acima de 50 MiB e sem texto reconhecido devem ser rejeitados.
 - A validação com PDF escaneado, protegido ou corrompido real continua pendente até haver amostras apropriadas.
 
+## Recuperação e validação final — 27/11/2026
+
+- `flutter analyze --no-pub`: concluído sem erros, com 9 informações de estilo/depreciação já documentadas.
+- `flutter test --no-pub`: 7/7 aprovados.
+- `flutter build apk --release --no-pub` sem autorização: falhou corretamente por ausência de `key.properties`.
+- `:app:assembleRelease -PallowDebugSigning=true`: concluído; APK de validação gerado com assinatura Android Debug.
+- `:app:bundleRelease -PallowDebugSigning=true`: concluído; AAB de validação gerado com assinatura Android Debug.
+- APK: 94.082.710 bytes; AAB: 74.688.790 bytes.
+- `jarsigner` identificou o certificado `CN=Android Debug`; isso confirma validação de build, não assinatura de produção.
+
 ## Auditoria de pré-release — 26/11/2026
 
 - `npm.cmd test`: 4/4 aprovados.

@@ -4,6 +4,10 @@
 
 A configuração Android agora falha sem `key.properties`, impedindo fallback silencioso para debug. O CI autoriza debug somente por variável explícita para manter builds de validação enquanto não há keystore de produção. O OCR rejeita PDFs que não possuem cabeçalho válido, excedem 50 MiB ou não produzem texto reconhecido. Detalhes e pendências estão em [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md).
 
+## Recuperação e validação final — 27/11/2026
+
+O bloqueio do Git foi resolvido após confirmar que não havia processo Git nem `.git/index.lock`; a falha era intermitente na pasta `.git` sob OneDrive. O commit `b07fb6e` preserva as correções da auditoria. `flutter analyze --no-pub` terminou sem erros e com 9 informações; `flutter test --no-pub` passou 7/7. APK e AAB de validação foram gerados com `-PallowDebugSigning=true` e permanecem assinados com o certificado Android Debug, não sendo releases de produção. A keystore definitiva não foi criada.
+
 ## Auditoria de pré-release — 26/11/2026
 
 O estado integrado estava na `main` em `31494c4` antes desta branch de preparação. `npm.cmd test` (4/4), verificações de sintaxe JavaScript, `flutter test` (agora 6 testes), `flutter analyze --no-fatal-infos` e `npm.cmd audit --omit=dev --audit-level=high` passaram; a análise Flutter mantém 9 informações de estilo/depreciação. O workflow de Android compila e publica APK e AAB de validação com autorização explícita de debug.

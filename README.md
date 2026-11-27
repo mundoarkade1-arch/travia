@@ -10,6 +10,8 @@ A `main` está integrada no commit `31494c4`. A auditoria reproduziu os testes N
 
 O build Release falha sem assinatura configurada; somente o CI de validação autoriza debug explicitamente. A assinatura de produção continua pendente de keystore e Secrets reais. OCR de PDF escaneado/protegido, tutor remoto e sincronização HTTPS permanecem validações externas pendentes; a captura efetiva da câmera foi comprovada no dispositivo físico e os resultados estão diferenciados em [`TESTING.md`](./TESTING.md).
 
+Na validação final de 27/11/2026, `flutter analyze` terminou sem erros, `flutter test` passou 7/7 e os builds APK/AAB foram concluídos somente com autorização explícita de assinatura debug. Os artefatos não representam uma release oficial.
+
 ## OCR Android — implementação 25/11/2026
 
 O cliente Flutter agora oferece câmera, galeria e seletor de arquivos para imagens e PDFs. Imagens usam ML Kit Text Recognition no script Latin, que cobre português brasileiro; o processamento ocorre no dispositivo e não envia documentos para servidores. O resultado pode ser revisado, editado, copiado e salvo junto aos metadados do material.
