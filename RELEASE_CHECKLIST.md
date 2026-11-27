@@ -2,6 +2,14 @@
 
 ## Estado desta missão
 
+## Atualizacao da Missao 7 - 2026-11-27
+
+- [x] Compartilhamento nativo de backup abre o chooser Android no POCO.
+- [x] Cancelamento do chooser retorna ao Travia sem crash.
+- [ ] Confirmar entrega em aplicativo externo sem enviar dados pessoais.
+- [ ] Validar fisicamente PDFs de 20, 51 e 100 MiB pelo fluxo completo.
+- [ ] Assinatura definitiva de producao.
+
 ## Homologacao complementar no POCO - 2026-11-27
 
 - [x] APK instalado corresponde ao artefato local por SHA-256.

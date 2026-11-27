@@ -2,6 +2,10 @@
 
 Este documento descreve o estado técnico de preparação do Travia. A missão não cria release pública, não publica em lojas e não distribui APK ou AAB.
 
+## Missao 7 - atualizacao funcional
+
+O compartilhamento externo foi implementado com `share_plus`: backup JSON usa arquivo temporario privado e resultado OCR usa texto, ambos entregues ao chooser nativo Android. O chooser foi aberto e cancelado no POCO sem crash. A assinatura de producao, o tutor HTTPS real e a entrega em aplicativo externo continuam pendentes de validacao/infraestrutura autorizada. O limite de PDF de 50 MiB permanece ativo; testes fisicos acima desse limite ainda nao foram concluidos.
+
 ## Atualizacao de homologacao - 2026-11-27
 
 O APK reconstruido do commit final `d54268d` foi instalado no POCO X5 Pro 5G (`5a3338e6`, Android 14/API 34). Foram validados OCR de imagem com acentuacao e OCR de PDF escaneado real de 2 paginas, incluindo selecao `1-2`, copia, salvamento e persistencia apos reboot. O backup `travia-final-test.json` foi exportado sem sobrescrever o backup existente, confirmou `version: 4` e foi restaurado pelo seletor Android.

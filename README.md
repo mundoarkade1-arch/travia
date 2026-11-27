@@ -1,5 +1,9 @@
 # Travia
 
+## Estado funcional atual - Missao 7
+
+O compartilhamento de backup JSON e resultado OCR usa chooser nativo Android por URI temporaria. No POCO, o chooser abriu e foi cancelado sem envio. O limite de PDF permanece em 50 MiB; suporte a senha para PDF protegido e tutor HTTPS real continuam pendentes.
+
 > Estado atual: o PDF protegido e o PDF invalido foram rejeitados com seguranca no aparelho, e um PDF publico de 10 MB/multipagina foi processado e salvo. O cliente ainda nao possui campo de senha nem compartilhamento externo. Permanecem pendentes PDF acima de 50 MiB, assinatura definitiva e tutor HTTPS real.
 
 ## Atualizacao de homologacao - 27/11/2026

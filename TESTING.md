@@ -1,5 +1,13 @@
 # Testes
 
+## Missao 7 - compartilhamento e limites de PDF - 2026-11-27
+
+- O APK com `share_plus` foi instalado no POCO com `adb install -r`, preservando os dados existentes.
+- `Compartilhar backup` abriu o chooser nativo Android com `travia-backup.json`; destinos visiveis incluiram Mi Share, WhatsApp, ChatGPT, Imprimir e Transmitir. O chooser foi cancelado sem envio de dados.
+- O compartilhamento de texto OCR foi implementado no dialogo de resultado. A entrega externa ainda requer selecao humana de um destino; nenhum dado pessoal foi enviado.
+- Foram preparados PDFs de 20 MiB, 51 MiB e 100 MiB e transferidos ao `/sdcard/Download`. A selecao efetiva no fluxo do app nao foi concluida nesta sessao; nao ha resultado fisico de OCR para esses tres arquivos.
+- O limite de 50 MiB permanece aplicado no `OcrService`; arquivos acima dele devem ser rejeitados antes do parser.
+
 ## Artefatos da auditoria final - commit 23a903d
 
 - APK de validacao: `flutter/build/app/outputs/flutter-apk/app-release.apk`, SHA-256 `5CCADCEFF0AAFB261B97FFC4839DEC5EBD1DC820CBF71E32FA3CD1EA25FA2308`.

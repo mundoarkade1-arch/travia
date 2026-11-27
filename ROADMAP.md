@@ -1,5 +1,11 @@
 # Roadmap
 
+## Atualizacao - 2026-11-27
+
+- Compartilhamento nativo: implementado para backup e texto OCR; falta validar entrega em um destino externo sem dados pessoais.
+- PDF grande: limite de 50 MiB mantido; arquivos de 20/51/100 MiB preparados, teste fisico completo pendente.
+- PDF protegido: rejeicao segura implementada; suporte a senha continua fora do escopo atual por ausencia de parser/fluxo seguro validado.
+
 ## Homologacao complementar - 2026-11-27
 
 - [x] Validar no POCO PDF protegido/invalido com rejeicao segura e PDF publico de 10 MB com OCR salvo.

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/curriculum.dart';
@@ -134,6 +135,23 @@ class _TraviaAppState extends State<TraviaApp> {
   Future<void> _backup() async => FilePicker.saveFile(
       fileName: 'travia-backup.json',
       bytes: Uint8List.fromList(utf8.encode(jsonEncode(data.toJson()))));
+
+  Future<void> _shareBackup() async {
+    try {
+      final directory = await getTemporaryDirectory();
+      final file =
+          File('${directory.path}${Platform.pathSeparator}travia-backup.json');
+      await file.writeAsString(jsonEncode(data.toJson()), encoding: utf8);
+      final result = await SharePlus.instance.share(
+          ShareParams(files: [XFile(file.path)], subject: 'Backup do Travia'));
+      if (result.status == ShareResultStatus.unavailable) {
+        _message('Nenhum aplicativo compatível para compartilhar.');
+      }
+    } catch (_) {
+      _message('Não foi possível compartilhar o backup.');
+    }
+  }
+
   Future<void> _restore() async {
     final files = await FilePicker.pickFiles(
         type: FileType.custom, allowedExtensions: ['json']);
@@ -670,6 +688,31 @@ class _TraviaAppState extends State<TraviaApp> {
                     },
                     icon: const Icon(Icons.copy),
                     label: const Text('Copiar')),
+                TextButton.icon(
+                    onPressed: () async {
+                      try {
+                        final result = await SharePlus.instance.share(
+                            ShareParams(
+                                text: controller.text,
+                                subject: 'OCR · ${material['name']}'));
+                        if (result.status == ShareResultStatus.unavailable &&
+                            dialogContext.mounted) {
+                          ScaffoldMessenger.of(dialogContext).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'Nenhum aplicativo compatível para compartilhar.')));
+                        }
+                      } catch (_) {
+                        if (dialogContext.mounted) {
+                          ScaffoldMessenger.of(dialogContext).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'Não foi possível compartilhar o resultado.')));
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.share),
+                    label: const Text('Compartilhar')),
                 FilledButton(
                     onPressed: () async {
                       material['ocrText'] = controller.text;
@@ -1098,6 +1141,10 @@ class _TraviaAppState extends State<TraviaApp> {
             onPressed: _backup,
             icon: const Icon(Icons.download),
             label: const Text('Backup JSON')),
+        OutlinedButton.icon(
+            onPressed: _shareBackup,
+            icon: const Icon(Icons.share),
+            label: const Text('Compartilhar backup')),
         OutlinedButton.icon(
             onPressed: _restore,
             icon: const Icon(Icons.restore),

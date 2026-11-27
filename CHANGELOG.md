@@ -1,5 +1,11 @@
 # Changelog
 
+## Em desenvolvimento - 2026-11-27
+
+- Adicionado compartilhamento nativo de backups JSON e resultados OCR com `share_plus`.
+- Adicionados timeouts de rede para tutor, autenticacao e sincronizacao.
+- CI passou a executar testes Node e auditoria npm.
+
 ## Homologacao complementar - 2026-11-27
 
 - Testados no POCO PDF protegido publico, PDF de 10 MB e arquivo falso, com rejeicao segura do protegido/invalido e OCR salvo do PDF de 2 paginas.
