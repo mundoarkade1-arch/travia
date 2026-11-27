@@ -67,6 +67,8 @@ class OcrDocumentResult {
 }
 
 class OcrService {
+  static const _maxPdfBytes = 50 * 1024 * 1024;
+
   Future<OcrDocumentResult> recognizeImage(String path,
       {OcrProgress? onProgress}) async {
     final file = File(path);
@@ -78,6 +80,9 @@ class OcrService {
     try {
       final result =
           await recognizer.processImage(InputImage.fromFilePath(path));
+      if (result.text.trim().isEmpty) {
+        throw const FormatException('Nenhum texto foi reconhecido na imagem.');
+      }
       onProgress?.call(1, 1, 'OCR concluído.');
       return OcrDocumentResult(
           source: 'imagem', pages: [OcrPageResult(page: 1, text: result.text)]);
@@ -87,6 +92,7 @@ class OcrService {
   }
 
   Future<int> pdfPageCount(String path) async {
+    await _validatePdfFile(File(path));
     final document = await pdfx.PdfDocument.openFile(path);
     try {
       return document.pagesCount;
@@ -98,21 +104,28 @@ class OcrService {
   Future<OcrDocumentResult> recognizePdf(String path,
       {OcrPageSelection? selection, OcrProgress? onProgress}) async {
     final file = File(path);
-    final fileSize = await file.exists() ? await file.length() : 0;
-    if (fileSize == 0) {
-      throw const FormatException('PDF inexistente ou vazio.');
-    }
-    if (fileSize > 50 * 1024 * 1024) {
+    await _validatePdfFile(file);
+    final int pageCount;
+    try {
+      pageCount = await pdfPageCount(path);
+    } catch (error) {
+      if (error is FormatException) rethrow;
       throw const FormatException(
-          'PDF maior que 50 MB. Selecione um arquivo menor ou divida o documento.');
+          'PDF inválido, protegido por senha ou ilegível.');
     }
-    final pageCount = await pdfPageCount(path);
     final pages = selection ?? OcrPageSelection.all(pageCount);
     if (pages.pages.isEmpty) {
       throw const FormatException('Nenhuma página válida foi selecionada.');
     }
 
-    final selectable = await _extractSelectableText(file, pages.pages);
+    final OcrDocumentResult selectable;
+    try {
+      selectable = await _extractSelectableText(file, pages.pages);
+    } catch (error) {
+      if (error is FormatException) rethrow;
+      throw const FormatException(
+          'PDF inválido, protegido por senha ou ilegível.');
+    }
     final hasScannedPages =
         selectable.pages.any((page) => page.text.trim().isEmpty);
     if (!hasScannedPages) {
@@ -173,6 +186,12 @@ class OcrService {
           pages.pages.length, pages.pages.length, 'OCR concluído.');
       final hasSelectablePages =
           selectable.pages.any((page) => page.text.trim().isNotEmpty);
+      final hasRecognizedText =
+          results.any((page) => page.text.trim().isNotEmpty);
+      if (!hasRecognizedText) {
+        throw const FormatException(
+            'Nenhum texto foi reconhecido nas páginas selecionadas.');
+      }
       return OcrDocumentResult(
           source: hasSelectablePages ? 'pdf-misto' : 'pdf-escaneado',
           pages: results);
@@ -197,6 +216,31 @@ class OcrService {
       return OcrDocumentResult(source: 'pdf-texto', pages: pages);
     } finally {
       document.dispose();
+    }
+  }
+
+  Future<void> _validatePdfFile(File file) async {
+    if (!await file.exists() || await file.length() == 0) {
+      throw const FormatException('PDF inexistente ou vazio.');
+    }
+    if (await file.length() > _maxPdfBytes) {
+      throw const FormatException(
+          'PDF maior que 50 MB. Selecione um arquivo menor ou divida o documento.');
+    }
+    final handle = await file.open();
+    try {
+      final header = await handle.read(5);
+      const expected = [37, 80, 68, 70, 45];
+      if (header.length != expected.length ||
+          !List<int>.generate(header.length, (index) => header[index])
+              .asMap()
+              .entries
+              .every((entry) => entry.value == expected[entry.key])) {
+        throw const FormatException(
+            'O arquivo selecionado não é um PDF válido.');
+      }
+    } finally {
+      await handle.close();
     }
   }
 }

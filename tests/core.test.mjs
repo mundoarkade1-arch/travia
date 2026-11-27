@@ -42,6 +42,7 @@ test('armazenamento de sincronização é criptografado e tem revisão/conflicto
   assert.equal(restarted.authenticate(recoveredLogin.token), 'aluno@example.com');
   assert.equal((await restarted.read('aluno@example.com')).revision, 1);
   assert.throws(() => restarted.authenticate('token-inexistente'), /unauthorized/);
+  await assert.rejects(() => restarted.login(null, 'senha-segura-123'), /invalid_credentials/);
 });
 
 test('sessão expira sem apagar conta nem dados persistidos', async t => {

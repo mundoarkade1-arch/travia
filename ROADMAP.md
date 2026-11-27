@@ -1,5 +1,35 @@
 # Roadmap
 
+## Correção de PDFs grandes - 2026-11-27
+
+- [x] Corrigir importação Android de PDFs grandes com `ACTION_OPEN_DOCUMENT` e streaming do `ContentResolver`.
+- [x] Validar cartões locais de 51 MiB e 100 MiB no POCO; OCR acima de 50 MiB permanece limitado.
+
+## Atualizacao - 2026-11-27
+
+- Compartilhamento nativo: implementado para backup e texto OCR; falta validar entrega em um destino externo sem dados pessoais.
+- PDF grande: limite de 50 MiB mantido; arquivos de 20/51/100 MiB preparados, teste fisico completo pendente.
+- PDF protegido: rejeicao segura implementada; suporte a senha continua fora do escopo atual por ausencia de parser/fluxo seguro validado.
+
+## Homologacao complementar - 2026-11-27
+
+- [x] Validar no POCO PDF protegido/invalido com rejeicao segura e PDF publico de 10 MB com OCR salvo.
+- [ ] Implementar, se aprovado pelo proprietario, entrada de senha para PDF protegido e compartilhamento externo.
+- [ ] Configurar assinatura definitiva e tutor HTTPS real.
+
+## Preparação para produção — 26/11/2026
+
+- [x] Impedir assinatura debug silenciosa em builds Release.
+- [x] Separar artefatos Android de validação debug e produção assinada no CI.
+- [x] Criar auditoria sintética de PDF e testes HTTP locais do tutor/sincronização.
+- [x] Reduzir avisos Flutter seguros; documentar depreciações externas restantes.
+- [x] Documentar keystore, backup, Secrets e recuperação sem criar credenciais.
+- [x] Rejeitar PDF vazio, inválido, maior que 50 MiB ou sem texto reconhecido.
+- [ ] Configurar keystore e Secrets de produção fornecidos pelo proprietário.
+- [ ] Validar PDFs escaneados/protegidos/corrompidos com amostras reais.
+- [ ] Auditar tutor e sincronização em infraestrutura HTTPS real.
+- [ ] Autorizar e publicar uma release em missão separada.
+
 ## Auditoria de pré-release — 26/11/2026
 
 - [x] Reproduzir testes Node, sintaxe JavaScript, testes Flutter e análise estática.
@@ -14,7 +44,7 @@
 
 - A branch `feat/android-ocr` foi validada no dispositivo fisico `5a3338e6`.
 - OCR de imagem, PDF textual multipagina, selecao de paginas, persistencia, edicao/copia e camera foram validados conforme registrado abaixo.
-- As secoes anteriores mantem historico de etapas; pendencias de PDF escaneado/protegido, captura efetiva da camera, keystore de producao e infraestrutura externa continuam reais.
+- As seções anteriores mantêm histórico de etapas; permanecem reais as pendências de PDF escaneado/protegido, keystore de produção e infraestrutura externa.
 
 ## OCR Android — 2026-11-25
 
@@ -65,11 +95,11 @@
 - [x] Validar PDF real multipagina, selecao `1-13` e extracao das paginas.
 - [x] Abrir e validar a tela de camera sem capturar imagem.
 - [x] Gerar APK e AAB Release atualizados.
-- [ ] Validar PDF escaneado, arquivo protegido/invalido e captura efetiva da camera com amostras especificas.
+- [ ] Validar PDF escaneado e arquivo protegido/inválido com amostras específicas.
 
 Há artefatos APK/AAB Release gerados anteriormente. A assinatura de produção continua pendente até que um keystore e credenciais sejam fornecidos; a configuração local segura está preparada.
 
-A validação em emulador e em dispositivo físico continua pendente nesta auditoria; a assinatura de produção também continua pendente.
+A validação física do OCR e da câmera já foi registrada em [TESTING.md](./TESTING.md); a assinatura de produção continua pendente.
 
 O cliente Flutter inicial foi conectado à matriz curricular real e à persistência local; a compilação Android foi recuperada neste ambiente e a validação em dispositivo continua pendente.
 
@@ -140,3 +170,10 @@ O cliente Flutter inicial foi conectado à matriz curricular real e à persistê
 - [ ] Aprovar edição/cópia do resultado e reabertura visual do texto após ANR do sistema no AVD.
 - [ ] Validar PDFs e câmera em dispositivo/AVD estável.
 - [ ] Assinar e validar artefatos com keystore de produção fornecido.
+
+## Missão 8 — acompanhamento físico — 2026-11-27
+
+- [x] Validar importação e OCR do PDF sintético de 20 MiB no POCO.
+- [ ] Validar funcionalmente 51 MiB e 100 MiB; as tentativas atuais não produziram cartão observável.
+- [ ] Confirmar recebimento externo de backup e OCR sem dados pessoais.
+- [ ] Completar assinatura definitiva e Tutor HTTPS real.

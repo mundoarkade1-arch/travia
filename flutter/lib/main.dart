@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/curriculum.dart';
@@ -32,6 +33,9 @@ class TraviaApp extends StatefulWidget {
 }
 
 class _TraviaAppState extends State<TraviaApp> {
+  static const _materialPicker =
+      MethodChannel('com.example.travia/material_picker');
+  static const _networkTimeout = Duration(seconds: 15);
   TraviaState data = TraviaState();
   SharedPreferences? prefs;
   int selectedCourse = 0;
@@ -133,6 +137,23 @@ class _TraviaAppState extends State<TraviaApp> {
   Future<void> _backup() async => FilePicker.saveFile(
       fileName: 'travia-backup.json',
       bytes: Uint8List.fromList(utf8.encode(jsonEncode(data.toJson()))));
+
+  Future<void> _shareBackup() async {
+    try {
+      final directory = await getTemporaryDirectory();
+      final file =
+          File('${directory.path}${Platform.pathSeparator}travia-backup.json');
+      await file.writeAsString(jsonEncode(data.toJson()), encoding: utf8);
+      final result = await SharePlus.instance.share(
+          ShareParams(files: [XFile(file.path)], subject: 'Backup do Travia'));
+      if (result.status == ShareResultStatus.unavailable) {
+        _message('Nenhum aplicativo compatível para compartilhar.');
+      }
+    } catch (_) {
+      _message('Não foi possível compartilhar o backup.');
+    }
+  }
+
   Future<void> _restore() async {
     final files = await FilePicker.pickFiles(
         type: FileType.custom, allowedExtensions: ['json']);
@@ -151,15 +172,17 @@ class _TraviaAppState extends State<TraviaApp> {
   }
 
   void _message(String value) {
-    if (mounted)
+    if (mounted) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(value)));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loading)
+    if (loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     final wide = MediaQuery.sizeOf(context).width >= 820;
     return Scaffold(
       appBar: AppBar(title: Text(pages[page]), actions: [
@@ -389,8 +412,9 @@ class _TraviaAppState extends State<TraviaApp> {
                                 firstDate: DateTime(2020),
                                 lastDate: DateTime(2100),
                                 initialDate: date!);
-                            if (selected != null)
+                            if (selected != null) {
                               setDialog(() => date = selected);
+                            }
                           },
                           icon: const Icon(Icons.date_range),
                           label:
@@ -437,6 +461,38 @@ class _TraviaAppState extends State<TraviaApp> {
       ]);
 
   Future<void> _importMaterial() async {
+    if (Platform.isAndroid) {
+      try {
+        final picked = await _materialPicker
+            .invokeMethod<Map<Object?, Object?>>('pickMaterial');
+        if (picked == null) return;
+        final sourcePath = picked['path']?.toString();
+        final name = picked['name']?.toString();
+        if (sourcePath == null || name == null || sourcePath.isEmpty) {
+          _message('Arquivo selecionado indisponivel.');
+          return;
+        }
+        final source = File(sourcePath);
+        if (!await source.exists() || await source.length() == 0) {
+          _message('O arquivo selecionado esta vazio ou indisponivel.');
+          return;
+        }
+        data.materials.add({
+          'id': DateTime.now().millisecondsSinceEpoch,
+          'name': name,
+          'size': await source.length(),
+          'path': await _copyMaterialFile(sourcePath, name),
+          'updatedAt': DateTime.now().toIso8601String()
+        });
+        await _save();
+      } on PlatformException catch (error) {
+        _message(
+            error.message ?? 'Nao foi possivel copiar o arquivo selecionado.');
+      } catch (_) {
+        _message('Nao foi possivel importar o arquivo selecionado.');
+      }
+      return;
+    }
     final files = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg']);
@@ -666,6 +722,31 @@ class _TraviaAppState extends State<TraviaApp> {
                     },
                     icon: const Icon(Icons.copy),
                     label: const Text('Copiar')),
+                TextButton.icon(
+                    onPressed: () async {
+                      try {
+                        final result = await SharePlus.instance.share(
+                            ShareParams(
+                                text: controller.text,
+                                subject: 'OCR · ${material['name']}'));
+                        if (result.status == ShareResultStatus.unavailable &&
+                            dialogContext.mounted) {
+                          ScaffoldMessenger.of(dialogContext).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'Nenhum aplicativo compatível para compartilhar.')));
+                        }
+                      } catch (_) {
+                        if (dialogContext.mounted) {
+                          ScaffoldMessenger.of(dialogContext).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'Não foi possível compartilhar o resultado.')));
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.share),
+                    label: const Text('Compartilhar')),
                 FilledButton(
                     onPressed: () async {
                       material['ocrText'] = controller.text;
@@ -903,8 +984,8 @@ class _TraviaAppState extends State<TraviaApp> {
       });
     } else {
       try {
-        final response =
-            await http.post(Uri.parse('${server.text.trim()}/api/tutor'),
+        final response = await http
+            .post(Uri.parse('${server.text.trim()}/api/tutor'),
                 headers: {'Content-Type': 'application/json'},
                 body: jsonEncode({
                   'endpoint': endpointUrl,
@@ -913,7 +994,8 @@ class _TraviaAppState extends State<TraviaApp> {
                   'messages': history
                       .map((m) => {'role': m['role'], 'content': m['text']})
                       .toList()
-                }));
+                }))
+            .timeout(_networkTimeout);
         final payload = jsonDecode(response.body);
         final answer = response.statusCode >= 200 && response.statusCode < 300
             ? (payload['choices']?[0]?['message']?['content'] ??
@@ -959,10 +1041,12 @@ class _TraviaAppState extends State<TraviaApp> {
     }
     try {
       final path = register ? '/api/auth/register' : '/api/auth/login';
-      final response = await http.post(Uri.parse('${server.text.trim()}$path'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(
-              {'email': email.text.trim(), 'password': password.text}));
+      final response = await http
+          .post(Uri.parse('${server.text.trim()}$path'),
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode(
+                  {'email': email.text.trim(), 'password': password.text}))
+          .timeout(_networkTimeout);
       if (response.statusCode != 200 && response.statusCode != 201) {
         throw Exception(
             jsonDecode(response.body)['error'] ?? response.statusCode);
@@ -986,7 +1070,9 @@ class _TraviaAppState extends State<TraviaApp> {
       if (current == null ||
           '${item['updatedAt'] ?? ''}'
                   .compareTo('${current['updatedAt'] ?? ''}') >
-              0) merged[key] = item;
+              0) {
+        merged[key] = item;
+      }
     }
     return merged.values.toList();
   }
@@ -1021,12 +1107,15 @@ class _TraviaAppState extends State<TraviaApp> {
     try {
       final base = server.text.trim();
       if (syncToken.isEmpty) {
-        final response = await http.post(Uri.parse('$base/api/auth/login'),
-            headers: {'Content-Type': 'application/json'},
-            body: jsonEncode(
-                {'email': email.text.trim(), 'password': password.text}));
-        if (response.statusCode != 200)
+        final response = await http
+            .post(Uri.parse('$base/api/auth/login'),
+                headers: {'Content-Type': 'application/json'},
+                body: jsonEncode(
+                    {'email': email.text.trim(), 'password': password.text}))
+            .timeout(_networkTimeout);
+        if (response.statusCode != 200) {
           throw Exception('login ${response.statusCode}');
+        }
         syncToken = jsonDecode(response.body)['token'].toString();
       }
       if (push) {
@@ -1035,27 +1124,34 @@ class _TraviaAppState extends State<TraviaApp> {
             updatedAt: DateTime.now().toUtc().toIso8601String(),
             payload: data,
             baseRevision: syncRevision);
-        final response = await http.put(Uri.parse('$base/api/sync'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $syncToken'
-            },
-            body: jsonEncode(
-                {'envelope': envelope.toJson(), 'baseRevision': syncRevision}));
+        final response = await http
+            .put(Uri.parse('$base/api/sync'),
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer $syncToken'
+                },
+                body: jsonEncode({
+                  'envelope': envelope.toJson(),
+                  'baseRevision': syncRevision
+                }))
+            .timeout(_networkTimeout);
         if (response.statusCode == 409) {
           if (retryAfterConflict) throw Exception('conflito_persistente');
           await _sync(false);
           await _sync(true, retryAfterConflict: true);
           return;
         }
-        if (response.statusCode != 200)
+        if (response.statusCode != 200) {
           throw Exception('envio ${response.statusCode}');
+        }
         syncRevision = jsonDecode(response.body)['revision'] as int;
       } else {
-        final response = await http.get(Uri.parse('$base/api/sync'),
-            headers: {'Authorization': 'Bearer $syncToken'});
-        if (response.statusCode != 200)
+        final response = await http.get(Uri.parse('$base/api/sync'), headers: {
+          'Authorization': 'Bearer $syncToken'
+        }).timeout(_networkTimeout);
+        if (response.statusCode != 200) {
           throw Exception('recebimento ${response.statusCode}');
+        }
         final remote = jsonDecode(response.body);
         if (remote['envelope'] != null) {
           final remoteState = TraviaState.fromJson(
@@ -1079,6 +1175,10 @@ class _TraviaAppState extends State<TraviaApp> {
             onPressed: _backup,
             icon: const Icon(Icons.download),
             label: const Text('Backup JSON')),
+        OutlinedButton.icon(
+            onPressed: _shareBackup,
+            icon: const Icon(Icons.share),
+            label: const Text('Compartilhar backup')),
         OutlinedButton.icon(
             onPressed: _restore,
             icon: const Icon(Icons.restore),

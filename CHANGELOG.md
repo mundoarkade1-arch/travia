@@ -1,5 +1,48 @@
 # Changelog
 
+## Correção de PDFs grandes - 2026-11-27
+
+- Substituído o caminho Android de importação de materiais por `ACTION_OPEN_DOCUMENT` com leitura em streaming para o armazenamento privado.
+- Tratados cancelamento, URI ausente, permissões persistentes indisponíveis e falhas de cópia sem crash.
+- Homologados fisicamente os cartões locais de 51 MiB e 100 MiB; OCR acima de 50 MiB continua rejeitado pelo limite documentado.
+
+## Em desenvolvimento - 2026-11-27
+
+- Adicionado compartilhamento nativo de backups JSON e resultados OCR com `share_plus`.
+- Adicionados timeouts de rede para tutor, autenticacao e sincronizacao.
+- CI passou a executar testes Node e auditoria npm.
+
+## Homologacao complementar - 2026-11-27
+
+- Testados no POCO PDF protegido publico, PDF de 10 MB e arquivo falso, com rejeicao segura do protegido/invalido e OCR salvo do PDF de 2 paginas.
+- Confirmado que o cliente atual nao possui fluxo de compartilhamento externo nem entrada de senha para PDF protegido; essas capacidades permanecem pendentes.
+
+## Homologacao OCR e backup - 2026-11-27
+
+- Validado OCR com acentuacao em imagem e PDF escaneado real de 2 paginas no POCO, incluindo copia, salvamento e persistencia apos reboot.
+- Validado backup JSON v4 exportado e restaurado sem sobrescrever o arquivo existente.
+- Mantidas como pendencias a keystore definitiva, PDF protegido/senhas, PDF grande, compartilhamento externo e tutor HTTPS real.
+
+## Homologacao fisica real - 2026-11-27
+
+- APK do commit `8e9151a` instalado no POCO X5 Pro 5G (`5a3338e6`, Android 14/API 34) com `adb install -r`, sem limpeza de dados.
+- Confirmados inicializacao, navegacao, matriz, edicao/salvamento de nota, captura efetiva pela camera, persistencia apos reboot e modo offline.
+- Acessados o seletor de backup e a selecao de paginas de PDF real com 13 paginas.
+- Mantidas como pendencias a keystore definitiva, OCR com acentuacao nesta versao, PDF escaneado/protegido, restauracao efetiva, compartilhamento/exportacao e tutor HTTPS real.
+
+## Preparação para produção — 26/11/2026
+
+- Impedido o fallback silencioso de assinatura debug em builds Release.
+- Mantida autorização explícita de debug apenas no pipeline de validação sem Secrets de produção.
+- Separados os artefatos Android de validação debug dos artefatos assinados de produção; Secrets parciais agora fazem o CI falhar com segurança.
+- Mantido o estado web no esquema v4 durante a inicialização.
+- Registrados os resultados finais de análise, testes e builds Android de validação em 27/11/2026.
+- Adicionada auditoria sintética de PDFs, cobertura HTTP local do tutor/sincronização e checklist pré-release.
+- Corrigida a liberação de documentos PDF para a API atual do `pdfjs-dist`.
+- Corrigidos sete avisos Flutter de chaves sem bloco; duas depreciações externas permanecem documentadas.
+- Adicionada validação de cabeçalho, tamanho e resultado do OCR de PDFs.
+- Adicionada a documentação [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md).
+
 O registro mais recente da PR #2 corresponde ao commit publicado em `feat/android-ocr`; entradas abaixo sao historicas e nao substituem a validacao final do dispositivo fisico.
 
 ## Auditoria de pré-release — 2026-11-26
@@ -149,3 +192,9 @@ O registro mais recente da PR #2 corresponde ao commit publicado em `feat/androi
 - Recuperado o AVD por inicialização a frio sem apagar dados do usuário.
 - Validado o APK novo instalado, com abertura, navegação principal e persistência após reinício.
 - Adicionado workflow GitHub Actions para Flutter Analyze, Flutter Test e APK Release.
+
+## Homologação física — 2026-11-27
+
+- Registrado teste real no POCO de PDF sintético de 20 MiB: 2 páginas e OCR concluído.
+- Registrado que as tentativas de 51 MiB e 100 MiB não produziram importação funcional observável; não foram marcadas como aprovadas.
+- Registrado chooser nativo de compartilhamento aberto/cancelado sem crash, sem comprovação de recebimento externo.

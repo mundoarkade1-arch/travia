@@ -25,10 +25,12 @@ export class SyncService {
     return this.login(normalized, password);
   }
   async login(email, password) {
+    if (typeof email !== 'string' || typeof password !== 'string') throw new Error('invalid_credentials');
     const normalized = email.toLowerCase(); const user = (await this.loadUsers())[normalized];
     if (!user) throw new Error('invalid_credentials');
     const digest = await scrypt(password, Buffer.from(user.salt), 32);
-    if (!timingSafeEqual(digest, Buffer.from(user.digest, 'base64url'))) throw new Error('invalid_credentials');
+    const storedDigest = Buffer.from(user.digest, 'base64url');
+    if (storedDigest.length !== digest.length || !timingSafeEqual(digest, storedDigest)) throw new Error('invalid_credentials');
     const token = randomBytes(32).toString('base64url'); const expiresAt = Date.now() + this.sessionTtlMs;
     this.sessions.set(token, { user: normalized, expiresAt });
     return { token, user: normalized, expiresAt: new Date(expiresAt).toISOString() };

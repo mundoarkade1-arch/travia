@@ -1,14 +1,53 @@
 # Estado do projeto
 
+## Correção do bloqueio de PDFs grandes - 2026-11-27
+
+- O fluxo Android passou a usar `ACTION_OPEN_DOCUMENT`, `ContentResolver` e cópia em streaming para o cache privado.
+- No POCO, 51 MiB (`53477376 bytes`) e 100 MiB (`104857600 bytes`) produziram cartões locais após a correção.
+- O caso de 100 MiB levou aproximadamente 5,3 s no recorte medido, com PSS posterior de aproximadamente 107 MiB e sem FATAL/ANR.
+- OCR acima de 50 MiB continua intencionalmente rejeitado com mensagem visível; importação grande está resolvida, OCR grande permanece limitação de produto.
+- APK local: `FF1D8A49A8F328283F853F7D396312E8FF7F86B9FAEAF26BE531539D4094498F`.
+- AAB local: `02B77D098B7ED350D6757AB4D9F3FDD2748E56E4CDBBB7E35CD8EEC5907F88E1`.
+
+## Missao 7 - estado atual
+
+O compartilhamento externo de backup JSON e resultado OCR foi implementado com `share_plus`, URI temporaria e chooser nativo. No POCO, o chooser abriu e foi cancelado sem envio. PDF protegido continua sendo rejeitado com seguranca porque nao existe suporte a senha. Foram preparados arquivos de 20, 51 e 100 MiB, mas a selecao efetiva pelo fluxo do app nao foi concluida; nao sao testes fisicos aprovados.
+
+Artefatos locais gerados a partir do codigo deste estado: APK `flutter/build/app/outputs/flutter-apk/app-release.apk`, SHA-256 `2F0C0118FDD2D1654B3533685889DD327B46E9DD2BBD5ACBD2566F65163E1581`; AAB `flutter/build/app/outputs/bundle/release/app-release.aab`, SHA-256 `6A232810D1DE6D1AD23E43982F546644C7067E56A9AE963819A6C5398D4A5571`. Ambos debug-signed.
+
+## Artefatos da auditoria final - commit 23a903d
+
+APK de validacao: `flutter/build/app/outputs/flutter-apk/app-release.apk`, SHA-256 `5CCADCEFF0AAFB261B97FFC4839DEC5EBD1DC820CBF71E32FA3CD1EA25FA2308`. AAB de validacao: `flutter/build/app/outputs/bundle/release/app-release.aab`, SHA-256 `7DF5C7D57BD72EFD16EC527B09086169817158731CD5B23DCF628C7ADD81732C`. Ambos sao debug-signed, package `com.example.travia`, versao `0.4.0`/code `1`, e nao sao artefatos de producao.
+
+## Homologacao complementar - 2026-11-27
+
+No POCO, o APK instalado foi extraido e conferido por SHA-256 contra o artefato local da branch de homologacao. Foram importados e testados um PDF protegido publico, um PDF publico de 10 MB e um falso PDF. O protegido foi rejeitado sem crash com mensagem segura; como nao ha campo de senha, os cenarios de senha correta/incorreta nao sao suportados. O PDF de 10 MB foi processado em 2 paginas e salvo. O falso PDF foi rejeitado explicitamente. O cliente nao possui compartilhamento externo implementado. A permissao de camera foi revogada e restaurada sem instabilidade, mas a camera externa abriu, portanto o caso de negacao efetiva permanece inconclusivo.
+
+## Homologacao fisica no POCO X5 Pro - 2026-11-27
+
+O APK reconstruido a partir do commit final `d54268d` foi instalado com `adb install -r` no dispositivo `5a3338e6` (modelo `22101320G`, Android 14/API 34), sem desinstalacao ou limpeza de dados. Inicializacao, navegacao, matriz, edicao/salvamento de nota, camera com captura, persistencia apos reboot e funcionamento offline foram observados sem crash do Travia. O backup foi exportado para `travia-final-test.json`, com `version: 4`, restaurado pelo seletor Android e validado apos reboot. OCR com acentuacao em imagem e PDF escaneado real de 2 paginas foram concluidos com salvamento e persistencia; permanecem pendentes PDF protegido/senhas, PDF grande, compartilhamento externo e tutor HTTPS real.
+
+## Auditoria de preparação para produção — 26/11/2026
+
+A configuração Android agora falha sem `key.properties`, impedindo fallback silencioso para debug. O CI autoriza debug somente por variável explícita para manter builds de validação enquanto não há keystore de produção. O OCR rejeita PDFs que não possuem cabeçalho válido, excedem 50 MiB ou não produzem texto reconhecido. Detalhes e pendências estão em [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md).
+
+## Recuperação e validação final — 27/11/2026
+
+O bloqueio do Git foi resolvido após confirmar que não havia processo Git nem `.git/index.lock`; a falha era intermitente na pasta `.git` sob OneDrive. O commit `b07fb6e` preserva as correções da auditoria. `flutter analyze --no-pub` terminou sem erros e com 9 informações; `flutter test --no-pub` passou 7/7. APK e AAB de validação foram gerados com `-PallowDebugSigning=true` e permanecem assinados com o certificado Android Debug, não sendo releases de produção. A keystore definitiva não foi criada.
+
 ## Auditoria de pré-release — 26/11/2026
 
-O estado integrado está na `main` em `9c16596`, com working tree limpo e `origin/main` sincronizada. `npm.cmd test` (4/4), verificações de sintaxe JavaScript, `flutter test` (5/5), `flutter analyze --no-fatal-infos` e `npm.cmd audit --omit=dev --audit-level=high` passaram; a análise Flutter mantém apenas 9 informações de estilo/depreciação. O workflow de Android foi reforçado para compilar e publicar APK e AAB Release como artefatos do CI.
+O estado integrado estava na `main` em `31494c4` antes desta branch de preparação. `npm.cmd test` (4/4), verificações de sintaxe JavaScript, `flutter test` (agora 6 testes), `flutter analyze --no-fatal-infos` e `npm.cmd audit --omit=dev --audit-level=high` passaram; a análise Flutter mantém 9 informações de estilo/depreciação. O workflow de Android compila e publica APK e AAB de validação com autorização explícita de debug.
 
-Nenhum segredo ou keystore foi criado. O build sem `key.properties` continua usando assinatura debug. Permanecem pendentes somente validações que dependem de amostras, hardware ou infraestrutura externos, especialmente PDF escaneado/protegido, tutor remoto, HTTPS e assinatura de produção. A captura efetiva da câmera foi validada no dispositivo físico autorizado.
+Nenhum segredo ou keystore foi criado. O build sem `key.properties` falha deliberadamente; a assinatura debug só é usada com autorização explícita de validação. O CI rejeita Secrets de assinatura parciais e separa os artefatos de validação debug dos artefatos assinados de produção. Permanecem pendentes somente validações que dependem de amostras, hardware ou infraestrutura externos, especialmente PDF escaneado/protegido, tutor remoto, HTTPS e assinatura de produção. A captura efetiva da câmera foi validada no dispositivo físico autorizado.
 
 ## Status atual - 26/11/2026
 
 O Flutter, o Android SDK e o ADB estao disponiveis neste ambiente. A PR #2 foi validada no dispositivo fisico autorizado `5a3338e6`; os registros datados abaixo preservam o historico das tentativas anteriores.
+
+## Homologação técnica — 27/11/2026
+
+Foram adicionados testes sintéticos de PDF e testes HTTP locais do tutor/sincronização. A bateria Node passou 6/6; `npm audit` reportou 0 vulnerabilidades. `flutter analyze --no-pub` passou sem erros, com 2 informações externas de depreciação; `flutter test --no-pub` passou 7/7. A assinatura de produção, PDF protegido, OCR de documento escaneado real, tutor HTTPS real e sincronização HTTPS externa permanecem pendentes.
 
 ## OCR Android — implementação 2026-11-25
 
@@ -62,6 +101,14 @@ O cliente Flutter funcional usa a matriz curricular real, persistência local, b
 
 ## Atual
 
+## Homologação física complementar — 2026-11-27
+
+- O POCO X5 Pro 5G (`5a3338e6`) permaneceu conectado como `device`; `com.example.travia` estava na versão `0.4.0`, versionCode `1`, API 34.
+- O PDF sintético de 20 MiB foi importado pelo fluxo real, exibiu 2 páginas e concluiu OCR com texto de teste. PSS chegou a aproximadamente 175 MiB, sem FATAL/ANR do Travia observado.
+- As tentativas de 51 MiB retornaram ao aplicativo sem cartão observável; o log registrou `deliverResultsIfNeeded`/`NullPointerException` no DocumentsUI. O arquivo de 100 MiB não obteve resultado funcional observável nesta rodada.
+- O chooser nativo de backup e OCR foi aberto e cancelado sem crash; recebimento externo não foi comprovado.
+- Assinatura definitiva e Tutor HTTPS real continuam bloqueios externos; homologação de arquivos grandes permanece parcial.
+
 ## Validacao no dispositivo fisico - 26/11/2026
 
 - Dispositivo autorizado `5a3338e6` usado como alvo principal; APK Release instalado com `Success`.
@@ -75,7 +122,7 @@ Versão web 0.4 funcional, com OCR/PDF e histórico de tutor por disciplina. O n
 
 ## Decisões
 
-O ambiente atual não possui Flutter, Dart, Android SDK ou ADB. HTML, CSS e JavaScript nativos permitem execução imediata em web. O estado migra até a versão 4; arquivos binários usam IndexedDB e metadados ficam no estado exportável. O servidor de sincronização opcional usa scrypt, tokens de sessão, revisão otimista e AES-256-GCM em arquivos fora do repositório.
+HTML, CSS e JavaScript nativos permitem execução imediata em web; Flutter, Android SDK e ADB estão disponíveis no ambiente desta auditoria. O estado migra até a versão 4; arquivos binários usam IndexedDB e metadados ficam no estado exportável. O servidor de sincronização opcional usa scrypt, tokens de sessão, revisão otimista e AES-256-GCM em arquivos fora do repositório.
 
 ## Correção de estabilidade do OCR — 2026-11-26
 

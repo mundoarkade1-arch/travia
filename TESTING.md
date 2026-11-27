@@ -1,11 +1,78 @@
 # Testes
 
+## Missao 7 - compartilhamento e limites de PDF - 2026-11-27
+
+- APK final de validacao: SHA-256 `2F0C0118FDD2D1654B3533685889DD327B46E9DD2BBD5ACBD2566F65163E1581`.
+- AAB final de validacao: SHA-256 `6A232810D1DE6D1AD23E43982F546644C7067E56A9AE963819A6C5398D4A5571`.
+- O APK com `share_plus` foi instalado no POCO com `adb install -r`, preservando os dados existentes.
+- `Compartilhar backup` abriu o chooser nativo Android com `travia-backup.json`; destinos visiveis incluiram Mi Share, WhatsApp, ChatGPT, Imprimir e Transmitir. O chooser foi cancelado sem envio de dados.
+- O compartilhamento de texto OCR foi implementado no dialogo de resultado. A entrega externa ainda requer selecao humana de um destino; nenhum dado pessoal foi enviado.
+- Foram preparados PDFs de 20 MiB, 51 MiB e 100 MiB e transferidos ao `/sdcard/Download`. A selecao efetiva no fluxo do app nao foi concluida nesta sessao; nao ha resultado fisico de OCR para esses tres arquivos.
+- O limite de 50 MiB permanece aplicado no `OcrService`; arquivos acima dele devem ser rejeitados antes do parser.
+
+## Artefatos da auditoria final - commit 23a903d
+
+- APK de validacao: `flutter/build/app/outputs/flutter-apk/app-release.apk`, SHA-256 `5CCADCEFF0AAFB261B97FFC4839DEC5EBD1DC820CBF71E32FA3CD1EA25FA2308`.
+- AAB de validacao: `flutter/build/app/outputs/bundle/release/app-release.aab`, SHA-256 `7DF5C7D57BD72EFD16EC527B09086169817158731CD5B23DCF628C7ADD81732C`.
+- Assinatura: Android Debug, certificado SHA-256 `6fa977b9b6810f8061233ef083302e4ea8df4597876c7940be4afdd53707033f`; package `com.example.travia`, versao `0.4.0`, code `1`.
+
+## Homologacao complementar no POCO - 2026-11-27
+
+- O dispositivo permaneceu `5a3338e6`, modelo `22101320G`, Android 14/API 34. O APK instalado foi extraido do aparelho e seu SHA-256 coincidiu com o artefato local `6C95FFFB6390286F9A7537EF3DF588A19A7D9844FF3FC17D879441B6334DC18F`.
+- A amostra publica protegida `sample-password-protected.pdf` (7.618 bytes, SHA-256 `010A138651A1B04955EC12436A8E9FEA33B1B171A7A10896278223FFFE20F734`) foi importada. O OCR exibiu erro seguro informando que o arquivo pode estar protegido, invalido ou grande demais; nao houve crash/ANR. O app nao oferece campo para senha, portanto senha correta/incorreta nao sao suportadas nem aprovadas.
+- A amostra publica `sample-pdf-10mb.pdf` (10.464.904 bytes, SHA-256 `9CA49F8D3CDACA4BCE1E86FF9FD56F55EC52D697DB4E00D48EA04AC9F7B4F9C1`) foi importada, reconhecida como PDF de 2 paginas, processada por OCR e salva no material sem crash.
+- O arquivo falso `travia-invalid.pdf` de 9 bytes foi importado e rejeitado com `O arquivo selecionado não é um PDF válido.`
+- O caminho de camera foi exercitado com a permissao do Travia temporariamente revogada; a biblioteca abriu a camera externa sem crash. A permissao foi restaurada. Isso nao comprova captura com permissao negada, pois a camera e um aplicativo externo.
+- Nao existe implementacao de compartilhamento externo no cliente atual; o seletor de compartilhamento permanece pendente de funcionalidade.
+- As chamadas do cliente para tutor, autenticacao e sincronizacao possuem timeout explicito de 15 segundos; o proxy local possui timeout de 30 segundos para o provedor.
+
+## Homologacao fisica real - POCO X5 Pro 5G - 2026-11-27
+
+- Dispositivo `5a3338e6`, modelo `22101320G`, Android 14/API 34; ADB retornou `device`.
+- APK reconstruido a partir do commit final `d54268d` instalado com `adb install -r` e retorno `Success`, sem desinstalar ou limpar dados.
+- Inicializacao, navegacao nas cinco abas e menu lateral foram confirmados sem `FATAL EXCEPTION` ou `ANR in` do Travia.
+- Matriz exibiu `25/70`; nota temporaria `8.5` foi editada/salva e o estado visivel foi restaurado para `Nota -`.
+- Camera do sistema abriu, o disparador foi acionado e uma imagem real foi capturada; o material local persistiu apos reboot.
+- Wi-Fi e dados moveis foram desativados temporariamente; `Modo offline ativo` foi exibido sem crash; conectividade restaurada.
+- Fluxo de backup exportou `travia-final-test.json` sem sobrescrever `travia-backup.json`; o JSON exportado contem `version: 4`. A restauracao desse arquivo foi acionada pelo seletor Android e retornou ao app sem erro.
+- PDF real de 13 paginas abriu `Selecionar paginas (13)` com intervalo `1-13`; selecao exercitada.
+- OCR de imagem com acentuacao foi concluido com copia e salvamento. PDF escaneado real de 2 paginas foi processado com selecao `1-2`, copia e salvamento; houve perda pontual do acento em `admissivel`. Apos reboot, ambos permaneceram listados como `OCR salvo`.
+- PDF protegido, senha correta/incorreta, PDF grande, compartilhamento externo e tutor HTTPS real permanecem pendentes por falta de amostra/servico autorizado.
+
+## Preparação para produção — 26/11/2026
+
+- A ausência de `flutter/android/key.properties` deve fazer um build Release falhar claramente.
+- Builds locais de validação podem usar `ORG_GRADLE_PROJECT_allowDebugSigning=true`; isso não valida assinatura de produção.
+- O CI deve rejeitar Secrets de assinatura parciais e nomear validações debug como `travia-android-validation-debug`.
+- Com os quatro Secrets configurados, o artefato deve ser nomeado `travia-android-production-signed`.
+- PDFs vazios, que não começam com `%PDF-`, acima de 50 MiB e sem texto reconhecido devem ser rejeitados.
+- A validação com PDF escaneado, protegido ou corrompido real continua pendente até haver amostras apropriadas.
+
+## Homologação técnica — 27/11/2026
+
+- Auditoria PDF sintética: 6/6 casos automatizados aprovados — textual, multipágina, sem camada de texto, vazio, falso e corrompido.
+- PDF sem camada de texto não foi tratado como sucesso falso: a API retornou `pdf-scan-required` para encaminhamento ao OCR visual.
+- PDFs protegido, senha correta/incorreta e OCR de imagem escaneada real: pendentes por ausência de ferramenta de cifragem/amostra/dispositivo apropriado.
+- Auditoria HTTP local do tutor/sincronização: aprovada; proxy local, chave somente em trânsito, bloqueio de HTTP externo, autenticação, persistência, conflito 409 e token inválido foram exercitados.
+- Isso não comprova integração com provedor HTTPS real nem infraestrutura de produção.
+- Avisos Flutter: 7 avisos de chaves em `if` corrigidos; permanecem 2 informações externas sobre a depreciação de `package:flutter/material.dart`.
+
+## Recuperação e validação final — 27/11/2026
+
+- `flutter analyze --no-pub`: concluído sem erros, com 9 informações de estilo/depreciação já documentadas.
+- `flutter test --no-pub`: 7/7 aprovados.
+- `flutter build apk --release --no-pub` sem autorização: falhou corretamente por ausência de `key.properties`.
+- `:app:assembleRelease -PallowDebugSigning=true`: concluído; APK de validação gerado com assinatura Android Debug.
+- `:app:bundleRelease -PallowDebugSigning=true`: concluído; AAB de validação gerado com assinatura Android Debug.
+- APK: 94.082.710 bytes; AAB: 74.688.790 bytes.
+- `jarsigner` identificou o certificado `CN=Android Debug`; isso confirma validação de build, não assinatura de produção.
+
 ## Auditoria de pré-release — 26/11/2026
 
 - `npm.cmd test`: 4/4 aprovados.
 - `node --check app.js` e `node --check server.mjs`: aprovados.
 - `npm.cmd audit --omit=dev --audit-level=high`: 0 vulnerabilidades.
-- `flutter test`: 5/5 aprovados.
+- `flutter test`: 6/6 aprovados.
 - `flutter analyze --no-fatal-infos`: aprovado sem erros; 9 informações de estilo/depreciação.
 - CI da PR de pré-release: análise, testes, APK Release, AAB Release e upload dos artefatos aprovados.
 - As evidências físicas estão separadas das validações automatizadas; esta etapa instalou o APK apenas com `adb install -r`, sem limpeza de dados.
@@ -219,7 +286,26 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - Não foram executados testes funcionais Android de câmera, PDF textual, PDF escaneado, PDF multipágina, seleção de páginas ou arquivo protegido/inválido.
 - Builds desta rodada: APK Release aprovado em 71,0 s; AAB Release aprovado em 32,6 s. `flutter analyze --no-fatal-infos` sem erros, com 9 infos conhecidas; `flutter test` 5/5.
 
+## Homologação física — PDFs grandes — 27/11/2026
+
+- Dispositivo: POCO X5 Pro 5G `22101320G`, Android 14/API 34, ADB `5a3338e6`.
+- `travia-pdf-20mb.pdf` (20 MiB): importado pelo seletor real; cartão com `20971520 bytes`; OCR abriu `1-2`, processou duas páginas e exibiu texto de teste. PSS após processamento: aproximadamente 175 MiB; sem `FATAL EXCEPTION` ou ANR do Travia no recorte de log. Aprovado para este arquivo sintético.
+- `travia-pdf-51mb.pdf` (51 MiB): tentativa pelo seletor real retornou ao aplicativo sem cartão observável. O log registrou `ActivityThread: fail in deliverResultsIfNeeded` com `NullPointerException` no DocumentsUI; sem crash/ANR do Travia. Não aprovado; há também limite de OCR de 50 MiB.
+- `travia-pdf-100mb.pdf` (100 MiB): arquivo presente no aparelho, mas a seleção não produziu resultado funcional observável nesta rodada. Não testado funcionalmente/aprovado; presença no armazenamento não é evidência de importação.
+- O arquivo de 20 MiB permaneceu listado durante a sessão; a persistência após reinício deste novo cartão não foi repetida para evitar duplicações.
+- Compartilhamento: chooser nativo de backup e OCR aberto e cancelado sem crash. Não houve recebimento em destino externo; entrega externa permanece pendente.
+
 - Adicionado `.github/workflows/flutter.yml` para executar em pushes da `main` e em pull requests para `main`.
+
+## Reteste do seletor Android para PDFs grandes - 2026-11-27
+
+- O fluxo Android de materiais usa `ACTION_OPEN_DOCUMENT` nativo e copia a URI `content://` para o armazenamento privado em streaming, com buffer de 1 MiB.
+- POCO X5 Pro 5G (`5a3338e6`, Android 14/API 34), APK de validação instalado com `adb install -r`, sem limpar dados.
+- `travia-pdf-20mb.pdf`: evidência histórica de importação real, 2 páginas e OCR concluído.
+- `travia-pdf-51mb.pdf`: cartão observado após a correção com `53477376 bytes`; importação aprovada. OCR acima de 50 MiB continua limitado pelo produto.
+- `travia-pdf-100mb.pdf`: `RESULT_OK`, `content://com.android.providers.downloads.documents`, cópia concluída em `104857600` bytes; cartão observado. A operação levou aproximadamente 5,3 s e o PSS posterior foi aproximadamente 107 MiB, sem FATAL/ANR do Travia.
+- Ao acionar OCR no cartão de 100 MiB, o aplicativo exibiu `PDF maior que 50 MB. Selecione um arquivo menor ou divida o documento.`
+- O erro anterior `deliverResultsIfNeeded`/`NullPointerException` não foi reproduzido no fluxo nativo corrigido.
 - O workflow usa Java 17, Flutter 3.50.1 estável, `flutter pub get`, `flutter analyze --no-fatal-infos`, `flutter test` e build APK Release.
 - O workflow cancela execuções superseded do mesmo PR e possui timeout de 15 minutos para não deixar builds remotos indefinidos.
 - Os primeiros workflows desta configuração passaram por analyze e testes; o build APK ainda estava em andamento durante esta execução.

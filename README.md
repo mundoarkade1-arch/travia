@@ -1,10 +1,32 @@
 # Travia
 
+## Estado funcional atual - Missao 7
+
+O compartilhamento de backup JSON e resultado OCR usa chooser nativo Android por URI temporaria. No POCO, o chooser abriu e foi cancelado sem envio. O limite de PDF permanece em 50 MiB; suporte a senha para PDF protegido e tutor HTTPS real continuam pendentes.
+
+> Estado atual: o PDF protegido e o PDF invalido foram rejeitados com seguranca no aparelho, e um PDF publico de 10 MB/multipagina foi processado e salvo. O cliente ainda nao possui campo de senha nem compartilhamento externo. Permanecem pendentes PDF acima de 50 MiB, assinatura definitiva e tutor HTTPS real.
+
+## Atualizacao de homologacao - 27/11/2026
+
+O APK reconstruido do commit final `d54268d` foi instalado no POCO X5 Pro 5G (`5a3338e6`) sem limpar dados. Foram confirmados backup/restauracao JSON v4, OCR de imagem com acentuacao e OCR de PDF escaneado real de 2 paginas, com salvamento e persistencia apos reboot. Permanecem pendentes assinatura definitiva, PDF protegido/senhas, PDF grande, compartilhamento externo e tutor HTTPS real.
+
+## Homologacao fisica - 27/11/2026
+
+Os registros historicos abaixo permanecem como evidencia de etapas anteriores; o bloco de estado atual e [`TESTING.md`](./TESTING.md) prevalecem quando houver diferenca de escopo.
+
+## Preparação para produção
+
+O projeto está em preparação, não em publicação. O build Release exige assinatura configurada; a exceção explícita de assinatura debug é usada apenas para validação local/CI. Consulte [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md) para keystore, Secrets, PDFs, segurança e critérios de publicação.
+
 ## Auditoria de pré-release — 26/11/2026
 
-A `main` está integrada no commit `9c16596`. A auditoria reproduziu os testes Node e Flutter, a análise estática sem erros e `npm audit --omit=dev --audit-level=high` sem vulnerabilidades. O workflow [`flutter.yml`](./.github/workflows/flutter.yml) agora gera e publica como artefatos do CI tanto o APK quanto o AAB Release, sem exigir segredos para a validação comum. As actions de checkout e Java foram atualizadas para versões compatíveis com o runtime atual do GitHub Actions.
+A `main` está integrada no commit `31494c4`. A auditoria reproduziu os testes Node e Flutter, a análise estática sem erros e `npm audit --omit=dev --audit-level=high` sem vulnerabilidades. O workflow [`flutter.yml`](./.github/workflows/flutter.yml) separa os artefatos `travia-android-validation-debug` e `travia-android-production-signed`; Secrets de produção parciais fazem o CI falhar com segurança.
 
-Os builds comuns usam assinatura debug deliberadamente. A assinatura de produção continua pendente de keystore e segredos reais. OCR de PDF escaneado/protegido, tutor remoto e sincronização HTTPS permanecem validações externas pendentes; a captura efetiva da câmera foi comprovada no dispositivo físico e os resultados estão diferenciados em [`TESTING.md`](./TESTING.md).
+O build Release falha sem assinatura configurada; somente o CI de validação autoriza debug explicitamente. A assinatura de produção continua pendente de keystore e Secrets reais. OCR de PDF escaneado/protegido, tutor remoto e sincronização HTTPS permanecem validações externas pendentes; a captura efetiva da câmera foi comprovada no dispositivo físico e os resultados estão diferenciados em [`TESTING.md`](./TESTING.md).
+
+Na validação final de 27/11/2026, `flutter analyze` terminou sem erros, `flutter test` passou 7/7 e os builds APK/AAB foram concluídos somente com autorização explícita de assinatura debug. Os artefatos não representam uma release oficial.
+
+A homologação técnica adicionou uma bateria sintética de PDFs e testes HTTP locais do tutor/sincronização. Os resultados e limites estão em [`TESTING.md`](./TESTING.md); a checklist física e o procedimento da keystore estão em [`RELEASE_CHECKLIST.md`](./RELEASE_CHECKLIST.md) e [`KEYSTORE_SETUP.md`](./KEYSTORE_SETUP.md).
 
 ## OCR Android — implementação 25/11/2026
 
