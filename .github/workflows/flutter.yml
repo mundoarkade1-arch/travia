@@ -17,6 +17,8 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      TRAVIA_PRODUCTION_SIGNING: ${{ secrets.TRAVIA_KEYSTORE_BASE64 != '' && secrets.TRAVIA_STORE_PASSWORD != '' && secrets.TRAVIA_KEY_PASSWORD != '' && secrets.TRAVIA_KEY_ALIAS != '' }}
     defaults:
       run:
         working-directory: flutter
@@ -86,7 +88,7 @@ jobs:
             echo "AAB verification completed with the expected debug/self-signed certificate warning."
           fi
       - name: Upload Android production artifacts
-        if: ${{ secrets.TRAVIA_KEYSTORE_BASE64 != '' && secrets.TRAVIA_STORE_PASSWORD != '' && secrets.TRAVIA_KEY_PASSWORD != '' && secrets.TRAVIA_KEY_ALIAS != '' }}
+        if: ${{ env.TRAVIA_PRODUCTION_SIGNING == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: travia-android-production-signed
@@ -96,7 +98,7 @@ jobs:
             flutter/build/app/outputs/bundle/release/app-release.aab
 
       - name: Upload Android validation artifacts (debug-signed)
-        if: ${{ secrets.TRAVIA_KEYSTORE_BASE64 == '' && secrets.TRAVIA_STORE_PASSWORD == '' && secrets.TRAVIA_KEY_PASSWORD == '' && secrets.TRAVIA_KEY_ALIAS == '' }}
+        if: ${{ env.TRAVIA_PRODUCTION_SIGNING == 'false' }}
         uses: actions/upload-artifact@v7
         with:
           name: travia-android-validation-debug
