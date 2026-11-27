@@ -151,15 +151,17 @@ class _TraviaAppState extends State<TraviaApp> {
   }
 
   void _message(String value) {
-    if (mounted)
+    if (mounted) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(value)));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loading)
+    if (loading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     final wide = MediaQuery.sizeOf(context).width >= 820;
     return Scaffold(
       appBar: AppBar(title: Text(pages[page]), actions: [
@@ -389,8 +391,9 @@ class _TraviaAppState extends State<TraviaApp> {
                                 firstDate: DateTime(2020),
                                 lastDate: DateTime(2100),
                                 initialDate: date!);
-                            if (selected != null)
+                            if (selected != null) {
                               setDialog(() => date = selected);
+                            }
                           },
                           icon: const Icon(Icons.date_range),
                           label:
@@ -986,7 +989,9 @@ class _TraviaAppState extends State<TraviaApp> {
       if (current == null ||
           '${item['updatedAt'] ?? ''}'
                   .compareTo('${current['updatedAt'] ?? ''}') >
-              0) merged[key] = item;
+          0) {
+        merged[key] = item;
+      }
     }
     return merged.values.toList();
   }
@@ -1025,8 +1030,9 @@ class _TraviaAppState extends State<TraviaApp> {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode(
                 {'email': email.text.trim(), 'password': password.text}));
-        if (response.statusCode != 200)
+        if (response.statusCode != 200) {
           throw Exception('login ${response.statusCode}');
+        }
         syncToken = jsonDecode(response.body)['token'].toString();
       }
       if (push) {
@@ -1048,14 +1054,16 @@ class _TraviaAppState extends State<TraviaApp> {
           await _sync(true, retryAfterConflict: true);
           return;
         }
-        if (response.statusCode != 200)
+        if (response.statusCode != 200) {
           throw Exception('envio ${response.statusCode}');
+        }
         syncRevision = jsonDecode(response.body)['revision'] as int;
       } else {
         final response = await http.get(Uri.parse('$base/api/sync'),
             headers: {'Authorization': 'Bearer $syncToken'});
-        if (response.statusCode != 200)
+        if (response.statusCode != 200) {
           throw Exception('recebimento ${response.statusCode}');
+        }
         final remote = jsonDecode(response.body);
         if (remote['envelope'] != null) {
           final remoteState = TraviaState.fromJson(
