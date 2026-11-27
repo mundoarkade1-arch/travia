@@ -38,4 +38,16 @@ void main() {
     addTearDown(() => file.delete().catchError((_) => file));
     expect(service.pdfPageCount(file.path), throwsA(isA<FormatException>()));
   });
+
+  test('recusa PDF maior que 50 MiB antes do parser', () async {
+    final service = OcrService();
+    final file = File('${Directory.systemTemp.path}/travia-large-ocr.pdf');
+    await file.writeAsBytes([37, 80, 68, 70, 45]);
+    final handle = await file.open(mode: FileMode.append);
+    await handle.setPosition(50 * 1024 * 1024);
+    await handle.writeByte(0);
+    await handle.close();
+    addTearDown(() => file.delete().catchError((_) => file));
+    expect(service.pdfPageCount(file.path), throwsA(isA<FormatException>()));
+  });
 }

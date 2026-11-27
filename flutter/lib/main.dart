@@ -33,6 +33,8 @@ class TraviaApp extends StatefulWidget {
 }
 
 class _TraviaAppState extends State<TraviaApp> {
+  static const _materialPicker =
+      MethodChannel('com.example.travia/material_picker');
   static const _networkTimeout = Duration(seconds: 15);
   TraviaState data = TraviaState();
   SharedPreferences? prefs;
@@ -459,6 +461,38 @@ class _TraviaAppState extends State<TraviaApp> {
       ]);
 
   Future<void> _importMaterial() async {
+    if (Platform.isAndroid) {
+      try {
+        final picked = await _materialPicker
+            .invokeMethod<Map<Object?, Object?>>('pickMaterial');
+        if (picked == null) return;
+        final sourcePath = picked['path']?.toString();
+        final name = picked['name']?.toString();
+        if (sourcePath == null || name == null || sourcePath.isEmpty) {
+          _message('Arquivo selecionado indisponivel.');
+          return;
+        }
+        final source = File(sourcePath);
+        if (!await source.exists() || await source.length() == 0) {
+          _message('O arquivo selecionado esta vazio ou indisponivel.');
+          return;
+        }
+        data.materials.add({
+          'id': DateTime.now().millisecondsSinceEpoch,
+          'name': name,
+          'size': await source.length(),
+          'path': await _copyMaterialFile(sourcePath, name),
+          'updatedAt': DateTime.now().toIso8601String()
+        });
+        await _save();
+      } on PlatformException catch (error) {
+        _message(
+            error.message ?? 'Nao foi possivel copiar o arquivo selecionado.');
+      } catch (_) {
+        _message('Nao foi possivel importar o arquivo selecionado.');
+      }
+      return;
+    }
     final files = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg']);
