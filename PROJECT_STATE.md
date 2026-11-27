@@ -1,8 +1,12 @@
 # Estado do projeto
 
+## Artefatos da auditoria final - commit 23a903d
+
+APK de validacao: `flutter/build/app/outputs/flutter-apk/app-release.apk`, SHA-256 `5CCADCEFF0AAFB261B97FFC4839DEC5EBD1DC820CBF71E32FA3CD1EA25FA2308`. AAB de validacao: `flutter/build/app/outputs/bundle/release/app-release.aab`, SHA-256 `7DF5C7D57BD72EFD16EC527B09086169817158731CD5B23DCF628C7ADD81732C`. Ambos sao debug-signed, package `com.example.travia`, versao `0.4.0`/code `1`, e nao sao artefatos de producao.
+
 ## Homologacao complementar - 2026-11-27
 
-No POCO, o APK instalado foi extraido e conferido por SHA-256 contra o artefato local do commit `a9c9fa4`. Foram importados e testados um PDF protegido publico, um PDF publico de 10 MB e um falso PDF. O protegido foi rejeitado sem crash com mensagem segura; como nao ha campo de senha, os cenarios de senha correta/incorreta nao sao suportados. O PDF de 10 MB foi processado em 2 paginas e salvo. O falso PDF foi rejeitado explicitamente. O cliente nao possui compartilhamento externo implementado. A permissao de camera foi revogada e restaurada sem instabilidade, mas a camera externa abriu, portanto o caso de negacao efetiva permanece inconclusivo.
+No POCO, o APK instalado foi extraido e conferido por SHA-256 contra o artefato local da branch de homologacao. Foram importados e testados um PDF protegido publico, um PDF publico de 10 MB e um falso PDF. O protegido foi rejeitado sem crash com mensagem segura; como nao ha campo de senha, os cenarios de senha correta/incorreta nao sao suportados. O PDF de 10 MB foi processado em 2 paginas e salvo. O falso PDF foi rejeitado explicitamente. O cliente nao possui compartilhamento externo implementado. A permissao de camera foi revogada e restaurada sem instabilidade, mas a camera externa abriu, portanto o caso de negacao efetiva permanece inconclusivo.
 
 ## Homologacao fisica no POCO X5 Pro - 2026-11-27
 

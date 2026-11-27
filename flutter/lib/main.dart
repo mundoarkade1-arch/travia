@@ -32,6 +32,7 @@ class TraviaApp extends StatefulWidget {
 }
 
 class _TraviaAppState extends State<TraviaApp> {
+  static const _networkTimeout = Duration(seconds: 15);
   TraviaState data = TraviaState();
   SharedPreferences? prefs;
   int selectedCourse = 0;
@@ -906,8 +907,8 @@ class _TraviaAppState extends State<TraviaApp> {
       });
     } else {
       try {
-        final response =
-            await http.post(Uri.parse('${server.text.trim()}/api/tutor'),
+        final response = await http
+            .post(Uri.parse('${server.text.trim()}/api/tutor'),
                 headers: {'Content-Type': 'application/json'},
                 body: jsonEncode({
                   'endpoint': endpointUrl,
@@ -916,7 +917,8 @@ class _TraviaAppState extends State<TraviaApp> {
                   'messages': history
                       .map((m) => {'role': m['role'], 'content': m['text']})
                       .toList()
-                }));
+                }))
+            .timeout(_networkTimeout);
         final payload = jsonDecode(response.body);
         final answer = response.statusCode >= 200 && response.statusCode < 300
             ? (payload['choices']?[0]?['message']?['content'] ??
@@ -962,10 +964,12 @@ class _TraviaAppState extends State<TraviaApp> {
     }
     try {
       final path = register ? '/api/auth/register' : '/api/auth/login';
-      final response = await http.post(Uri.parse('${server.text.trim()}$path'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(
-              {'email': email.text.trim(), 'password': password.text}));
+      final response = await http
+          .post(Uri.parse('${server.text.trim()}$path'),
+              headers: {'Content-Type': 'application/json'},
+              body: jsonEncode(
+                  {'email': email.text.trim(), 'password': password.text}))
+          .timeout(_networkTimeout);
       if (response.statusCode != 200 && response.statusCode != 201) {
         throw Exception(
             jsonDecode(response.body)['error'] ?? response.statusCode);
@@ -989,7 +993,7 @@ class _TraviaAppState extends State<TraviaApp> {
       if (current == null ||
           '${item['updatedAt'] ?? ''}'
                   .compareTo('${current['updatedAt'] ?? ''}') >
-          0) {
+              0) {
         merged[key] = item;
       }
     }
@@ -1026,10 +1030,12 @@ class _TraviaAppState extends State<TraviaApp> {
     try {
       final base = server.text.trim();
       if (syncToken.isEmpty) {
-        final response = await http.post(Uri.parse('$base/api/auth/login'),
-            headers: {'Content-Type': 'application/json'},
-            body: jsonEncode(
-                {'email': email.text.trim(), 'password': password.text}));
+        final response = await http
+            .post(Uri.parse('$base/api/auth/login'),
+                headers: {'Content-Type': 'application/json'},
+                body: jsonEncode(
+                    {'email': email.text.trim(), 'password': password.text}))
+            .timeout(_networkTimeout);
         if (response.statusCode != 200) {
           throw Exception('login ${response.statusCode}');
         }
@@ -1041,13 +1047,17 @@ class _TraviaAppState extends State<TraviaApp> {
             updatedAt: DateTime.now().toUtc().toIso8601String(),
             payload: data,
             baseRevision: syncRevision);
-        final response = await http.put(Uri.parse('$base/api/sync'),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $syncToken'
-            },
-            body: jsonEncode(
-                {'envelope': envelope.toJson(), 'baseRevision': syncRevision}));
+        final response = await http
+            .put(Uri.parse('$base/api/sync'),
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': 'Bearer $syncToken'
+                },
+                body: jsonEncode({
+                  'envelope': envelope.toJson(),
+                  'baseRevision': syncRevision
+                }))
+            .timeout(_networkTimeout);
         if (response.statusCode == 409) {
           if (retryAfterConflict) throw Exception('conflito_persistente');
           await _sync(false);
@@ -1059,8 +1069,9 @@ class _TraviaAppState extends State<TraviaApp> {
         }
         syncRevision = jsonDecode(response.body)['revision'] as int;
       } else {
-        final response = await http.get(Uri.parse('$base/api/sync'),
-            headers: {'Authorization': 'Bearer $syncToken'});
+        final response = await http.get(Uri.parse('$base/api/sync'), headers: {
+          'Authorization': 'Bearer $syncToken'
+        }).timeout(_networkTimeout);
         if (response.statusCode != 200) {
           throw Exception('recebimento ${response.statusCode}');
         }

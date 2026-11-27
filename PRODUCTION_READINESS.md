@@ -6,7 +6,9 @@ Este documento descreve o estado técnico de preparação do Travia. A missão n
 
 O APK reconstruido do commit final `d54268d` foi instalado no POCO X5 Pro 5G (`5a3338e6`, Android 14/API 34). Foram validados OCR de imagem com acentuacao e OCR de PDF escaneado real de 2 paginas, incluindo selecao `1-2`, copia, salvamento e persistencia apos reboot. O backup `travia-final-test.json` foi exportado sem sobrescrever o backup existente, confirmou `version: 4` e foi restaurado pelo seletor Android.
 
-Continuam pendentes a keystore de producao, PDF protegido/senhas, PDF grande, compartilhamento externo e tutor HTTPS real. A amostra escaneada teve perda pontual de acento em `admissivel`; isso foi registrado como resultado observado, nao como aprovacao perfeita de OCR.
+O cliente Flutter aplica timeout de 15 segundos nas chamadas de tutor, autenticacao e sincronizacao. O servidor mantem timeout de 30 segundos para o provedor do tutor e rejeita HTTP externo, aceitando HTTP apenas para localhost. A suite local confirma essas regras, mas tutor HTTPS real, certificado, credenciais autorizadas e rate limiting de producao continuam dependentes de infraestrutura externa.
+
+Na homologacao fisica, PDF protegido e PDF invalido foram rejeitados com mensagem visivel e sem crash; a aplicacao nao possui campo de senha, portanto senha correta/incorreta nao e uma funcionalidade suportada. PDF publico de 10 MB, multipagina, foi processado e salvo. Permanecem pendentes PDF acima de 50 MiB, compartilhamento externo e assinatura definitiva.
 
 ## Assinatura Android
 

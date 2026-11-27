@@ -1,5 +1,11 @@
 # Testes
 
+## Artefatos da auditoria final - commit 23a903d
+
+- APK de validacao: `flutter/build/app/outputs/flutter-apk/app-release.apk`, SHA-256 `5CCADCEFF0AAFB261B97FFC4839DEC5EBD1DC820CBF71E32FA3CD1EA25FA2308`.
+- AAB de validacao: `flutter/build/app/outputs/bundle/release/app-release.aab`, SHA-256 `7DF5C7D57BD72EFD16EC527B09086169817158731CD5B23DCF628C7ADD81732C`.
+- Assinatura: Android Debug, certificado SHA-256 `6fa977b9b6810f8061233ef083302e4ea8df4597876c7940be4afdd53707033f`; package `com.example.travia`, versao `0.4.0`, code `1`.
+
 ## Homologacao complementar no POCO - 2026-11-27
 
 - O dispositivo permaneceu `5a3338e6`, modelo `22101320G`, Android 14/API 34. O APK instalado foi extraido do aparelho e seu SHA-256 coincidiu com o artefato local `6C95FFFB6390286F9A7537EF3DF588A19A7D9844FF3FC17D879441B6334DC18F`.
@@ -8,6 +14,7 @@
 - O arquivo falso `travia-invalid.pdf` de 9 bytes foi importado e rejeitado com `O arquivo selecionado não é um PDF válido.`
 - O caminho de camera foi exercitado com a permissao do Travia temporariamente revogada; a biblioteca abriu a camera externa sem crash. A permissao foi restaurada. Isso nao comprova captura com permissao negada, pois a camera e um aplicativo externo.
 - Nao existe implementacao de compartilhamento externo no cliente atual; o seletor de compartilhamento permanece pendente de funcionalidade.
+- As chamadas do cliente para tutor, autenticacao e sincronizacao possuem timeout explicito de 15 segundos; o proxy local possui timeout de 30 segundos para o provedor.
 
 ## Homologacao fisica real - POCO X5 Pro 5G - 2026-11-27
 

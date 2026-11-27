@@ -43,6 +43,21 @@ jobs:
         run: flutter analyze --no-fatal-infos
       - name: Run Flutter tests
         run: flutter test
+      - name: Configure Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install Node dependencies
+        working-directory: .
+        run: npm ci
+      - name: Run Node tests
+        working-directory: .
+        run: npm test
+      - name: Audit Node dependencies
+        working-directory: .
+        run: npm audit --omit=dev --audit-level=high
       - name: Configure Android signing
         shell: bash
         env:

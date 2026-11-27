@@ -1,12 +1,14 @@
 # Travia
 
+> Estado atual: o PDF protegido e o PDF invalido foram rejeitados com seguranca no aparelho, e um PDF publico de 10 MB/multipagina foi processado e salvo. O cliente ainda nao possui campo de senha nem compartilhamento externo. Permanecem pendentes PDF acima de 50 MiB, assinatura definitiva e tutor HTTPS real.
+
 ## Atualizacao de homologacao - 27/11/2026
 
 O APK reconstruido do commit final `d54268d` foi instalado no POCO X5 Pro 5G (`5a3338e6`) sem limpar dados. Foram confirmados backup/restauracao JSON v4, OCR de imagem com acentuacao e OCR de PDF escaneado real de 2 paginas, com salvamento e persistencia apos reboot. Permanecem pendentes assinatura definitiva, PDF protegido/senhas, PDF grande, compartilhamento externo e tutor HTTPS real.
 
 ## Homologacao fisica - 27/11/2026
 
-O APK de validacao do commit `8e9151a` foi instalado no POCO X5 Pro 5G (`5a3338e6`) sem limpar dados. Inicializacao, navegacao, matriz, edicao de nota, captura por camera, persistencia apos reboot e funcionamento offline foram confirmados. A assinatura definitiva, PDFs protegidos/escaneados, restauracao, compartilhamento/exportacao e tutor HTTPS real continuam pendentes; este APK debug-signed nao e release oficial.
+Os registros historicos abaixo permanecem como evidencia de etapas anteriores; o bloco de estado atual e [`TESTING.md`](./TESTING.md) prevalecem quando houver diferenca de escopo.
 
 ## Preparação para produção
 
