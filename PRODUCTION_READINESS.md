@@ -62,3 +62,7 @@ A versão atual é `0.4.0+1`, com package ID `com.example.travia`. O CI executa 
 - Tutor remoto local/proxy e sincronização local: concluídos nos testes automatizados; tutor HTTPS real e sincronização HTTPS externa: pendentes de serviço, certificados e credenciais reais.
 - Avisos Flutter: 7 corrigidos com segurança; 2 permanecem por depreciação externa de `material.dart`.
 - Release pública: não autorizada nesta missão.
+
+## Homologacao fisica atual
+
+Em 2026-11-27, o APK de validacao do commit `8e9151a` foi instalado no POCO X5 Pro 5G (`5a3338e6`, Android 14/API 34) sem limpar dados. Inicializacao, navegacao, matriz, edicao/salvamento de nota, camera com captura, persistencia apos reboot e funcionamento offline foram observados sem crash do Travia. O fluxo de backup abriu o seletor Android e o PDF real de 13 paginas abriu a selecao de paginas. A keystore definitiva nao existe no ambiente; OCR com acentuacao, PDF escaneado/protegido, restauracao, compartilhamento/exportacao e tutor HTTPS real permanecem pendentes.

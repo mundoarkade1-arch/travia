@@ -1,5 +1,17 @@
 # Testes
 
+## Homologacao fisica real - POCO X5 Pro 5G - 2026-11-27
+
+- Dispositivo `5a3338e6`, modelo `22101320G`, Android 14/API 34; ADB retornou `device`.
+- APK do checkout `8e9151a` instalado com `adb install -r` e retorno `Success`, sem desinstalar ou limpar dados.
+- Inicializacao, navegacao nas cinco abas e menu lateral foram confirmados sem `FATAL EXCEPTION` ou `ANR in` do Travia.
+- Matriz exibiu `25/70`; nota temporaria `8.5` foi editada/salva e o estado visivel foi restaurado para `Nota -`.
+- Camera do sistema abriu, o disparador foi acionado e uma imagem real foi capturada; o material local persistiu apos reboot.
+- Wi-Fi e dados moveis foram desativados temporariamente; `Modo offline ativo` foi exibido sem crash; conectividade restaurada.
+- Fluxo de backup abriu o seletor Android e exibiu `travia-backup.json`; a gravacao nao foi confirmada para evitar sobrescrever arquivo existente.
+- PDF real de 13 paginas abriu `Selecionar paginas (13)` com intervalo `1-13`; selecao exercitada.
+- OCR com acentuacao, PDF escaneado/protegido, senha, restauracao, compartilhamento/exportacao e tutor HTTPS real permanecem pendentes.
+
 ## Preparação para produção — 26/11/2026
 
 - A ausência de `flutter/android/key.properties` deve fazer um build Release falhar claramente.

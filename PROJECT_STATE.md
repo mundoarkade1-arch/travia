@@ -1,5 +1,9 @@
 # Estado do projeto
 
+## Homologacao fisica no POCO X5 Pro - 2026-11-27
+
+O APK de validacao do commit `8e9151a` foi instalado com `adb install -r` no dispositivo `5a3338e6` (modelo `22101320G`, Android 14/API 34), sem desinstalacao ou limpeza de dados. Inicializacao, navegacao, matriz, edicao/salvamento de nota, camera com captura, persistencia apos reboot e funcionamento offline foram observados sem crash do Travia. O seletor de backup e a selecao de paginas de um PDF real de 13 paginas tambem foram acessados. OCR com acentuacao, PDF escaneado/protegido, restauracao efetiva, compartilhamento/exportacao e tutor HTTPS real continuam pendentes.
+
 ## Auditoria de preparação para produção — 26/11/2026
 
 A configuração Android agora falha sem `key.properties`, impedindo fallback silencioso para debug. O CI autoriza debug somente por variável explícita para manter builds de validação enquanto não há keystore de produção. O OCR rejeita PDFs que não possuem cabeçalho válido, excedem 50 MiB ou não produzem texto reconhecido. Detalhes e pendências estão em [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md).

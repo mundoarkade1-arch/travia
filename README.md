@@ -1,5 +1,9 @@
 # Travia
 
+## Homologacao fisica - 27/11/2026
+
+O APK de validacao do commit `8e9151a` foi instalado no POCO X5 Pro 5G (`5a3338e6`) sem limpar dados. Inicializacao, navegacao, matriz, edicao de nota, captura por camera, persistencia apos reboot e funcionamento offline foram confirmados. A assinatura definitiva, PDFs protegidos/escaneados, restauracao, compartilhamento/exportacao e tutor HTTPS real continuam pendentes; este APK debug-signed nao e release oficial.
+
 ## Preparação para produção
 
 O projeto está em preparação, não em publicação. O build Release exige assinatura configurada; a exceção explícita de assinatura debug é usada apenas para validação local/CI. Consulte [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md) para keystore, Secrets, PDFs, segurança e critérios de publicação.

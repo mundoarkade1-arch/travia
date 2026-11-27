@@ -1,5 +1,12 @@
 # Changelog
 
+## Homologacao fisica real - 2026-11-27
+
+- APK do commit `8e9151a` instalado no POCO X5 Pro 5G (`5a3338e6`, Android 14/API 34) com `adb install -r`, sem limpeza de dados.
+- Confirmados inicializacao, navegacao, matriz, edicao/salvamento de nota, captura efetiva pela camera, persistencia apos reboot e modo offline.
+- Acessados o seletor de backup e a selecao de paginas de PDF real com 13 paginas.
+- Mantidas como pendencias a keystore definitiva, OCR com acentuacao nesta versao, PDF escaneado/protegido, restauracao efetiva, compartilhamento/exportacao e tutor HTTPS real.
+
 ## Preparação para produção — 26/11/2026
 
 - Impedido o fallback silencioso de assinatura debug em builds Release.

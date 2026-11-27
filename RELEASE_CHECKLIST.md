@@ -2,6 +2,14 @@
 
 ## Estado desta missão
 
+### Execucao real no POCO X5 Pro - 2026-11-27
+
+- [x] APK de validacao instalado com `adb install -r`, preservando os dados existentes.
+- [x] Inicializacao, navegacao, matriz, edicao/salvamento de nota, camera com captura, persistencia apos reboot e modo offline.
+- [x] Seletor de backup aberto sem sobrescrever o arquivo existente.
+- [x] Seletor de paginas aberto para PDF real de 13 paginas.
+- [ ] Restauracao efetiva, OCR com acentuacao nesta versao, PDF escaneado/protegido, senha, compartilhamento/exportacao e tutor HTTPS real.
+
 - [x] PR #4 aberta, sem merge.
 - [x] CI verde no commit `5b37d14`.
 - [x] Testes Node, Flutter e auditoria npm executados.
