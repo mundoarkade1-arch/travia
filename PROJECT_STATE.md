@@ -18,6 +18,10 @@ Nenhum segredo ou keystore foi criado. O build sem `key.properties` falha delibe
 
 O Flutter, o Android SDK e o ADB estao disponiveis neste ambiente. A PR #2 foi validada no dispositivo fisico autorizado `5a3338e6`; os registros datados abaixo preservam o historico das tentativas anteriores.
 
+## Homologação técnica — 27/11/2026
+
+Foram adicionados testes sintéticos de PDF e testes HTTP locais do tutor/sincronização. A bateria Node passou 6/6; `npm audit` reportou 0 vulnerabilidades. `flutter analyze --no-pub` passou sem erros, com 2 informações externas de depreciação; `flutter test --no-pub` passou 7/7. A assinatura de produção, PDF protegido, OCR de documento escaneado real, tutor HTTPS real e sincronização HTTPS externa permanecem pendentes.
+
 ## OCR Android — implementação 2026-11-25
 
 Implementado no módulo Materiais: captura por câmera, seleção pela galeria/arquivos, pré-visualização de imagens, OCR de imagens em português pelo ML Kit Latin, edição, cópia e persistência do texto reconhecido. O texto é salvo em `materials[].ocrText`, com páginas, origem e data, mantendo compatibilidade com estados v4 anteriores.

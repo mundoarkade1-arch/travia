@@ -7,6 +7,9 @@
 - Separados os artefatos Android de validação debug dos artefatos assinados de produção; Secrets parciais agora fazem o CI falhar com segurança.
 - Mantido o estado web no esquema v4 durante a inicialização.
 - Registrados os resultados finais de análise, testes e builds Android de validação em 27/11/2026.
+- Adicionada auditoria sintética de PDFs, cobertura HTTP local do tutor/sincronização e checklist pré-release.
+- Corrigida a liberação de documentos PDF para a API atual do `pdfjs-dist`.
+- Corrigidos sete avisos Flutter de chaves sem bloco; duas depreciações externas permanecem documentadas.
 - Adicionada validação de cabeçalho, tamanho e resultado do OCR de PDFs.
 - Adicionada a documentação [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md).
 

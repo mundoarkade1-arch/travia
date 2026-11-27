@@ -9,6 +9,15 @@
 - PDFs vazios, que não começam com `%PDF-`, acima de 50 MiB e sem texto reconhecido devem ser rejeitados.
 - A validação com PDF escaneado, protegido ou corrompido real continua pendente até haver amostras apropriadas.
 
+## Homologação técnica — 27/11/2026
+
+- Auditoria PDF sintética: 6/6 casos automatizados aprovados — textual, multipágina, sem camada de texto, vazio, falso e corrompido.
+- PDF sem camada de texto não foi tratado como sucesso falso: a API retornou `pdf-scan-required` para encaminhamento ao OCR visual.
+- PDFs protegido, senha correta/incorreta e OCR de imagem escaneada real: pendentes por ausência de ferramenta de cifragem/amostra/dispositivo apropriado.
+- Auditoria HTTP local do tutor/sincronização: aprovada; proxy local, chave somente em trânsito, bloqueio de HTTP externo, autenticação, persistência, conflito 409 e token inválido foram exercitados.
+- Isso não comprova integração com provedor HTTPS real nem infraestrutura de produção.
+- Avisos Flutter: 7 avisos de chaves em `if` corrigidos; permanecem 2 informações externas sobre a depreciação de `package:flutter/material.dart`.
+
 ## Recuperação e validação final — 27/11/2026
 
 - `flutter analyze --no-pub`: concluído sem erros, com 9 informações de estilo/depreciação já documentadas.

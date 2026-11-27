@@ -12,6 +12,8 @@ O build Release falha sem assinatura configurada; somente o CI de validação au
 
 Na validação final de 27/11/2026, `flutter analyze` terminou sem erros, `flutter test` passou 7/7 e os builds APK/AAB foram concluídos somente com autorização explícita de assinatura debug. Os artefatos não representam uma release oficial.
 
+A homologação técnica adicionou uma bateria sintética de PDFs e testes HTTP locais do tutor/sincronização. Os resultados e limites estão em [`TESTING.md`](./TESTING.md); a checklist física e o procedimento da keystore estão em [`RELEASE_CHECKLIST.md`](./RELEASE_CHECKLIST.md) e [`KEYSTORE_SETUP.md`](./KEYSTORE_SETUP.md).
+
 ## OCR Android — implementação 25/11/2026
 
 O cliente Flutter agora oferece câmera, galeria e seletor de arquivos para imagens e PDFs. Imagens usam ML Kit Text Recognition no script Latin, que cobre português brasileiro; o processamento ocorre no dispositivo e não envia documentos para servidores. O resultado pode ser revisado, editado, copiado e salvo junto aos metadados do material.

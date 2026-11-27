@@ -4,6 +4,8 @@
 
 - [x] Impedir assinatura debug silenciosa em builds Release.
 - [x] Separar artefatos Android de validação debug e produção assinada no CI.
+- [x] Criar auditoria sintética de PDF e testes HTTP locais do tutor/sincronização.
+- [x] Reduzir avisos Flutter seguros; documentar depreciações externas restantes.
 - [x] Documentar keystore, backup, Secrets e recuperação sem criar credenciais.
 - [x] Rejeitar PDF vazio, inválido, maior que 50 MiB ou sem texto reconhecido.
 - [ ] Configurar keystore e Secrets de produção fornecidos pelo proprietário.

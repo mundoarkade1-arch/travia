@@ -37,15 +37,17 @@ O workflow não imprime os valores e os arquivos temporários são descartados j
 
 Nenhuma keystore definitiva foi criada nesta missão.
 
+O procedimento completo, incluindo geração local, fingerprint, backup, recuperação e os quatro Secrets, está em [KEYSTORE_SETUP.md](./KEYSTORE_SETUP.md). A checklist operacional está em [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md).
+
 ## PDFs e OCR
 
 O cliente Flutter aceita PDFs até 50 MiB, valida a assinatura `%PDF-`, preserva a ordem das páginas e rejeita arquivos vazios, inválidos, protegidos/ilegíveis ou resultados sem texto reconhecido. PDFs textuais usam extração direta; páginas sem texto usam renderização temporária e OCR local, com limpeza após cada página.
 
-PDFs protegidos, corrompidos e escaneados exigem amostras reais para validação funcional em dispositivo. A ausência de uma amostra não deve ser apresentada como teste aprovado.
+A auditoria automatizada executou PDFs sintéticos textual, multipágina, sem camada de texto, vazio, falso e corrompido. A versão atual do `pdfjs-dist` exigiu trocar `destroy()` por `cleanup()` para liberar o documento. PDFs protegidos, senha correta/incorreta e OCR visual em documento escaneado ainda exigem amostras reais e ferramenta/dispositivo apropriados; a ausência de uma amostra não é teste aprovado.
 
 ## Tutor e sincronização
 
-O modo offline não depende de serviços externos. A sincronização opcional usa dados cifrados em AES-256-GCM no servidor, senhas derivadas com scrypt e tokens em memória. O endpoint do tutor rejeita HTTP fora de localhost; HTTPS, certificados, autenticação operacional, rate limiting e observabilidade de produção ainda exigem infraestrutura real.
+O modo offline não depende de serviços externos. A sincronização opcional usa dados cifrados em AES-256-GCM no servidor, senhas derivadas com scrypt e tokens em memória. Os testes locais confirmaram proxy do tutor, bloqueio de HTTP externo, autenticação, persistência, conflito 409 e token inválido. HTTPS real, certificados, autenticação operacional, rate limiting e observabilidade de produção ainda exigem infraestrutura real.
 
 ## Versionamento e pipeline
 
@@ -57,5 +59,6 @@ A versão atual é `0.4.0+1`, com package ID `com.example.travia`. O CI executa 
 - APK/AAB de validação: disponível, com assinatura debug explícita.
 - OCR de imagem e PDF textual: validado conforme [TESTING.md](./TESTING.md).
 - PDF escaneado/protegido/corrompido: cobertura automatizada de rejeição; validação com amostras reais pendente.
-- Tutor remoto e sincronização HTTPS: pendentes de serviço e credenciais reais.
+- Tutor remoto local/proxy e sincronização local: concluídos nos testes automatizados; tutor HTTPS real e sincronização HTTPS externa: pendentes de serviço, certificados e credenciais reais.
+- Avisos Flutter: 7 corrigidos com segurança; 2 permanecem por depreciação externa de `material.dart`.
 - Release pública: não autorizada nesta missão.
