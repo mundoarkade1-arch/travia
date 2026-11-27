@@ -49,7 +49,7 @@ jobs:
           TRAVIA_KEY_PASSWORD: ${{ secrets.TRAVIA_KEY_PASSWORD }}
           TRAVIA_KEY_ALIAS: ${{ secrets.TRAVIA_KEY_ALIAS }}
         run: |
-          if [ -n "${TRAVIA_KEYSTORE_BASE64:-}" ]; then
+          if [ -n "${TRAVIA_KEYSTORE_BASE64:-}" ] && [ -n "${TRAVIA_STORE_PASSWORD:-}" ] && [ -n "${TRAVIA_KEY_PASSWORD:-}" ] && [ -n "${TRAVIA_KEY_ALIAS:-}" ]; then
             printf '%s' "$TRAVIA_KEYSTORE_BASE64" | base64 --decode > android/travia-upload-key.jks
             cat > android/key.properties <<EOF
           storePassword=$TRAVIA_STORE_PASSWORD
@@ -58,6 +58,9 @@ jobs:
           storeFile=travia-upload-key.jks
           EOF
             echo "Production signing configured from GitHub Secrets."
+          elif [ -n "${TRAVIA_KEYSTORE_BASE64:-}${TRAVIA_STORE_PASSWORD:-}${TRAVIA_KEY_PASSWORD:-}${TRAVIA_KEY_ALIAS:-}" ]; then
+            echo "Production signing Secrets are incomplete; refusing to build with ambiguous credentials." >&2
+            exit 1
           else
             echo "Production signing Secrets are absent; enabling explicit debug signing for validation artifacts."
             echo "allowDebugSigning=true" >> android/gradle.properties
@@ -70,19 +73,33 @@ jobs:
         shell: bash
         env:
           TRAVIA_KEYSTORE_BASE64: ${{ secrets.TRAVIA_KEYSTORE_BASE64 }}
+          TRAVIA_STORE_PASSWORD: ${{ secrets.TRAVIA_STORE_PASSWORD }}
+          TRAVIA_KEY_PASSWORD: ${{ secrets.TRAVIA_KEY_PASSWORD }}
+          TRAVIA_KEY_ALIAS: ${{ secrets.TRAVIA_KEY_ALIAS }}
         run: |
           APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -n 1)
           "$APKSIGNER" verify --verbose build/app/outputs/flutter-apk/app-release.apk
-          if [ -n "${TRAVIA_KEYSTORE_BASE64:-}" ]; then
+          if [ -n "${TRAVIA_KEYSTORE_BASE64:-}" ] && [ -n "${TRAVIA_STORE_PASSWORD:-}" ] && [ -n "${TRAVIA_KEY_PASSWORD:-}" ] && [ -n "${TRAVIA_KEY_ALIAS:-}" ]; then
             jarsigner -verify -strict build/app/outputs/bundle/release/app-release.aab
           else
             jarsigner -verify build/app/outputs/bundle/release/app-release.aab
             echo "AAB verification completed with the expected debug/self-signed certificate warning."
           fi
-      - name: Upload Android artifacts
+      - name: Upload Android production artifacts
+        if: ${{ secrets.TRAVIA_KEYSTORE_BASE64 != '' && secrets.TRAVIA_STORE_PASSWORD != '' && secrets.TRAVIA_KEY_PASSWORD != '' && secrets.TRAVIA_KEY_ALIAS != '' }}
         uses: actions/upload-artifact@v7
         with:
-          name: travia-android-release
+          name: travia-android-production-signed
+          if-no-files-found: error
+          path: |
+            flutter/build/app/outputs/flutter-apk/app-release.apk
+            flutter/build/app/outputs/bundle/release/app-release.aab
+
+      - name: Upload Android validation artifacts (debug-signed)
+        if: ${{ secrets.TRAVIA_KEYSTORE_BASE64 == '' && secrets.TRAVIA_STORE_PASSWORD == '' && secrets.TRAVIA_KEY_PASSWORD == '' && secrets.TRAVIA_KEY_ALIAS == '' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: travia-android-validation-debug
           if-no-files-found: error
           path: |
             flutter/build/app/outputs/flutter-apk/app-release.apk

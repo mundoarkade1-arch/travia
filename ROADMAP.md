@@ -3,6 +3,7 @@
 ## Preparação para produção — 26/11/2026
 
 - [x] Impedir assinatura debug silenciosa em builds Release.
+- [x] Separar artefatos Android de validação debug e produção assinada no CI.
 - [x] Documentar keystore, backup, Secrets e recuperação sem criar credenciais.
 - [x] Rejeitar PDF vazio, inválido, maior que 50 MiB ou sem texto reconhecido.
 - [ ] Configurar keystore e Secrets de produção fornecidos pelo proprietário.

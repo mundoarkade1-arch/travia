@@ -15,7 +15,7 @@ Push-Location android
 Pop-Location
 ```
 
-O workflow usa essa autorização apenas quando `TRAVIA_KEYSTORE_BASE64`, `TRAVIA_STORE_PASSWORD`, `TRAVIA_KEY_PASSWORD` e `TRAVIA_KEY_ALIAS` não estão configurados. Quando os quatro Secrets existem, ele cria `key.properties` somente no runner e usa a keystore fornecida. Artefatos sem esses Secrets continuam sendo validações debug, não releases assinadas.
+O workflow só considera assinatura de produção quando os quatro Secrets existem simultaneamente: `TRAVIA_KEYSTORE_BASE64`, `TRAVIA_STORE_PASSWORD`, `TRAVIA_KEY_PASSWORD` e `TRAVIA_KEY_ALIAS`. Quando os quatro existem, ele cria `key.properties` somente no runner e publica o artefato `travia-android-production-signed`. Se todos estiverem ausentes, autoriza debug explicitamente e publica apenas `travia-android-validation-debug`. Uma combinação parcial faz o CI falhar com segurança, sem gerar artefato ambíguo.
 
 Secrets esperados no GitHub Actions:
 

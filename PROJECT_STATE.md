@@ -8,7 +8,7 @@ A configuração Android agora falha sem `key.properties`, impedindo fallback si
 
 O estado integrado estava na `main` em `31494c4` antes desta branch de preparação. `npm.cmd test` (4/4), verificações de sintaxe JavaScript, `flutter test` (agora 6 testes), `flutter analyze --no-fatal-infos` e `npm.cmd audit --omit=dev --audit-level=high` passaram; a análise Flutter mantém 9 informações de estilo/depreciação. O workflow de Android compila e publica APK e AAB de validação com autorização explícita de debug.
 
-Nenhum segredo ou keystore foi criado. O build sem `key.properties` falha deliberadamente; a assinatura debug só é usada com autorização explícita de validação. Permanecem pendentes somente validações que dependem de amostras, hardware ou infraestrutura externos, especialmente PDF escaneado/protegido, tutor remoto, HTTPS e assinatura de produção. A captura efetiva da câmera foi validada no dispositivo físico autorizado.
+Nenhum segredo ou keystore foi criado. O build sem `key.properties` falha deliberadamente; a assinatura debug só é usada com autorização explícita de validação. O CI rejeita Secrets de assinatura parciais e separa os artefatos de validação debug dos artefatos assinados de produção. Permanecem pendentes somente validações que dependem de amostras, hardware ou infraestrutura externos, especialmente PDF escaneado/protegido, tutor remoto, HTTPS e assinatura de produção. A captura efetiva da câmera foi validada no dispositivo físico autorizado.
 
 ## Status atual - 26/11/2026
 

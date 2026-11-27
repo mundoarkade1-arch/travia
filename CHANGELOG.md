@@ -4,6 +4,8 @@
 
 - Impedido o fallback silencioso de assinatura debug em builds Release.
 - Mantida autorização explícita de debug apenas no pipeline de validação sem Secrets de produção.
+- Separados os artefatos Android de validação debug dos artefatos assinados de produção; Secrets parciais agora fazem o CI falhar com segurança.
+- Mantido o estado web no esquema v4 durante a inicialização.
 - Adicionada validação de cabeçalho, tamanho e resultado do OCR de PDFs.
 - Adicionada a documentação [PRODUCTION_READINESS.md](./PRODUCTION_READINESS.md).
 

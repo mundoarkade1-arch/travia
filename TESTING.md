@@ -4,6 +4,8 @@
 
 - A ausência de `flutter/android/key.properties` deve fazer um build Release falhar claramente.
 - Builds locais de validação podem usar `ORG_GRADLE_PROJECT_allowDebugSigning=true`; isso não valida assinatura de produção.
+- O CI deve rejeitar Secrets de assinatura parciais e nomear validações debug como `travia-android-validation-debug`.
+- Com os quatro Secrets configurados, o artefato deve ser nomeado `travia-android-production-signed`.
 - PDFs vazios, que não começam com `%PDF-`, acima de 50 MiB e sem texto reconhecido devem ser rejeitados.
 - A validação com PDF escaneado, protegido ou corrompido real continua pendente até haver amostras apropriadas.
 
