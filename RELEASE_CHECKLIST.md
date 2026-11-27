@@ -9,6 +9,14 @@
 - [ ] PDF de 51 MiB: seleção real sem cartão importado observável; DocumentsUI registrou falha de entrega; não aprovado.
 - [ ] PDF de 100 MiB: não houve resultado funcional observável nesta rodada; não aprovado.
 - [x] Chooser de compartilhamento de backup e OCR aberto e cancelado sem crash.
+
+## Reteste de PDFs grandes - 2026-11-27
+
+- [x] Importação de 51 MiB pelo seletor Android e cópia privada em streaming; cartão de `53477376 bytes` observado.
+- [x] Importação de 100 MiB pelo seletor Android e cópia privada em streaming; cartão de `104857600 bytes` observado.
+- [x] Tratamento estável do OCR acima de 50 MiB; mensagem de limite exibida sem travamento.
+- [ ] OCR acima de 50 MiB; bloqueado pelo limite atual do produto.
+- [ ] Recebimento de compartilhamento em aplicativo externo; requer seleção manual de destino.
 - [ ] Recebimento efetivo em destino externo: pendente, sem envio de dados pessoais.
 - [ ] Assinatura definitiva, keystore, quatro Secrets e Tutor HTTPS real.
 

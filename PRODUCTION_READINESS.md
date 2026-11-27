@@ -77,6 +77,10 @@ A versão atual é `0.4.0+1`, com package ID `com.example.travia`. O CI executa 
 
 ## Homologacao fisica atual
 
+## Correção do seletor Android - 2026-11-27
+
+O bloqueio de importação dos arquivos grandes foi corrigido no aplicativo. O novo caminho usa `ACTION_OPEN_DOCUMENT` e streaming do `ContentResolver` para armazenamento privado, tratando retorno nulo, cancelamento e falhas de cópia. No POCO, 51 MiB e 100 MiB produziram cartões locais com os tamanhos exatos; o caso de 100 MiB foi copiado em aproximadamente 5,3 s, sem FATAL/ANR. O limite de OCR de 50 MiB permanece ativo e foi exibido na interface. Builds locais continuam assinados com Android Debug; assinatura definitiva e Tutor HTTPS real seguem pendentes.
+
 Em 2026-11-27, o APK de validacao do commit `8e9151a` foi instalado no POCO X5 Pro 5G (`5a3338e6`, Android 14/API 34) sem limpar dados. Inicializacao, navegacao, matriz, edicao/salvamento de nota, camera com captura, persistencia apos reboot e funcionamento offline foram observados sem crash do Travia. O fluxo de backup abriu o seletor Android e o PDF real de 13 paginas abriu a selecao de paginas. A keystore definitiva nao existe no ambiente; OCR com acentuacao, PDF escaneado/protegido, restauracao, compartilhamento/exportacao e tutor HTTPS real permanecem pendentes.
 
 Na rodada de 2026-11-27, o APK instalado continuou em `com.example.travia` `0.4.0+1`. O arquivo sintético de 20 MiB foi importado pelo fluxo real, reconhecido como 2 páginas e processado pelo OCR; o PSS observado após o processamento foi aproximadamente 175 MiB, sem FATAL/ANR do Travia. A seleção de 51 MiB retornou sem cartão observável e o log registrou `deliverResultsIfNeeded` com `NullPointerException` no DocumentsUI; o arquivo de 100 MiB não produziu resultado funcional observável. Esses dois cenários permanecem não aprovados. O chooser nativo de backup e OCR abriu e foi cancelado sem crash, mas não houve recebimento externo comprovado.

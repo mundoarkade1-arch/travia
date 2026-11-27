@@ -1,5 +1,11 @@
 # Changelog
 
+## Correção de PDFs grandes - 2026-11-27
+
+- Substituído o caminho Android de importação de materiais por `ACTION_OPEN_DOCUMENT` com leitura em streaming para o armazenamento privado.
+- Tratados cancelamento, URI ausente, permissões persistentes indisponíveis e falhas de cópia sem crash.
+- Homologados fisicamente os cartões locais de 51 MiB e 100 MiB; OCR acima de 50 MiB continua rejeitado pelo limite documentado.
+
 ## Em desenvolvimento - 2026-11-27
 
 - Adicionado compartilhamento nativo de backups JSON e resultados OCR com `share_plus`.

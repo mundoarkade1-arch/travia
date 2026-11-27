@@ -1,5 +1,14 @@
 # Estado do projeto
 
+## Correção do bloqueio de PDFs grandes - 2026-11-27
+
+- O fluxo Android passou a usar `ACTION_OPEN_DOCUMENT`, `ContentResolver` e cópia em streaming para o cache privado.
+- No POCO, 51 MiB (`53477376 bytes`) e 100 MiB (`104857600 bytes`) produziram cartões locais após a correção.
+- O caso de 100 MiB levou aproximadamente 5,3 s no recorte medido, com PSS posterior de aproximadamente 107 MiB e sem FATAL/ANR.
+- OCR acima de 50 MiB continua intencionalmente rejeitado com mensagem visível; importação grande está resolvida, OCR grande permanece limitação de produto.
+- APK local: `FF1D8A49A8F328283F853F7D396312E8FF7F86B9FAEAF26BE531539D4094498F`.
+- AAB local: `02B77D098B7ED350D6757AB4D9F3FDD2748E56E4CDBBB7E35CD8EEC5907F88E1`.
+
 ## Missao 7 - estado atual
 
 O compartilhamento externo de backup JSON e resultado OCR foi implementado com `share_plus`, URI temporaria e chooser nativo. No POCO, o chooser abriu e foi cancelado sem envio. PDF protegido continua sendo rejeitado com seguranca porque nao existe suporte a senha. Foram preparados arquivos de 20, 51 e 100 MiB, mas a selecao efetiva pelo fluxo do app nao foi concluida; nao sao testes fisicos aprovados.

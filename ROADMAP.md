@@ -1,5 +1,10 @@
 # Roadmap
 
+## Correção de PDFs grandes - 2026-11-27
+
+- [x] Corrigir importação Android de PDFs grandes com `ACTION_OPEN_DOCUMENT` e streaming do `ContentResolver`.
+- [x] Validar cartões locais de 51 MiB e 100 MiB no POCO; OCR acima de 50 MiB permanece limitado.
+
 ## Atualizacao - 2026-11-27
 
 - Compartilhamento nativo: implementado para backup e texto OCR; falta validar entrega em um destino externo sem dados pessoais.

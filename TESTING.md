@@ -296,6 +296,16 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - Compartilhamento: chooser nativo de backup e OCR aberto e cancelado sem crash. Não houve recebimento em destino externo; entrega externa permanece pendente.
 
 - Adicionado `.github/workflows/flutter.yml` para executar em pushes da `main` e em pull requests para `main`.
+
+## Reteste do seletor Android para PDFs grandes - 2026-11-27
+
+- O fluxo Android de materiais usa `ACTION_OPEN_DOCUMENT` nativo e copia a URI `content://` para o armazenamento privado em streaming, com buffer de 1 MiB.
+- POCO X5 Pro 5G (`5a3338e6`, Android 14/API 34), APK de validação instalado com `adb install -r`, sem limpar dados.
+- `travia-pdf-20mb.pdf`: evidência histórica de importação real, 2 páginas e OCR concluído.
+- `travia-pdf-51mb.pdf`: cartão observado após a correção com `53477376 bytes`; importação aprovada. OCR acima de 50 MiB continua limitado pelo produto.
+- `travia-pdf-100mb.pdf`: `RESULT_OK`, `content://com.android.providers.downloads.documents`, cópia concluída em `104857600` bytes; cartão observado. A operação levou aproximadamente 5,3 s e o PSS posterior foi aproximadamente 107 MiB, sem FATAL/ANR do Travia.
+- Ao acionar OCR no cartão de 100 MiB, o aplicativo exibiu `PDF maior que 50 MB. Selecione um arquivo menor ou divida o documento.`
+- O erro anterior `deliverResultsIfNeeded`/`NullPointerException` não foi reproduzido no fluxo nativo corrigido.
 - O workflow usa Java 17, Flutter 3.50.1 estável, `flutter pub get`, `flutter analyze --no-fatal-infos`, `flutter test` e build APK Release.
 - O workflow cancela execuções superseded do mesmo PR e possui timeout de 15 minutos para não deixar builds remotos indefinidos.
 - Os primeiros workflows desta configuração passaram por analyze e testes; o build APK ainda estava em andamento durante esta execução.
