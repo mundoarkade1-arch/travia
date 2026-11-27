@@ -4,6 +4,10 @@
 
 ### Execucao real no POCO X5 Pro - 2026-11-27
 
+- [x] Backup JSON v4 exportado, validado e restaurado sem sobrescrever o arquivo existente.
+- [x] OCR com acentuacao em imagem e PDF escaneado real de 2 paginas, com salvamento e persistencia apos reboot.
+- [ ] PDF protegido, senha correta/incorreta, PDF grande, compartilhamento externo e tutor HTTPS real.
+
 - [x] APK de validacao instalado com `adb install -r`, preservando os dados existentes.
 - [x] Inicializacao, navegacao, matriz, edicao/salvamento de nota, camera com captura, persistencia apos reboot e modo offline.
 - [x] Seletor de backup aberto sem sobrescrever o arquivo existente.

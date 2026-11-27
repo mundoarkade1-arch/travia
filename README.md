@@ -1,5 +1,9 @@
 # Travia
 
+## Atualizacao de homologacao - 27/11/2026
+
+O APK reconstruido do commit final `d54268d` foi instalado no POCO X5 Pro 5G (`5a3338e6`) sem limpar dados. Foram confirmados backup/restauracao JSON v4, OCR de imagem com acentuacao e OCR de PDF escaneado real de 2 paginas, com salvamento e persistencia apos reboot. Permanecem pendentes assinatura definitiva, PDF protegido/senhas, PDF grande, compartilhamento externo e tutor HTTPS real.
+
 ## Homologacao fisica - 27/11/2026
 
 O APK de validacao do commit `8e9151a` foi instalado no POCO X5 Pro 5G (`5a3338e6`) sem limpar dados. Inicializacao, navegacao, matriz, edicao de nota, captura por camera, persistencia apos reboot e funcionamento offline foram confirmados. A assinatura definitiva, PDFs protegidos/escaneados, restauracao, compartilhamento/exportacao e tutor HTTPS real continuam pendentes; este APK debug-signed nao e release oficial.

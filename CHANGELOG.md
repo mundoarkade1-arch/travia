@@ -1,5 +1,11 @@
 # Changelog
 
+## Homologacao OCR e backup - 2026-11-27
+
+- Validado OCR com acentuacao em imagem e PDF escaneado real de 2 paginas no POCO, incluindo copia, salvamento e persistencia apos reboot.
+- Validado backup JSON v4 exportado e restaurado sem sobrescrever o arquivo existente.
+- Mantidas como pendencias a keystore definitiva, PDF protegido/senhas, PDF grande, compartilhamento externo e tutor HTTPS real.
+
 ## Homologacao fisica real - 2026-11-27
 
 - APK do commit `8e9151a` instalado no POCO X5 Pro 5G (`5a3338e6`, Android 14/API 34) com `adb install -r`, sem limpeza de dados.

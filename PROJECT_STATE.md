@@ -2,7 +2,7 @@
 
 ## Homologacao fisica no POCO X5 Pro - 2026-11-27
 
-O APK de validacao do commit `8e9151a` foi instalado com `adb install -r` no dispositivo `5a3338e6` (modelo `22101320G`, Android 14/API 34), sem desinstalacao ou limpeza de dados. Inicializacao, navegacao, matriz, edicao/salvamento de nota, camera com captura, persistencia apos reboot e funcionamento offline foram observados sem crash do Travia. O seletor de backup e a selecao de paginas de um PDF real de 13 paginas tambem foram acessados. OCR com acentuacao, PDF escaneado/protegido, restauracao efetiva, compartilhamento/exportacao e tutor HTTPS real continuam pendentes.
+O APK reconstruido a partir do commit final `d54268d` foi instalado com `adb install -r` no dispositivo `5a3338e6` (modelo `22101320G`, Android 14/API 34), sem desinstalacao ou limpeza de dados. Inicializacao, navegacao, matriz, edicao/salvamento de nota, camera com captura, persistencia apos reboot e funcionamento offline foram observados sem crash do Travia. O backup foi exportado para `travia-final-test.json`, com `version: 4`, restaurado pelo seletor Android e validado apos reboot. OCR com acentuacao em imagem e PDF escaneado real de 2 paginas foram concluidos com salvamento e persistencia; permanecem pendentes PDF protegido/senhas, PDF grande, compartilhamento externo e tutor HTTPS real.
 
 ## Auditoria de preparação para produção — 26/11/2026
 

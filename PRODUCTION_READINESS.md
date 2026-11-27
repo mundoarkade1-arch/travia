@@ -2,6 +2,12 @@
 
 Este documento descreve o estado técnico de preparação do Travia. A missão não cria release pública, não publica em lojas e não distribui APK ou AAB.
 
+## Atualizacao de homologacao - 2026-11-27
+
+O APK reconstruido do commit final `d54268d` foi instalado no POCO X5 Pro 5G (`5a3338e6`, Android 14/API 34). Foram validados OCR de imagem com acentuacao e OCR de PDF escaneado real de 2 paginas, incluindo selecao `1-2`, copia, salvamento e persistencia apos reboot. O backup `travia-final-test.json` foi exportado sem sobrescrever o backup existente, confirmou `version: 4` e foi restaurado pelo seletor Android.
+
+Continuam pendentes a keystore de producao, PDF protegido/senhas, PDF grande, compartilhamento externo e tutor HTTPS real. A amostra escaneada teve perda pontual de acento em `admissivel`; isso foi registrado como resultado observado, nao como aprovacao perfeita de OCR.
+
 ## Assinatura Android
 
 `flutter/android/key.properties` e qualquer `.jks`/`.keystore` ficam fora do Git. O build Release exige `key.properties` com as quatro propriedades completas (`storePassword`, `keyPassword`, `keyAlias` e `storeFile`). Sem elas, o build falha para evitar assinatura debug silenciosa.
