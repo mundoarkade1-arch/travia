@@ -17,7 +17,7 @@ Escolha um diretório privado fora do repositório e execute sem informar senhas
 
 ```powershell
 $keystore = 'C:\Caminho-Privado\travia-upload-key.jks'
-keytool -genkeypair -v -keystore $keystore -storetype PKCS12 -alias travia-upload -keyalg RSA -keysize 4096 -validity 10000
+keytool -genkeypair -v -keystore $keystore -storetype PKCS12 -alias travia-upload -keyalg RSA -keysize 4096 -sigalg SHA256withRSA -validity 10000
 ```
 
 Registre o fingerprint sem compartilhar a senha ou a chave privada:
@@ -35,6 +35,10 @@ Guarde o fingerprint SHA-256 em um registro seguro do proprietário. Ele deve se
 3. Guarde as senhas em um gerenciador de segredos, separado das cópias.
 4. Teste a leitura de uma cópia em uma máquina de recuperação sem alterar a original.
 5. Nunca envie a keystore, senhas ou fingerprint privado pelo chat, Git, issue ou log.
+
+## Ordem obrigatória antes do CI
+
+Confirme a existência das duas cópias criptografadas e faça um teste de leitura de uma cópia de recuperação antes de configurar qualquer Secret no GitHub. Não substitua uma keystore existente: se o caminho escolhido já existir, interrompa o procedimento e confirme a identidade pelo alias e fingerprint.
 
 ## GitHub Actions
 

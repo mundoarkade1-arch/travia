@@ -3,7 +3,7 @@
 ## Estado desta missão
 
 - [x] PR #4 aberta, sem merge.
-- [x] CI verde no commit `4c8aecb`.
+- [x] CI verde no commit `5b37d14`.
 - [x] Testes Node, Flutter e auditoria npm executados.
 - [x] APK/AAB de validação gerados com assinatura debug explícita.
 - [ ] Keystore definitiva criada pelo proprietário.
