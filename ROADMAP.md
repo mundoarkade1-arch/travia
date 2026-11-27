@@ -165,3 +165,10 @@ O cliente Flutter inicial foi conectado à matriz curricular real e à persistê
 - [ ] Aprovar edição/cópia do resultado e reabertura visual do texto após ANR do sistema no AVD.
 - [ ] Validar PDFs e câmera em dispositivo/AVD estável.
 - [ ] Assinar e validar artefatos com keystore de produção fornecido.
+
+## Missão 8 — acompanhamento físico — 2026-11-27
+
+- [x] Validar importação e OCR do PDF sintético de 20 MiB no POCO.
+- [ ] Validar funcionalmente 51 MiB e 100 MiB; as tentativas atuais não produziram cartão observável.
+- [ ] Confirmar recebimento externo de backup e OCR sem dados pessoais.
+- [ ] Completar assinatura definitiva e Tutor HTTPS real.

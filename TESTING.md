@@ -286,6 +286,15 @@ Verificação estática do cliente Flutter: matriz real, persistência local e b
 - Não foram executados testes funcionais Android de câmera, PDF textual, PDF escaneado, PDF multipágina, seleção de páginas ou arquivo protegido/inválido.
 - Builds desta rodada: APK Release aprovado em 71,0 s; AAB Release aprovado em 32,6 s. `flutter analyze --no-fatal-infos` sem erros, com 9 infos conhecidas; `flutter test` 5/5.
 
+## Homologação física — PDFs grandes — 27/11/2026
+
+- Dispositivo: POCO X5 Pro 5G `22101320G`, Android 14/API 34, ADB `5a3338e6`.
+- `travia-pdf-20mb.pdf` (20 MiB): importado pelo seletor real; cartão com `20971520 bytes`; OCR abriu `1-2`, processou duas páginas e exibiu texto de teste. PSS após processamento: aproximadamente 175 MiB; sem `FATAL EXCEPTION` ou ANR do Travia no recorte de log. Aprovado para este arquivo sintético.
+- `travia-pdf-51mb.pdf` (51 MiB): tentativa pelo seletor real retornou ao aplicativo sem cartão observável. O log registrou `ActivityThread: fail in deliverResultsIfNeeded` com `NullPointerException` no DocumentsUI; sem crash/ANR do Travia. Não aprovado; há também limite de OCR de 50 MiB.
+- `travia-pdf-100mb.pdf` (100 MiB): arquivo presente no aparelho, mas a seleção não produziu resultado funcional observável nesta rodada. Não testado funcionalmente/aprovado; presença no armazenamento não é evidência de importação.
+- O arquivo de 20 MiB permaneceu listado durante a sessão; a persistência após reinício deste novo cartão não foi repetida para evitar duplicações.
+- Compartilhamento: chooser nativo de backup e OCR aberto e cancelado sem crash. Não houve recebimento em destino externo; entrega externa permanece pendente.
+
 - Adicionado `.github/workflows/flutter.yml` para executar em pushes da `main` e em pull requests para `main`.
 - O workflow usa Java 17, Flutter 3.50.1 estável, `flutter pub get`, `flutter analyze --no-fatal-infos`, `flutter test` e build APK Release.
 - O workflow cancela execuções superseded do mesmo PR e possui timeout de 15 minutos para não deixar builds remotos indefinidos.

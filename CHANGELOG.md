@@ -186,3 +186,9 @@ O registro mais recente da PR #2 corresponde ao commit publicado em `feat/androi
 - Recuperado o AVD por inicialização a frio sem apagar dados do usuário.
 - Validado o APK novo instalado, com abertura, navegação principal e persistência após reinício.
 - Adicionado workflow GitHub Actions para Flutter Analyze, Flutter Test e APK Release.
+
+## Homologação física — 2026-11-27
+
+- Registrado teste real no POCO de PDF sintético de 20 MiB: 2 páginas e OCR concluído.
+- Registrado que as tentativas de 51 MiB e 100 MiB não produziram importação funcional observável; não foram marcadas como aprovadas.
+- Registrado chooser nativo de compartilhamento aberto/cancelado sem crash, sem comprovação de recebimento externo.

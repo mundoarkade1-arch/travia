@@ -2,6 +2,16 @@
 
 ## Estado desta missão
 
+## Atualização da Missão 8 — 2026-11-27
+
+- [x] Dispositivo `5a3338e6` confirmado como `device`; pacote `com.example.travia`, versão `0.4.0`, versionCode `1`.
+- [x] PDF sintético de 20 MiB importado pelo fluxo real, reconhecido como 2 páginas e processado pelo OCR.
+- [ ] PDF de 51 MiB: seleção real sem cartão importado observável; DocumentsUI registrou falha de entrega; não aprovado.
+- [ ] PDF de 100 MiB: não houve resultado funcional observável nesta rodada; não aprovado.
+- [x] Chooser de compartilhamento de backup e OCR aberto e cancelado sem crash.
+- [ ] Recebimento efetivo em destino externo: pendente, sem envio de dados pessoais.
+- [ ] Assinatura definitiva, keystore, quatro Secrets e Tutor HTTPS real.
+
 ## Atualizacao da Missao 7 - 2026-11-27
 
 - [x] Compartilhamento nativo de backup abre o chooser Android no POCO.

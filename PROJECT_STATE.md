@@ -92,6 +92,14 @@ O cliente Flutter funcional usa a matriz curricular real, persistência local, b
 
 ## Atual
 
+## Homologação física complementar — 2026-11-27
+
+- O POCO X5 Pro 5G (`5a3338e6`) permaneceu conectado como `device`; `com.example.travia` estava na versão `0.4.0`, versionCode `1`, API 34.
+- O PDF sintético de 20 MiB foi importado pelo fluxo real, exibiu 2 páginas e concluiu OCR com texto de teste. PSS chegou a aproximadamente 175 MiB, sem FATAL/ANR do Travia observado.
+- As tentativas de 51 MiB retornaram ao aplicativo sem cartão observável; o log registrou `deliverResultsIfNeeded`/`NullPointerException` no DocumentsUI. O arquivo de 100 MiB não obteve resultado funcional observável nesta rodada.
+- O chooser nativo de backup e OCR foi aberto e cancelado sem crash; recebimento externo não foi comprovado.
+- Assinatura definitiva e Tutor HTTPS real continuam bloqueios externos; homologação de arquivos grandes permanece parcial.
+
 ## Validacao no dispositivo fisico - 26/11/2026
 
 - Dispositivo autorizado `5a3338e6` usado como alvo principal; APK Release instalado com `Success`.
